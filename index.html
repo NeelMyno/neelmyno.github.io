@@ -3717,12 +3717,27 @@
                                                                 </g>
                                                             </g>
 
-                                                            <!-- BOTTOM strip: stats -->
+                                                            <!-- BOTTOM strip: stats. Each big number + label pair is its own
+                                                                 <text> with explicit coordinates — the previous tspan-with-dx
+                                                                 approach mixed font-size jumps with an inherited large negative
+                                                                 letter-spacing, which produced unreliable kerning artifacts in
+                                                                 some renderers (visible as a phantom circle/glyph between
+                                                                 TOKENS and 98 on macOS Edge). Discrete <text> elements are
+                                                                 deterministic and avoid the inheritance pitfall entirely. -->
                                                             <g transform="translate(110,820)">
                                                                 <text x="0" y="0" font-family="ui-monospace, JetBrains Mono, monospace" font-weight="700" font-size="13" fill="#5C5C5C" letter-spacing="3">v0.15.0 · OBSIDIAN · SPRING GREEN · SATOSHI · 8-POINT SOFT GRID · WCAG 2.2 AA</text>
-                                                                <g transform="translate(0,42)">
-                                                                    <text font-family="Manrope, sans-serif" font-weight="900" font-size="60" fill="#E6E6E6" letter-spacing="-2.5"><tspan>887</tspan><tspan dx="14" font-size="20" fill="#6B6B6B" font-weight="700">TOKENS</tspan><tspan dx="60" fill="#E6E6E6" font-size="60" font-weight="900">98</tspan><tspan dx="14" font-size="20" fill="#6B6B6B" font-weight="700">COMPONENTS</tspan><tspan dx="60" fill="#E6E6E6" font-size="60" font-weight="900">9</tspan><tspan dx="14" font-size="20" fill="#6B6B6B" font-weight="700">PLATFORMS</tspan><tspan dx="60" fill="#00FA8A" font-size="60" font-weight="900">33</tspan><tspan dx="14" font-size="20" fill="#6B6B6B" font-weight="700">ADRs</tspan></text>
-                                                                </g>
+                                                                <!-- 887 TOKENS -->
+                                                                <text x="0" y="100" font-family="Manrope, sans-serif" font-weight="900" font-size="60" fill="#E6E6E6" letter-spacing="-2.5">887</text>
+                                                                <text x="220" y="100" font-family="ui-monospace, JetBrains Mono, monospace" font-weight="700" font-size="14" fill="#6B6B6B" letter-spacing="2">TOKENS</text>
+                                                                <!-- 98 COMPONENTS -->
+                                                                <text x="420" y="100" font-family="Manrope, sans-serif" font-weight="900" font-size="60" fill="#E6E6E6" letter-spacing="-2.5">98</text>
+                                                                <text x="540" y="100" font-family="ui-monospace, JetBrains Mono, monospace" font-weight="700" font-size="14" fill="#6B6B6B" letter-spacing="2">COMPONENTS</text>
+                                                                <!-- 9 PLATFORMS -->
+                                                                <text x="820" y="100" font-family="Manrope, sans-serif" font-weight="900" font-size="60" fill="#E6E6E6" letter-spacing="-2.5">9</text>
+                                                                <text x="880" y="100" font-family="ui-monospace, JetBrains Mono, monospace" font-weight="700" font-size="14" fill="#6B6B6B" letter-spacing="2">PLATFORMS</text>
+                                                                <!-- 33 ADRs (the accent — Spring Green) -->
+                                                                <text x="1140" y="100" font-family="Manrope, sans-serif" font-weight="900" font-size="60" fill="#00FA8A" letter-spacing="-2.5">33</text>
+                                                                <text x="1240" y="100" font-family="ui-monospace, JetBrains Mono, monospace" font-weight="700" font-size="14" fill="#6B6B6B" letter-spacing="2">ADRs</text>
                                                             </g>
                                                         </svg>
                                                         <div style="visibility: hidden; background-color:rgba(13,13,13,0.85)" class="project-item-pause-button pause"></div>
