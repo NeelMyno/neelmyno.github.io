@@ -3634,9 +3634,10 @@
                                                                 <pattern id="lum-grid" width="80" height="80" patternUnits="userSpaceOnUse">
                                                                     <path d="M 80 0 L 0 0 0 80" fill="none" stroke="#FFFFFF" stroke-width="1" stroke-opacity="0.025"/>
                                                                 </pattern>
-                                                                <filter id="lum-pulse-glow" x="-50%" y="-50%" width="200%" height="200%">
-                                                                    <feGaussianBlur stdDeviation="6"/>
-                                                                </filter>
+                                                                <linearGradient id="lum-screen-shadow" x1="0.5" y1="0" x2="0.5" y2="1">
+                                                                    <stop offset="0%" stop-color="#000000" stop-opacity="0"/>
+                                                                    <stop offset="100%" stop-color="#000000" stop-opacity="0.55"/>
+                                                                </linearGradient>
                                                             </defs>
                                                             <rect width="1920" height="1000" fill="url(#lum-card-bg)"/>
                                                             <rect width="1920" height="1000" fill="url(#lum-grid)"/>
@@ -3660,8 +3661,12 @@
                                                                 <text x="6" y="338" font-family="Manrope, -apple-system, sans-serif" font-weight="500" font-size="34" fill="#00FA8A" letter-spacing="-0.8">A vertically integrated design system.</text>
                                                             </g>
 
-                                                            <!-- CENTER-RIGHT: mini "operator screen" -->
-                                                            <g transform="translate(1070,180)" filter="drop-shadow(0 36px 80px rgba(0,0,0,0.55))">
+                                                            <!-- CENTER-RIGHT: mini "operator screen". Filter-free shadow keeps
+                                                                 hover-transform GPU work cheap — drop-shadow on SVG was
+                                                                 forcing full re-raster every frame. -->
+                                                            <g transform="translate(1070,180)">
+                                                                <!-- soft pseudo-shadow (offset gradient rect) -->
+                                                                <rect x="-20" y="40" width="780" height="500" rx="40" fill="url(#lum-screen-shadow)" opacity="0.6"/>
                                                                 <rect width="740" height="480" rx="20" fill="url(#lum-screen)" stroke="#FFFFFF" stroke-opacity="0.06"/>
                                                                 <!-- top bar -->
                                                                 <rect x="20" y="20" width="700" height="40" rx="10" fill="#0D0D0D"/>
