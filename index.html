@@ -18,6 +18,22 @@
         .projects-list-item-link { will-change: transform; transform: translateZ(0); backface-visibility: hidden; }
         .projects-list-item-link svg { pointer-events: none; }
         .projects-list-item-link img { pointer-events: none; }
+        /* Hover-lag fix: every card scales .project-list-img-inner from
+           0.85 → 1 on hover, but the element also carries a 30px-blur
+           box-shadow. Without GPU promotion the shadow had to be
+           re-rasterized at the new scale every frame, on the CPU. Promote
+           the inner to its own compositor layer so the shadow rasterizes
+           once into the layer texture and the GPU just transforms it —
+           the same pattern Stripe/Linear use on their card grids. */
+        .projects-list-item-link .project-list-img-inner {
+            will-change: transform;
+            transform: scale(0.85) translateZ(0);
+            backface-visibility: hidden;
+            contain: paint;
+        }
+        .projects-list-item-link:hover .project-list-img-inner {
+            transform: scale(1) translateZ(0);
+        }
         /* Force the Lumen card visible — the Webflow CMS export's runtime hides
            anything past the original item count; reveal it explicitly. */
         #w-node-lumen-design-system { display: block !important; }
@@ -1959,12 +1975,6 @@
                                                                     <stop offset="0%" stop-color="#14171C"/>
                                                                     <stop offset="100%" stop-color="#0A0C0F"/>
                                                                 </linearGradient>
-                                                                <filter id="tho8-card-shadow" x="-20%" y="-20%" width="140%" height="140%">
-                                                                    <feGaussianBlur in="SourceAlpha" stdDeviation="18"/>
-                                                                    <feOffset dx="0" dy="16"/>
-                                                                    <feComponentTransfer><feFuncA type="linear" slope="0.28"/></feComponentTransfer>
-                                                                    <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
-                                                                </filter>
                                                             </defs>
                                                             <rect width="1920" height="1000" fill="url(#tho8-card-bg)"/>
 
