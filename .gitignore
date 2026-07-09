@@ -1,2 +1,5 @@
 # Local working files — never publish (holds pre-curation backup with old content + preview drafts)
 .claude/
+docs/
+.DS_Store
+**/.DS_Store
