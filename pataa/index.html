@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pataa · 6 case-study directions</title>
+<style>
+  :root{
+    --bg:#100F0D;            /* warm near-black, never pure #000 */
+    --surface:#181614;       /* one tonal step up (dark elevation = lighter surface) */
+    --surface-2:#201D19;
+    --line:#2C2823;          /* hairline */
+    --line-2:#3A342D;
+    --ink:#EFEBE3;           /* warm off-white */
+    --ink-2:#B4AC9E;
+    --ink-3:#847C6E;
+    --accent:#D2A24C;        /* one restrained warm ochre; index + hover only, never a glow */
+    --sp:8px;
+    --ease:cubic-bezier(.22,1,.36,1);
+    --radius:14px;
+  }
+  @media (prefers-color-scheme: light){
+    :root{ --bg:#F4EFE6; --surface:#FBF7EF; --surface-2:#FFFFFF; --line:#E4DBCB; --line-2:#D6CBB6; --ink:#23201B; --ink-2:#5A5346; --ink-3:#8A8272; --accent:#A8761E; }
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+    line-height:1.55; -webkit-font-smoothing:antialiased;
+    font-feature-settings:"ss01","cv01";
+  }
+  .wrap{max-width:1240px; margin:0 auto; padding:clamp(28px,6vw,72px) clamp(20px,5vw,56px) 96px;}
+  .eyebrow{font-family:ui-monospace,"SF Mono",Menlo,monospace; font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:var(--accent); margin:0 0 18px;}
+  h1{font-size:clamp(30px,5vw,52px); line-height:1.04; letter-spacing:-.02em; font-weight:640; margin:0 0 18px; max-width:20ch;}
+  .lede{font-size:clamp(15px,1.5vw,18px); color:var(--ink-2); max-width:62ch; margin:0 0 14px;}
+  .note{font-size:13.5px; color:var(--ink-3); max-width:70ch; border-left:2px solid var(--line-2); padding-left:14px; margin:22px 0 0;}
+  .note b{color:var(--ink-2); font-weight:600;}
+  .rule{height:1px; background:var(--line); border:0; margin:40px 0 34px;}
+
+  .grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(340px,1fr)); gap:clamp(18px,2.4vw,30px);}
+  .card{
+    display:flex; flex-direction:column; background:var(--surface);
+    border:1px solid var(--line); border-radius:var(--radius); overflow:hidden;
+    text-decoration:none; color:inherit;
+    transition:transform .32s var(--ease), border-color .32s var(--ease), box-shadow .32s var(--ease);
+    opacity:0; transform:translateY(14px);
+  }
+  .card.in{opacity:1; transform:none;}
+  .card:hover{ transform:translateY(-4px); border-color:var(--line-2);
+    box-shadow:0 1px 2px rgba(0,0,0,.4), 0 18px 40px -18px rgba(0,0,0,.6); } /* neutral shadow only */
+  .card:focus-visible{ outline:2px solid var(--accent); outline-offset:3px; }
+  .thumb{position:relative; aspect-ratio:16/10; overflow:hidden; background:var(--surface-2); border-bottom:1px solid var(--line);}
+  .thumb img{width:100%; height:100%; object-fit:cover; object-position:top center; display:block;
+    transition:transform .5s var(--ease); }
+  .card:hover .thumb img{ transform:scale(1.028); }
+  .num{position:absolute; top:10px; left:12px; font-family:ui-monospace,"SF Mono",Menlo,monospace;
+    font-size:12px; letter-spacing:.06em; color:var(--ink); background:rgba(16,15,13,.72);
+    border:1px solid rgba(255,255,255,.14); padding:3px 8px; border-radius:6px; backdrop-filter:saturate(120%) blur(2px);}
+  @media (prefers-color-scheme: light){ .num{ background:rgba(255,255,255,.78); border-color:rgba(0,0,0,.1);} }
+  .body{padding:16px 18px 18px;}
+  .name{font-size:17.5px; font-weight:640; letter-spacing:-.01em; margin:0 0 5px; display:flex; align-items:baseline; gap:8px;}
+  .concept{font-size:13.5px; color:var(--ink-2); margin:0 0 12px; min-height:2.6em;}
+  .tags{display:flex; flex-wrap:wrap; gap:6px;}
+  .tag{font-family:ui-monospace,"SF Mono",Menlo,monospace; font-size:11px; letter-spacing:.03em;
+    color:var(--ink-3); border:1px solid var(--line); border-radius:100px; padding:3px 9px;}
+  .foot{margin-top:56px; font-size:12.5px; color:var(--ink-3); font-family:ui-monospace,"SF Mono",Menlo,monospace;}
+  @media (prefers-reduced-motion: reduce){ .card{opacity:1; transform:none; transition:none;} .card:hover{transform:none;} .thumb img,.card:hover .thumb img{transition:none; transform:none;} }
+</style>
+</head>
+<body>
+<main class="wrap">
+  <p class="eyebrow">Pataa · design exploration · 2026-07-12</p>
+  <h1>One case study, six ways to tell it.</h1>
+  <p class="lede">Six dedicated case-study pages for the Pataa work, each a different design direction. Same true story, six distinct visual and interaction languages. Pick the one that reads most like you, and we take it forward.</p>
+  <p class="note"><b>All six are grounded and honest.</b> Every fact traces to the real case study; the only product number anywhere is the app's ~7.5M downloads (framed as its scale, never a result); the app screens are the real ones. No fabricated metrics, no invented quotes. Built to the design doctrine (each derives its own look; none default to the Warp green).</p>
+  <hr class="rule">
+  <div class="grid" id="grid"></div>
+  <p class="foot">Open any page in a new tab. Neel Tengariya · UI/UX designer on the Pataa 2022 redesign team.</p>
+</main>
+<script>
+  const V = [
+    ["02","editorial","The Editorial","A print-magazine feature. Fraunces serif, real app screens set as figures, one idea per page.",["warm ivory","editorial"]],
+    ["03","instrument-panel","The Instrument Panel","A dark technical console. Real app screens on warm near-black, SYS.00 to 09, one amber signal.",["near-black · amber","console"]],
+    ["04","vernacular","The Vernacular","Warm and humanist. Two people stuck on the same phone call, told close to the ground.",["warm cream","humanist"]],
+    ["06","swiss-grid","The Swiss Grid","International Typographic Style. Archivo Expanded, a strict grid, hairline rules, one amber accent.",["paper · amber","discipline"]],
+    ["07","interactive-demo","The Walkthrough","An evidence-led walkthrough. The real app flow shown screen by screen, the product as its own proof.",["warm light","walkthrough"]],
+    ["08","cinematic","The Cinematic","The human story, in daylight. Big Fraunces display, generous space, real screens given room to breathe.",["daylight · serif","cinematic"]],
+  ];
+  const grid = document.getElementById('grid');
+  V.forEach(([n,slug,name,concept,tags])=>{
+    const a = document.createElement('a');
+    a.className='card'; a.href=n+'-'+slug+'.html'; a.target='_blank'; a.rel='noopener';
+    a.setAttribute('aria-label', name+': '+concept);
+    a.innerHTML =
+      '<div class="thumb"><span class="num">'+n+'</span>'+
+      '<img src="thumbs/'+n+'-'+slug+'.png" alt="Preview of the '+name+' direction" loading="lazy"></div>'+
+      '<div class="body"><div class="name">'+name+'</div>'+
+      '<p class="concept">'+concept+'</p>'+
+      '<div class="tags">'+tags.map(t=>'<span class="tag">'+t+'</span>').join('')+'</div></div>';
+    grid.appendChild(a);
+  });
+  const io = new IntersectionObserver((es)=>es.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target);} }), {rootMargin:'0px 0px -8% 0px'});
+  document.querySelectorAll('.card').forEach((c,i)=>{ c.style.transitionDelay=(Math.min(i,8)*40)+'ms'; io.observe(c); });
+</script>
+</body>
+</html>
