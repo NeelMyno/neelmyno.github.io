@@ -103,22 +103,39 @@
   /* amber highlight on a single key word: ink on bright amber reads ~13:1 (sin 1 safe) */
   .hl{background:var(--pill);color:var(--on-amber);padding:.02em .2em;border-radius:4px;box-decoration-break:clone;-webkit-box-decoration-break:clone;font-weight:800}
 
-  /* ---- site header: Neel's site nav (cross-site consistency), on the paper canvas ---- */
-  .site-nav{background:var(--paper);border-bottom:1px solid var(--line)}
-  .site-nav .snav-inner{display:flex;align-items:center;justify-content:space-between;gap:24px;padding-block:12px}
-  .site-logo{display:inline-flex;align-items:center;line-height:0}
-  .site-logo img{height:26px;width:auto;display:block}
-  .site-links{display:flex;align-items:center;gap:clamp(14px,2.3vw,28px)}
-  .site-links a{font-family:var(--sans);font-size:var(--fs-sm);font-weight:500;text-decoration:none;letter-spacing:-.006em;padding:6px 2px;transition:color .15s var(--ease-out),background .15s var(--ease-out),border-color .15s var(--ease-out)}
-  .site-links a.plain{color:var(--ink-dim)}
-  .site-links a.plain:hover{color:var(--ink)}
-  .site-links a:focus-visible,.site-logo:focus-visible{outline:2px solid var(--amber);outline-offset:4px;border-radius:4px}
-  .site-links a.site-cta{color:var(--ink);font-weight:600;border:1px solid var(--line-strong);border-radius:9px;padding:8px 15px;display:inline-flex;align-items:center;gap:7px}
-  .site-links a.site-cta:hover{background:var(--ink);border-color:var(--ink);color:var(--paper)}
-  .site-cta .arw{font-weight:400;transform:translateY(.4px)}
-  @media (max-width:600px){
-    .site-links a.plain{display:none}
-    .site-links a.site-cta{padding:7px 13px}
+  /* ============================================================
+     SITE NAV — the REAL homepage component, rules copied verbatim from
+     css/index_mini.css so /pataa/ is a true extension of neelmyno.in:
+     same markup, same Inter Display font, same 1200px container, same
+     fixed+blur bar, same .cta--nav button, same nav-link hover. Generic
+     selectors (.cta/.container/.page-padding) are scoped under .nav so
+     nothing bleeds into the case study below.
+     ============================================================ */
+  @font-face{font-family:"Inter Display";src:url("https://assets.website-files.com/6279077bf697b924fac6e205/636dfe8261df29a8a191ebc6_Inter-Display.woff2") format("woff2");font-weight:400;font-style:normal;font-display:swap}
+  @font-face{font-family:"Inter Display";src:url("https://assets.website-files.com/6279077bf697b924fac6e205/636dfe98b0633015995d2554_Inter-DisplayBold.woff2") format("woff2");font-weight:700;font-style:normal;font-display:swap}
+  @font-face{font-family:"Inter Display";src:url("https://assets.website-files.com/6279077bf697b924fac6e205/636dfea34a3e3c1b85745887_Inter-DisplayLight.woff2") format("woff2");font-weight:300;font-style:normal;font-display:swap}
+  .nav{position:fixed;top:0;right:0;bottom:auto;left:0;z-index:100;background-color:hsla(0,0%,100%,.7);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);transition:background-color .2s,color .2s;font-family:"Inter Display",sans-serif;font-size:16px;line-height:1.5}
+  .nav.dark{color:#ecedee}
+  .nav .page-padding{padding-right:40px;padding-left:40px}
+  .nav .container{width:100%;max-width:1200px;margin-right:auto;margin-left:auto}
+  .nav-inner{position:relative;display:flex;padding-top:6px;padding-bottom:6px;justify-content:center;align-items:center;border-bottom:1px solid rgba(2,23,53,.1);transition:border-color .2s}
+  .nav-logo{position:absolute;top:auto;right:auto;bottom:auto;left:0;z-index:102;display:flex;align-items:center;margin-left:-16px;padding:6px 16px;font-size:17px;text-decoration:none;color:inherit}
+  .nav-logo img{width:60px;height:auto;display:block}
+  .nav-menu{display:flex;align-items:center}
+  .nav-link{position:relative;z-index:102;display:inline-block;padding:8px 14px;color:#687076;text-decoration:none}
+  .nav-link:hover{color:#151718}
+  .nav .cta{display:flex;align-items:center;font-weight:500;padding:8px 20px;color:#006adc;font-size:20px;text-decoration:none}
+  .nav .cta.cta--nav{position:absolute;right:0;z-index:102;margin-right:-20px;font-size:16px}
+  .nav .cta-chevron{display:flex;align-items:center;margin-left:6px}
+  .nav .cta-chevron svg{display:block}
+  /* the nav is fixed, like the homepage — offset the page so the masthead clears it (nav is 53px tall) */
+  body{padding-top:53px}
+  @media screen and (max-width:767px){
+    .nav .page-padding{padding-right:20px;padding-left:20px}
+    .nav-inner{justify-content:space-between}
+    .nav-logo{position:static;margin-left:0;padding-left:0}
+    .nav-menu{display:none}
+    .nav .cta.cta--nav{position:static;margin-right:0;font-size:15px}
   }
 
   /* ---- masthead: a print-style running head, not sticky chrome ---- */
@@ -412,19 +429,28 @@
 </head>
 <body>
 
-<!-- ============ SITE HEADER (Neel's site nav — cross-site consistency) ============ -->
-<header class="site-nav">
-  <div class="wrap snav-inner">
-    <a class="site-logo" href="/" aria-label="Neel Tengariya — home"><img src="/images/home/navbar/logo_full_black_copyright.svg" alt="Neel Tengariya" width="53" height="26"></a>
-    <nav class="site-links" aria-label="Primary">
-      <a class="plain" href="/#home">Home</a>
-      <a class="plain" href="/#work">Work</a>
-      <a class="plain" href="/#experience">Experience</a>
-      <a class="plain" href="/">About</a>
-      <a class="site-cta" href="/resume/neel_tengariya_resume.pdf" download>Download Resume<span class="arw" aria-hidden="true">&rsaquo;</span></a>
-    </nav>
+<!-- ============ SITE NAV — the real homepage component (identical markup to neelmyno.in) ============ -->
+<div class="nav">
+  <div class="page-padding">
+    <div class="container">
+      <div class="nav-inner">
+        <a href="/" aria-current="page" class="nav-logo w-inline-block w--current" aria-label="Neel Tengariya — home">
+          <div><img width="60" src="/images/home/navbar/logo_full_black_copyright.svg" alt="Neel logo"></div>
+        </a>
+        <div class="nav-menu">
+          <a href="/#home" class="nav-link">Home</a>
+          <a href="/#work" class="nav-link">Work</a>
+          <a href="/#experience" class="nav-link">Experience</a>
+          <a href="/" class="nav-link">About</a>
+          <a href="/resume/neel_tengariya_resume.pdf" class="cta cta--nav w-inline-block" download>
+            <div>Download Resume</div>
+            <div class="cta-chevron w-embed"><svg width="7" height="10" xmlns="http://www.w3.org/2000/svg"><path d="M1.566.434 6.131 5 1.566 9.566.434 8.434 3.869 5 .434 1.566z" fill="currentColor" /></svg></div>
+          </a>
+        </div>
+      </div>
+    </div>
   </div>
-</header>
+</div>
 
 <!-- ============ MASTHEAD (running head, not sticky) ============ -->
 <header class="masthead">
