@@ -3,105 +3,849 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Pataa · 6 case-study directions</title>
+<title>A trustable address for the last mile · Pataa, set in the grid</title>
+<meta name="description" content="The Swiss-grid telling of the Pataa 2022 redesign: an address you can trust at a glance and act on without a phone call.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=Archivo+Expanded:wght@600;700;800;900&display=swap" rel="stylesheet">
 <style>
+  /* ============================================================
+     06 · THE SWISS GRID  (International Typographic Style)
+     One idea per section. Every screen AND component is a real PNG
+     from the live app; zero UI is drawn in code. Captions
+     are the exact width of the thing they caption. Light paper canvas.
+     Brand-lock (from the real Pataa app): warm paper, ONE amber signal
+     as marks and fills only, the amber caret is Pataa's mark, one honest
+     maroon carried by the real live-location and voice screens.
+     Type: Archivo grotesque + Archivo Expanded, tight on the big sizes.
+     ============================================================ */
   :root{
-    --bg:#100F0D;            /* warm near-black, never pure #000 */
-    --surface:#181614;       /* one tonal step up (dark elevation = lighter surface) */
-    --surface-2:#201D19;
-    --line:#2C2823;          /* hairline */
-    --line-2:#3A342D;
-    --ink:#EFEBE3;           /* warm off-white */
-    --ink-2:#B4AC9E;
-    --ink-3:#847C6E;
-    --accent:#D2A24C;        /* one restrained warm ochre; index + hover only, never a glow */
-    --sp:8px;
-    --ease:cubic-bezier(.22,1,.36,1);
-    --radius:14px;
-  }
-  @media (prefers-color-scheme: light){
-    :root{ --bg:#F4EFE6; --surface:#FBF7EF; --surface-2:#FFFFFF; --line:#E4DBCB; --line-2:#D6CBB6; --ink:#23201B; --ink-2:#5A5346; --ink-3:#8A8272; --accent:#A8761E; }
-  }
-  *{box-sizing:border-box}
-  html{-webkit-text-size-adjust:100%}
-  body{
-    margin:0; background:var(--bg); color:var(--ink);
-    font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
-    line-height:1.55; -webkit-font-smoothing:antialiased;
-    font-feature-settings:"ss01","cv01";
-  }
-  .wrap{max-width:1240px; margin:0 auto; padding:clamp(28px,6vw,72px) clamp(20px,5vw,56px) 96px;}
-  .eyebrow{font-family:ui-monospace,"SF Mono",Menlo,monospace; font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:var(--accent); margin:0 0 18px;}
-  h1{font-size:clamp(30px,5vw,52px); line-height:1.04; letter-spacing:-.02em; font-weight:640; margin:0 0 18px; max-width:20ch;}
-  .lede{font-size:clamp(15px,1.5vw,18px); color:var(--ink-2); max-width:62ch; margin:0 0 14px;}
-  .note{font-size:13.5px; color:var(--ink-3); max-width:70ch; border-left:2px solid var(--line-2); padding-left:14px; margin:22px 0 0;}
-  .note b{color:var(--ink-2); font-weight:600;}
-  .rule{height:1px; background:var(--line); border:0; margin:40px 0 34px;}
+    --paper:#F4F2EB;        /* warm off-white, never pure #fff */
+    --paper-2:#ECE9E0;      /* tonal band / figure ground */
+    --paper-3:#E5E1D5;
+    --surface:#FFFFFF;
+    --ink:#1C1C1C;          /* warm near-black, matches the app dark */
+    --ink-2:#141310;        /* deepest display ink */
+    --ink-dim:#54514A;      /* body secondary        ~7:1 */
+    --ink-faint:#6B6760;    /* small labels          ~5:1 */
+    --line:#DED9CD;         /* hairline rules */
+    --line-strong:#C9C3B4;
+    --amber:#E39D02;        /* the product signal: graphic marks, rules, dots, borders */
+    --amber-ink:#8A5A00;    /* amber-as-small-text on paper, AA (>4.5:1) */
+    --pill:#FFC543;         /* the ShortCode fill yellow; ink on it reads ~13:1 */
+    --on-amber:#1C1C1C;     /* ink on amber */
+    --maroon:#872826;       /* the one honest red, from the real live + voice states */
+    /* neutral elevation only, no accent in any shadow (sin 2) */
+    --shadow-photo:0 2px 18px rgba(20,18,12,.10), 0 1px 3px rgba(20,18,12,.07);
+    --shadow-float:0 18px 46px rgba(20,18,12,.15), 0 3px 10px rgba(20,18,12,.08);
+    --sans:'Archivo','Helvetica Neue',Helvetica,Arial,system-ui,sans-serif;
+    --wide:'Archivo Expanded','Archivo','Helvetica Neue',Arial,sans-serif;
 
-  .grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(340px,1fr)); gap:clamp(18px,2.4vw,30px);}
-  .card{
-    display:flex; flex-direction:column; background:var(--surface);
-    border:1px solid var(--line); border-radius:var(--radius); overflow:hidden;
-    text-decoration:none; color:inherit;
-    transition:transform .32s var(--ease), border-color .32s var(--ease), box-shadow .32s var(--ease);
-    opacity:0; transform:translateY(14px);
+    --fs-mega:clamp(4rem,13vw,10rem);
+    --fs-display:clamp(2.3rem,7.4vw,6.2rem);
+    --fs-h1:clamp(1.95rem,4.4vw,3.5rem);
+    --fs-h2:clamp(1.45rem,2.6vw,2.05rem);
+    --fs-lead:clamp(1.16rem,1.7vw,1.5rem);
+    --fs-body:clamp(1.02rem,1.05vw,1.1rem);
+    --fs-sm:0.9375rem;
+    --fs-label:0.72rem;
+    --fs-micro:0.6875rem;
+
+    /* one modular spacing scale, 4px base */
+    --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:32px;
+    --s7:48px; --s8:64px; --s9:96px; --s10:128px; --s11:160px;
+
+    --maxw:1160px;
+    --pad:clamp(20px,5vw,60px);
+    --ease-out:cubic-bezier(0.22,1,0.36,1);
   }
-  .card.in{opacity:1; transform:none;}
-  .card:hover{ transform:translateY(-4px); border-color:var(--line-2);
-    box-shadow:0 1px 2px rgba(0,0,0,.4), 0 18px 40px -18px rgba(0,0,0,.6); } /* neutral shadow only */
-  .card:focus-visible{ outline:2px solid var(--accent); outline-offset:3px; }
-  .thumb{position:relative; aspect-ratio:16/10; overflow:hidden; background:var(--surface-2); border-bottom:1px solid var(--line);}
-  .thumb img{width:100%; height:100%; object-fit:cover; object-position:top center; display:block;
-    transition:transform .5s var(--ease); }
-  .card:hover .thumb img{ transform:scale(1.028); }
-  .num{position:absolute; top:10px; left:12px; font-family:ui-monospace,"SF Mono",Menlo,monospace;
-    font-size:12px; letter-spacing:.06em; color:var(--ink); background:rgba(16,15,13,.72);
-    border:1px solid rgba(255,255,255,.14); padding:3px 8px; border-radius:6px; backdrop-filter:saturate(120%) blur(2px);}
-  @media (prefers-color-scheme: light){ .num{ background:rgba(255,255,255,.78); border-color:rgba(0,0,0,.1);} }
-  .body{padding:16px 18px 18px;}
-  .name{font-size:17.5px; font-weight:640; letter-spacing:-.01em; margin:0 0 5px; display:flex; align-items:baseline; gap:8px;}
-  .concept{font-size:13.5px; color:var(--ink-2); margin:0 0 12px; min-height:2.6em;}
-  .tags{display:flex; flex-wrap:wrap; gap:6px;}
-  .tag{font-family:ui-monospace,"SF Mono",Menlo,monospace; font-size:11px; letter-spacing:.03em;
-    color:var(--ink-3); border:1px solid var(--line); border-radius:100px; padding:3px 9px;}
-  .foot{margin-top:56px; font-size:12.5px; color:var(--ink-3); font-family:ui-monospace,"SF Mono",Menlo,monospace;}
-  @media (prefers-reduced-motion: reduce){ .card{opacity:1; transform:none; transition:none;} .card:hover{transform:none;} .thumb img,.card:hover .thumb img{transition:none; transform:none;} }
+
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+  body{
+    margin:0;background:var(--paper);color:var(--ink);
+    font-family:var(--sans);font-size:var(--fs-body);line-height:1.6;
+    font-feature-settings:"kern" 1,"liga" 1;
+    -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
+    overflow-x:hidden;
+  }
+  img{display:block;max-width:100%;height:auto}
+  ::selection{background:var(--pill);color:var(--on-amber)}
+  a{color:var(--amber-ink);text-underline-offset:.16em;text-decoration-thickness:.06em}
+  :focus-visible{outline:2.5px solid var(--amber-ink);outline-offset:3px;border-radius:3px}
+  /* tabular figures wherever a number carries meaning */
+  .tnum,.num,.meta dd,.fig,.mega,.mini .n,.code-big,.reach .v,.data .fig{font-feature-settings:"tnum" 1,"lnum" 1}
+
+  /* ---- rails ---- */
+  .wrap{max-width:var(--maxw);margin-inline:auto;padding-inline:var(--pad)}
+  .grid12{display:grid;grid-template-columns:repeat(12,1fr);gap:clamp(20px,3vw,40px)}
+  .measure{max-width:58ch}
+  section{padding-block:clamp(56px,9vw,120px);position:relative}
+  section + section{border-top:1px solid var(--line)}
+
+  /* ---- type ---- */
+  h1,h2,h3{margin:0;font-weight:800}
+  .kicker{font-family:var(--sans);font-size:var(--fs-label);font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-dim);margin:0}
+  .caret{color:var(--amber);font-family:var(--wide);font-weight:900;font-style:normal}
+  .eyebrow{grid-column:1/-1;display:flex;align-items:center;gap:16px;font-size:var(--fs-label);letter-spacing:.14em;text-transform:uppercase;color:var(--ink-dim);font-weight:700;margin:0 0 var(--s7)}
+  .eyebrow .num{font-family:var(--wide);font-weight:800;letter-spacing:.02em;color:var(--ink);font-feature-settings:"tnum" 1;display:inline-flex;align-items:baseline;gap:1px}
+  .eyebrow .num .caret{font-size:1.02em}
+  .eyebrow .lbl{color:var(--ink);font-weight:800;letter-spacing:.12em}
+  .eyebrow .rule{flex:1;height:1px;background:var(--line-strong)}
+  .eyebrow .tag{color:var(--ink-faint);font-weight:600}
+  .title{font-family:var(--wide);font-weight:800;font-size:var(--fs-h1);line-height:1.02;letter-spacing:-.025em;color:var(--ink-2);max-width:20ch}
+  .lead{font-size:var(--fs-lead);line-height:1.4;font-weight:450;color:var(--ink);letter-spacing:-.005em;max-width:32ch}
+  p{margin:0 0 1.05em;max-width:60ch}
+  .body{color:var(--ink-dim);max-width:56ch}
+  .body b,.lead b{color:var(--ink);font-weight:700}
+  .dim{color:var(--ink-dim)}.faint{color:var(--ink-faint)}
+  /* amber highlight on a single key word: ink on bright amber reads ~13:1 (sin 1 safe) */
+  .hl{background:var(--pill);color:var(--on-amber);padding:.02em .2em;border-radius:4px;box-decoration-break:clone;-webkit-box-decoration-break:clone;font-weight:800}
+
+  /* ---- masthead: a print-style running head, not sticky chrome ---- */
+  .masthead{border-bottom:1px solid var(--line)}
+  .masthead .row{display:flex;align-items:center;justify-content:space-between;gap:20px;padding-block:16px}
+  .brand{font-family:var(--wide);font-weight:800;letter-spacing:.02em;font-size:1.02rem;text-transform:uppercase;display:inline-flex;align-items:center;gap:9px}
+  .brand img{width:26px;height:26px}
+  .brand .caret{font-size:1.05em}
+  .masthead .ident{font-size:var(--fs-micro);letter-spacing:.13em;text-transform:uppercase;color:var(--ink-faint);font-weight:600;text-align:right}
+  @media (max-width:560px){.masthead .ident{display:none}}
+
+  /* ============ COVER ============ */
+  #cover{padding-block:clamp(40px,6vw,84px) clamp(52px,8vw,104px)}
+  .cover-copy{grid-column:1 / span 7;align-self:center}
+  .cover-figs{grid-column:9 / span 4;align-self:center}
+  @media (max-width:920px){.cover-copy{grid-column:1/-1}.cover-figs{grid-column:1/-1;margin-top:var(--s8);justify-self:start}}
+  .cover-kicker{margin-bottom:var(--s7)}
+  .cover-h1{font-family:var(--wide);font-weight:900;font-size:var(--fs-display);line-height:.98;letter-spacing:-.035em;color:var(--ink-2);margin:0 0 var(--s5)}
+  .cover-h1 .l2{color:var(--ink)}
+  .cover-lead{font-size:var(--fs-lead);line-height:1.4;font-weight:450;color:var(--ink);max-width:40ch;margin:0 0 var(--s6)}
+  .cover-lead .em{font-weight:700}
+  /* meta table, hung on a strong ink rule */
+  .meta{border-top:2px solid var(--ink);margin:0;max-width:38rem}
+  .meta div{display:grid;grid-template-columns:8.5rem 1fr;gap:10px 18px;padding:11px 0;border-bottom:1px solid var(--line)}
+  .meta dt{font-size:var(--fs-micro);letter-spacing:.13em;text-transform:uppercase;color:var(--ink-faint);font-weight:700;padding-top:3px}
+  .meta dd{margin:0;font-size:var(--fs-sm);font-weight:600;color:var(--ink);line-height:1.4}
+  .meta dd .s{display:block;font-size:var(--fs-micro);font-weight:600;color:var(--ink-faint);letter-spacing:.03em;text-transform:uppercase;margin-top:3px}
+  .meta .reach dd{font-family:var(--wide);font-weight:800;font-size:1.3rem;letter-spacing:.01em;display:flex;align-items:center;gap:9px}
+  .meta .reach .u{width:11px;height:11px;background:var(--amber);flex:0 0 auto}
+  .meta .reach .s{margin-top:0}
+  /* the cover phone, whole */
+  .cover-figs figure{margin:0;width:fit-content}
+  .cover-figs img{width:min(280px,74vw);height:auto;border-radius:20px;border:1px solid var(--line);box-shadow:var(--shadow-float);background:var(--surface)}
+  .cover-figs figcaption{width:100%;margin-top:14px;font-size:var(--fs-micro);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-faint);font-weight:700}
+
+  /* ============ HERO SHOWCASE (3 whole screens + real component snippets) ============ */
+  .showcase{background:var(--paper-2);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+  .show-head{grid-column:1/-1;display:flex;align-items:center;gap:16px;font-size:var(--fs-label);letter-spacing:.14em;text-transform:uppercase;color:var(--ink-dim);font-weight:700;margin-bottom:var(--s7)}
+  .show-head .rule{flex:1;height:1px;background:var(--line-strong)}
+  .show-screens{grid-column:1/-1;display:flex;gap:clamp(16px,3vw,40px);justify-content:flex-start;align-items:flex-start;flex-wrap:wrap}
+  .show-screens figure{margin:0;width:fit-content;max-width:100%}
+  .show-screens img{width:min(240px,70vw);height:auto;border-radius:18px;border:1px solid var(--line);box-shadow:var(--shadow-float);background:var(--surface)}
+  .show-screens figcaption{width:100%;margin-top:12px;font-size:var(--fs-micro);letter-spacing:.07em;text-transform:uppercase;color:var(--ink-faint);font-weight:700;display:flex;gap:7px;align-items:baseline}
+  .show-screens figcaption .fn{font-family:var(--wide);color:var(--amber-ink);font-weight:800}
+  .snips{grid-column:1/-1;margin-top:var(--s8);border-top:1px solid var(--line-strong);padding-top:var(--s6)}
+  .snips-label{text-align:left;font-size:var(--fs-micro);font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-faint);margin:0 0 var(--s5)}
+  .snips-row{display:flex;gap:clamp(16px,3vw,40px);justify-content:flex-start;align-items:center;flex-wrap:wrap}
+  .snip img{height:auto;border-radius:12px;filter:drop-shadow(0 10px 22px rgba(20,18,12,.13))}
+
+  /* ============ UI-SHOWCASE MONTAGE (real composited app screens, full grid width, true aspect ratio) ============ */
+  .montage{grid-column:1/-1;width:100%;margin:var(--s7) 0 0}
+  .montage img{width:100%;height:auto;display:block}
+
+  /* ============ SNAPSHOT (at a glance) - typographic, no images ============ */
+  .snap-head{grid-column:1/-1;display:flex;align-items:baseline;gap:16px;font-size:var(--fs-label);letter-spacing:.16em;text-transform:uppercase;color:var(--ink-dim);font-weight:800;margin-bottom:var(--s6)}
+  .snap-head .tag{color:var(--ink-faint);font-weight:600;letter-spacing:.1em}
+  .snap-lead{grid-column:1 / span 9;font-family:var(--wide);font-size:clamp(1.5rem,3.4vw,2.5rem);font-weight:800;line-height:1.1;letter-spacing:-.02em;margin:0 0 var(--s8)}
+  @media (max-width:920px){.snap-lead{grid-column:1/-1}}
+  .three{grid-column:1/-1;display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(24px,3vw,48px)}
+  @media (max-width:820px){.three{grid-template-columns:1fr;max-width:34rem}}
+  .three .row{padding-top:var(--s4);border-top:2px solid var(--ink)}
+  .three .row .k{font-family:var(--wide);font-weight:800;font-size:1.15rem;letter-spacing:-.01em;margin-bottom:8px}
+  .three .row .v{color:var(--ink-dim);font-size:var(--fs-sm);line-height:1.5;max-width:34ch}
+  .three .row .v b{color:var(--ink);font-weight:700}
+  .snap-reach{grid-column:1/-1;margin-top:var(--s9);border-top:2px solid var(--ink);padding-top:var(--s5);display:grid;grid-template-columns:minmax(180px,4fr) 8fr;gap:20px 40px;align-items:baseline}
+  @media (max-width:640px){.snap-reach{grid-template-columns:1fr;gap:14px}}
+  .snap-reach .v{font-family:var(--wide);font-weight:800;font-size:clamp(2.4rem,6vw,4rem);line-height:.9;letter-spacing:-.02em;display:flex;align-items:baseline;gap:.14em}
+  .snap-reach .v .u{width:14px;height:14px;background:var(--amber);align-self:center}
+  .snap-reach .rl{color:var(--ink-dim);font-size:var(--fs-sm);line-height:1.5;max-width:56ch}
+  .snap-reach .rl b{color:var(--ink);font-weight:700}
+  .ambition{grid-column:1/-1;margin-top:var(--s6);display:flex;gap:10px;flex-wrap:wrap}
+  .ambition .t{display:inline-flex;align-items:center;gap:9px;border:1px solid var(--line-strong);background:var(--paper);padding:8px 14px;border-radius:999px;font-size:var(--fs-sm);font-weight:600;color:var(--ink)}
+  .ambition .t .d{width:8px;height:8px;background:var(--amber);border-radius:50%;flex:0 0 auto}
+
+  /* ============ generic section head ============ */
+  .s-head{grid-column:1/-1;max-width:22ch;margin-bottom:var(--s6)}
+  .lead-col{grid-column:1 / span 8;margin-bottom:var(--s6)}
+  @media (max-width:920px){.lead-col{grid-column:1/-1}}
+  .prose{grid-column:1 / span 7}
+  @media (max-width:920px){.prose{grid-column:1/-1}}
+
+  /* the industry data table (context) - pure typography, tabular */
+  .data{grid-column:1/-1;margin-top:var(--s7);border-top:2px solid var(--ink)}
+  .data .di{display:grid;grid-template-columns:minmax(190px,4fr) 8fr;gap:14px 36px;align-items:baseline;padding:22px 0;border-bottom:1px solid var(--line)}
+  @media (max-width:640px){.data .di{grid-template-columns:1fr;gap:8px}}
+  .data .fig{font-family:var(--wide);font-weight:800;font-size:clamp(2.3rem,6vw,4.4rem);line-height:.9;letter-spacing:-.02em;color:var(--ink);position:relative;display:inline-block;justify-self:start}
+  .data .di.hot .fig::after{content:"";position:absolute;left:0;right:0;bottom:-9px;height:6px;background:var(--amber)}
+  .data .lab{font-size:var(--fs-sm);color:var(--ink-dim);line-height:1.45;max-width:44ch}
+  .data .lab b{color:var(--ink);font-weight:700}
+  .srcnote{grid-column:1/-1;margin-top:var(--s4);font-size:var(--fs-micro);letter-spacing:.05em;text-transform:uppercase;color:var(--ink-faint);font-weight:600;display:flex;gap:8px;align-items:baseline}
+  .rolehonest{grid-column:1 / span 9;margin-top:var(--s7);padding-left:20px;border-left:3px solid var(--amber)}
+  .rolehonest p{margin:0;color:var(--ink-dim);font-size:var(--fs-sm);max-width:64ch}
+  .rolehonest b{color:var(--ink)}
+  @media (max-width:920px){.rolehonest{grid-column:1/-1}}
+
+  /* scenario quote */
+  .scenario{grid-column:1/-1;margin:var(--s8) 0 0}
+  .scenario q{display:block;font-family:var(--wide);font-weight:700;font-size:clamp(1.7rem,4vw,3.1rem);line-height:1.06;letter-spacing:-.02em;quotes:none;max-width:18ch}
+  .scenario q::before{content:"\201C"}.scenario q::after{content:"\201D"}
+  .scenario .cap{margin-top:var(--s4);font-size:var(--fs-label);letter-spacing:.1em;text-transform:uppercase;color:var(--ink-dim);font-weight:600;display:flex;gap:8px;align-items:baseline}
+
+  /* research reframe */
+  .reframe{grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr;gap:clamp(24px,4vw,56px);margin-top:var(--s7)}
+  @media (max-width:760px){.reframe{grid-template-columns:1fr;gap:var(--s6)}}
+  .brief{padding-top:var(--s4);border-top:1px solid var(--line-strong)}
+  .brief .k{font-size:var(--fs-micro);letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:var(--ink-faint);margin-bottom:12px}
+  .brief.old .t{font-family:var(--wide);font-size:clamp(1.3rem,2.6vw,1.85rem);font-weight:700;color:var(--ink-faint);text-decoration:line-through;text-decoration-thickness:2px;letter-spacing:-.01em;line-height:1.15}
+  .brief.new .k{color:var(--ink)}
+  .brief.new .t{font-family:var(--wide);font-size:clamp(1.45rem,3vw,2.1rem);font-weight:800;color:var(--ink-2);letter-spacing:-.015em;line-height:1.12}
+  .minis{grid-column:1/-1;display:flex;gap:clamp(28px,5vw,64px);flex-wrap:wrap;margin-top:var(--s8);border-top:2px solid var(--ink);padding-top:var(--s5)}
+  .mini{display:flex;align-items:baseline;gap:12px}
+  .mini .n{font-family:var(--wide);font-weight:800;font-size:clamp(2rem,4vw,3rem);line-height:.9;color:var(--ink)}
+  .mini .sq{width:11px;height:11px;background:var(--amber);align-self:center;flex:0 0 auto}
+  .mini .lab{font-size:var(--fs-micro);letter-spacing:.12em;text-transform:uppercase;color:var(--ink-dim);font-weight:700}
+
+  /* people - three clean cards, one need each (photos, not app UI) */
+  .people{grid-column:1/-1;display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(20px,3vw,36px);margin-top:var(--s7)}
+  @media (max-width:820px){.people{grid-template-columns:1fr;max-width:24rem}}
+  .person{}
+  .person .pf{position:relative;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--paper-3)}
+  .person .pf img{width:100%;aspect-ratio:4/5;object-fit:cover;object-position:center 22%;filter:grayscale(1) contrast(1.03)}
+  .person .badge{position:absolute;left:12px;bottom:11px;font-size:var(--fs-micro);letter-spacing:.1em;text-transform:uppercase;font-weight:800;color:#fff;background:rgba(20,18,12,.62);padding:4px 9px;border-radius:6px;backdrop-filter:blur(2px)}
+  .person .nm{font-family:var(--wide);font-weight:800;font-size:1.2rem;letter-spacing:-.01em;margin:14px 0 3px;display:flex;align-items:baseline;gap:8px}
+  .person .nm .age{font-size:.72em;color:var(--amber-ink);font-weight:800}
+  .person .ro{font-size:var(--fs-micro);letter-spacing:.1em;text-transform:uppercase;color:var(--ink-faint);font-weight:700;margin:0 0 12px}
+  .person .nd{font-size:var(--fs-sm);color:var(--ink-dim);margin:0;line-height:1.5}
+  .person .nd b{color:var(--ink);font-weight:700}
+  .forcing{grid-column:1 / span 9;margin-top:var(--s8);padding-left:20px;border-left:3px solid var(--amber)}
+  .forcing .k{font-size:var(--fs-micro);letter-spacing:.14em;text-transform:uppercase;font-weight:800;color:var(--ink);margin-bottom:10px;display:flex;gap:8px;align-items:baseline}
+  .forcing p{margin:0;font-size:var(--fs-lead);line-height:1.42;font-weight:450;color:var(--ink);max-width:60ch}
+  .forcing p b{font-weight:800}
+  @media (max-width:920px){.forcing{grid-column:1/-1}}
+  .disc{grid-column:1/-1;margin-top:var(--s6);font-size:var(--fs-micro);letter-spacing:.04em;text-transform:uppercase;color:var(--ink-faint);font-weight:600;display:flex;gap:8px;align-items:baseline}
+
+  /* approach ladder */
+  .ladder{grid-column:1/-1;margin-top:var(--s7);border-top:2px solid var(--ink)}
+  .ladder .row{display:grid;grid-template-columns:minmax(88px,1fr) 10fr;gap:20px 32px;align-items:baseline;padding:22px 0;border-bottom:1px solid var(--line)}
+  @media (max-width:560px){.ladder .row{grid-template-columns:1fr;gap:8px}}
+  .ladder .p{font-family:var(--wide);font-weight:800;font-size:clamp(1.6rem,3.4vw,2.4rem);line-height:.9;letter-spacing:-.01em;color:var(--ink-faint)}
+  .ladder .row.p0 .p{color:var(--amber-ink)}
+  .ladder .txt b{font-family:var(--wide);font-size:clamp(1.1rem,2vw,1.4rem);font-weight:800;letter-spacing:-.01em;display:block;margin-bottom:4px}
+  .ladder .txt span{color:var(--ink-dim);font-size:var(--fs-sm)}
+  .split{margin-top:var(--s7)}
+  .process-col{grid-column:1 / span 7}
+  .axes{grid-column:9 / span 4;align-self:start}
+  @media (max-width:920px){.process-col,.axes{grid-column:1/-1}.axes{margin-top:var(--s6)}}
+  .axes .k{font-size:var(--fs-micro);letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:var(--ink-faint);margin-bottom:12px}
+  .axes ul{list-style:none;margin:0;padding:0}
+  .axes li{display:flex;gap:12px;align-items:baseline;padding:11px 0;border-top:1px solid var(--line);font-weight:600;font-size:var(--fs-sm)}
+  .axes li:first-child{border-top:0}
+  .axes li .d{width:9px;height:9px;background:var(--amber);flex:0 0 auto;margin-top:6px}
+
+  /* user testing: real controlled sessions and one field session (field-1.jpg, no on-page label per Neel 2026-07-12), grayscale documentary register, hung on the 12-col grid (mirrors the persona photo treatment) */
+  .testing{grid-column:1/-1;margin-top:var(--s8)}
+  .test-head{display:flex;align-items:center;gap:16px;font-size:var(--fs-label);letter-spacing:.14em;text-transform:uppercase;color:var(--ink-dim);font-weight:700;margin:0 0 var(--s5);max-width:none}
+  .test-head .rule{flex:1;height:1px;background:var(--line-strong);min-width:32px}
+  .test-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(12px,2vw,24px)}
+  @media (max-width:560px){.test-grid{grid-template-columns:1fr}}
+  .test-grid img{width:100%;aspect-ratio:4/3;object-fit:cover;border:1px solid var(--line);border-radius:14px;background:var(--paper-3);filter:grayscale(1) contrast(1.03)}
+  .test-cap{margin:var(--s5) 0 0;font-size:var(--fs-sm);line-height:1.55;color:var(--ink-dim);max-width:56ch}
+  .test-cap b{color:var(--ink);font-weight:700}
+  .test-field{display:grid;grid-template-columns:repeat(12,1fr);gap:clamp(20px,3vw,40px);margin:var(--s5) 0 0}
+  .test-field figure{grid-column:1 / -1;margin:0}
+  .test-field img{width:100%;aspect-ratio:4/3;object-fit:cover;border:1px solid var(--line);border-radius:14px;background:var(--paper-3);filter:grayscale(1) contrast(1.03)}
+
+  /* pull quote */
+  .pull{grid-column:1/-1;margin-top:var(--s8);border-top:2px solid var(--ink);border-bottom:2px solid var(--ink);padding:var(--s6) 0}
+  .pull q{quotes:none;display:block;font-family:var(--wide);font-weight:700;font-size:clamp(1.4rem,3.4vw,2.5rem);line-height:1.1;letter-spacing:-.015em;color:var(--ink-2);max-width:26ch}
+  .pull q::before{content:"\201C"}.pull q::after{content:"\201D"}
+  .pull.small q{font-size:clamp(1.25rem,2.8vw,1.9rem)}
+  .pull .attr{margin-top:var(--s4);font-size:var(--fs-label);letter-spacing:.1em;text-transform:uppercase;color:var(--ink-dim);font-weight:700;display:flex;gap:8px;align-items:baseline}
+
+  /* the ShortCode, set as type */
+  .anatomy{grid-column:1/-1;margin-top:var(--s7)}
+  .code-big{font-family:var(--wide);font-weight:800;font-size:clamp(2.1rem,10vw,7rem);letter-spacing:-.015em;line-height:1;display:inline-flex;align-items:baseline;white-space:nowrap;color:var(--ink-2)}
+  .code-big .caret{margin-right:.02em}
+  .anno{display:grid;grid-template-columns:repeat(3,1fr);gap:0 clamp(20px,3vw,40px);margin-top:var(--s5);max-width:52rem}
+  @media (max-width:760px){.anno{grid-template-columns:1fr;gap:var(--s5)}}
+  .anno .a{padding-top:12px;border-top:3px solid var(--amber)}
+  .anno .a .k{font-size:var(--fs-micro);letter-spacing:.1em;text-transform:uppercase;font-weight:800;color:var(--ink)}
+  .anno .a .v{font-size:var(--fs-sm);color:var(--ink-dim);margin-top:4px;line-height:1.4}
+
+  /* staged sequence of whole screens (create flow) - one idea, airy */
+  .seq{grid-column:1/-1;margin-top:var(--s9)}
+  .seq-row{display:flex;gap:clamp(18px,3vw,40px);justify-content:flex-start;flex-wrap:wrap}
+  .seq figure{margin:0;width:min(220px,66vw);max-width:100%}
+  .seq figure img{width:min(220px,66vw);height:auto;border-radius:18px;border:1px solid var(--line);box-shadow:var(--shadow-float);background:var(--surface)}
+  .seq figure figcaption{width:100%;margin-top:12px;font-size:var(--fs-sm);color:var(--ink-dim);line-height:1.4}
+  .seq figure .step{font-family:var(--wide);font-weight:800;font-size:.9rem;color:var(--amber-ink);margin-right:.4rem;font-feature-settings:"tnum" 1}
+  .seq-cap{grid-column:1/-1;text-align:left;margin:var(--s6) 0 0;font-size:var(--fs-sm);color:var(--ink-faint);max-width:52ch}
+
+  /* the figure.shot pattern - one screen, caption = its width */
+  figure.shot{width:min(300px,74vw);max-width:100%;margin:var(--s7) 0 0}
+  figure.shot:has(img.wide){width:min(520px,88vw)}
+  figure.shot:has(img.card){width:min(440px,90vw)}
+  figure.shot.center{margin-inline:auto}
+  figure.shot img{width:100%;height:auto;border-radius:18px;border:1px solid var(--line);background:var(--surface);box-shadow:var(--shadow-float)}
+  figure.shot img.wide{border-radius:16px}
+  figure.shot img.card{border-radius:16px}
+  figure.shot figcaption{width:100%;margin-top:14px;font-size:var(--fs-sm);line-height:1.5;color:var(--ink-dim)}
+  figure.shot figcaption b{color:var(--ink);font-weight:700;display:block;font-family:var(--wide);font-size:1rem;margin-bottom:2px;letter-spacing:-.01em}
+  .fn-tag{display:inline-block;font-family:var(--wide);font-weight:800;font-size:var(--fs-micro);letter-spacing:.06em;text-transform:uppercase;color:var(--amber-ink);margin-bottom:6px}
+
+  /* directions layout */
+  .dir-a{grid-column:1 / span 6}
+  .dir-b{grid-column:7 / span 6}
+  @media (max-width:920px){.dir-a,.dir-b{grid-column:1/-1}}
+  .dir-b figure.shot{margin-top:0}
+  .dir-photos{grid-column:1/-1;margin-top:var(--s9);display:grid;grid-template-columns:repeat(12,1fr);gap:clamp(20px,3vw,40px);align-items:center}
+  .dir-photos figure.shot{grid-column:1 / span 5;margin-top:0}
+  .dir-photos .dp{grid-column:7 / span 6}
+  @media (max-width:820px){.dir-photos figure.shot,.dir-photos .dp{grid-column:1/-1}}
+  .dir-photos .dp .t{font-family:var(--wide);font-size:clamp(1.3rem,2.6vw,1.9rem);font-weight:800;letter-spacing:-.015em;line-height:1.12;margin-bottom:12px}
+  .dir-key{grid-column:1/-1;margin-top:var(--s8);border-top:2px solid var(--ink);border-bottom:2px solid var(--ink);padding:var(--s6) 0}
+  .dir-key p{font-family:var(--wide);font-size:clamp(1.35rem,3vw,2.2rem);font-weight:800;line-height:1.14;letter-spacing:-.015em;margin:0;max-width:26ch;color:var(--ink-2)}
+
+  /* honesty layout */
+  .hon-a{grid-column:1 / span 6;align-self:center}
+  .hon-b{grid-column:8 / span 5}
+  @media (max-width:920px){.hon-a,.hon-b{grid-column:1/-1}}
+  .hon-b figure.shot{margin-top:0}
+  .hon-carry{grid-column:1 / span 9;margin-top:var(--s7);font-size:var(--fs-lead);font-weight:450;color:var(--ink);line-height:1.4;max-width:52ch}
+  @media (max-width:920px){.hon-carry{grid-column:1/-1}}
+
+  /* system: a typographic list + screens */
+  .syslist{grid-column:1 / span 6;margin-top:var(--s6);border-top:2px solid var(--ink)}
+  @media (max-width:920px){.syslist{grid-column:1/-1}}
+  .syslist .r{display:grid;grid-template-columns:40px 1fr;gap:16px;padding:16px 0;border-bottom:1px solid var(--line);align-items:baseline}
+  .syslist .r .no{font-family:var(--wide);font-weight:800;color:var(--ink-faint);font-feature-settings:"tnum" 1;font-size:.95rem}
+  .syslist .r b{font-family:var(--wide);font-weight:800;font-size:1.05rem;letter-spacing:-.01em}
+  .syslist .r span{color:var(--ink-dim);font-size:var(--fs-sm);display:block;margin-top:2px}
+  .syslist .r .ext{display:inline-block;color:var(--on-amber);background:var(--pill);border-radius:4px;padding:0 6px;font-weight:800;white-space:nowrap;line-height:1.35;vertical-align:baseline}
+  .sys-aside{grid-column:8 / span 5;align-self:start;margin-top:var(--s6)}
+  @media (max-width:920px){.sys-aside{grid-column:1/-1}}
+  .sys-aside figure.shot{margin-top:0}
+  .kit{grid-column:1/-1;margin-top:var(--s9);display:grid;grid-template-columns:1fr 1fr;gap:clamp(24px,5vw,64px);justify-items:start}
+  @media (max-width:720px){.kit{grid-template-columns:1fr;gap:var(--s8)}}
+  .kit figure.shot{margin-top:0;width:min(280px,72vw)}
+  .kit figure.shot img{width:100%}
+
+  /* impact: one lead number + honest prose */
+  .impact-wrap{grid-column:1/-1;display:grid;grid-template-columns:repeat(12,1fr);gap:clamp(24px,4vw,56px);align-items:end;margin-top:var(--s7)}
+  .impact-num{grid-column:1 / span 6}
+  .impact-body{grid-column:8 / span 5}
+  @media (max-width:920px){.impact-num,.impact-body{grid-column:1/-1}}
+  .mega{font-family:var(--wide);font-weight:800;font-size:var(--fs-mega);line-height:.82;letter-spacing:-.04em;color:var(--ink-2);position:relative;display:inline-block}
+  .mega::after{content:"";position:absolute;left:0;bottom:-14px;width:62%;height:10px;background:var(--amber)}
+  .mega .plus{color:var(--ink)}
+  .mega-lab{margin-top:var(--s6);font-size:var(--fs-label);letter-spacing:.12em;text-transform:uppercase;color:var(--ink-dim);font-weight:700}
+  .impact-body p{font-size:var(--fs-body);line-height:1.6;color:var(--ink-dim);max-width:52ch}
+  .impact-body p b{color:var(--ink);font-weight:700}
+  .badge{grid-column:1/-1;justify-self:start;margin-top:var(--s7);display:inline-flex;gap:12px;align-items:center;border:1px solid var(--line-strong);padding:12px 18px;background:var(--paper-2);border-radius:10px}
+  .badge .d{width:9px;height:9px;background:var(--amber);flex:0 0 auto}
+  .badge span{font-size:var(--fs-sm);font-weight:700}
+  .badge span .dim{color:var(--ink-dim);font-weight:500}
+
+  /* reflection */
+  .refl{grid-column:1/-1;margin-top:var(--s6);border-top:2px solid var(--ink)}
+  .refl .r{display:grid;grid-template-columns:minmax(140px,2fr) 9fr;gap:16px 40px;padding:26px 0;border-bottom:1px solid var(--line);align-items:baseline}
+  @media (max-width:640px){.refl .r{grid-template-columns:1fr;gap:8px}}
+  .refl .r .k{font-size:var(--fs-micro);letter-spacing:.14em;text-transform:uppercase;font-weight:800;color:var(--ink);display:inline-flex;align-items:center;gap:8px}
+  .refl .r .k .d{width:9px;height:9px;background:var(--amber);flex:0 0 auto}
+  .refl .r .t{font-size:clamp(1.1rem,2vw,1.5rem);font-weight:600;letter-spacing:-.01em;line-height:1.3;color:var(--ink)}
+  .refl .r .t b{font-weight:800}
+
+  /* colophon */
+  .colophon{background:var(--paper-2);border-top:1px solid var(--line)}
+  .colophon .wrap{padding-block:clamp(52px,7vw,88px)}
+  .colophon .cred{grid-column:1 / span 7}
+  .colophon .note{grid-column:9 / span 4;align-self:start}
+  @media (max-width:920px){.colophon .cred,.colophon .note{grid-column:1/-1}.colophon .note{margin-top:var(--s7)}}
+  .colophon .brand{font-family:var(--wide);font-weight:800;font-size:clamp(1.8rem,5vw,3rem);letter-spacing:-.01em;margin-bottom:var(--s5);display:inline-flex;align-items:center;gap:10px}
+  .colophon .cred p{color:var(--ink-dim);font-size:var(--fs-sm);line-height:1.6;max-width:60ch}
+  .colophon .cred p b{color:var(--ink)}
+  .colophon .cred .fine{font-size:var(--fs-micro);letter-spacing:.02em;color:var(--ink-faint);margin-top:var(--s5)}
+  .colophon .note dl{margin:0;border-top:2px solid var(--ink)}
+  .colophon .note div{display:grid;grid-template-columns:auto 1fr;gap:10px 18px;padding:11px 0;border-bottom:1px solid var(--line)}
+  .colophon .note dt{font-size:var(--fs-micro);letter-spacing:.12em;text-transform:uppercase;color:var(--ink-faint);font-weight:700}
+  .colophon .note dd{margin:0;font-size:var(--fs-sm);color:var(--ink);font-weight:600;text-align:right}
+  .colophon .note dd .u{display:inline-block;width:10px;height:10px;background:var(--amber);vertical-align:baseline;margin-left:6px}
+  .backlink{grid-column:1/-1;display:inline-flex;align-items:center;gap:.5rem;margin-top:var(--s7);font-size:var(--fs-sm);color:var(--ink-dim);text-decoration:none;font-weight:700}
+  .backlink:hover{color:var(--ink)}
+
+  /* calm reveal - CSS transition only, no keyframes; reduced-motion safe */
+  .rise{opacity:0;transform:translateY(16px);transition:opacity .7s var(--ease-out),transform .7s var(--ease-out)}
+  .rise.in{opacity:1;transform:none}
+  @media (prefers-reduced-motion:reduce){.rise{opacity:1;transform:none;transition:none}}
+  /* very narrow phones: drop the secondary eyebrow tag so the section marker never crowds */
+  @media (max-width:430px){.eyebrow .tag,.snap-head .tag{display:none}}
 </style>
 </head>
 <body>
-<main class="wrap">
-  <p class="eyebrow">Pataa · design exploration · 2026-07-12</p>
-  <h1>One case study, six ways to tell it.</h1>
-  <p class="lede">Six dedicated case-study pages for the Pataa work, each a different design direction. Same true story, six distinct visual and interaction languages. Pick the one that reads most like you, and we take it forward.</p>
-  <p class="note"><b>All six are grounded and honest.</b> Every fact traces to the real case study; the only product number anywhere is the app's ~7.5M downloads (framed as its scale, never a result); the app screens are the real ones. No fabricated metrics, no invented quotes. Built to the design doctrine (each derives its own look; none default to the Warp green).</p>
-  <hr class="rule">
-  <div class="grid" id="grid"></div>
-  <p class="foot">Open any page in a new tab. Neel Tengariya · UI/UX designer on the Pataa 2022 redesign team.</p>
+
+<!-- ============ MASTHEAD (running head, not sticky) ============ -->
+<header class="masthead">
+  <div class="wrap row">
+    <div class="brand"><img src="assets/figma/pataa-icon.svg" alt="Pataa" width="26" height="26"><span><span class="caret" aria-hidden="true">^</span>PATAA</span></div>
+    <div class="ident">Pataa Navigations &middot; 2022 Redesign &middot; Case study</div>
+  </div>
+</header>
+
+<main>
+
+<!-- ============ COVER ============ -->
+<section id="cover" aria-label="Cover">
+  <div class="wrap grid12">
+    <div class="cover-copy">
+      <p class="kicker cover-kicker rise"><span class="caret" aria-hidden="true">^</span> Pataa Navigations &middot; 2022 redesign &middot; Android + iOS</p>
+      <h1 class="cover-h1 rise">A trustable address<br><span class="l2">for the last mile.</span></h1>
+      <p class="cover-lead rise">In most of India a written address points at an <span class="em">area</span>, not a place. Pataa gives any spot a short, memorable code that resolves to a single 3&nbsp;by&nbsp;3 metre block, then lets a person explain the last stretch in their own voice.</p>
+      <dl class="meta rise">
+        <div><dt>Role</dt><dd>UI / UX Designer<span class="s">2022 redesign team</span></dd></div>
+        <div><dt>Team</dt><dd>Prefme Matrix / Pataa Navigations</dd></div>
+        <div><dt>Platform</dt><dd>Android + iOS<span class="s">Live consumer app</span></dd></div>
+        <div><dt>My part</dt><dd>Research, synthesis, create-and-share flows, rich-media directions</dd></div>
+        <div class="reach"><dt>Reach</dt><dd><span class="u" aria-hidden="true"></span><span class="v">7.5M+</span><span class="s">downloads the app has reached</span></dd></div>
+      </dl>
+    </div>
+    <div class="cover-figs rise">
+      <figure>
+        <img src="assets/figma/home.png" alt="The Pataa home screen: a map with the black-and-amber pin on one block, a search field, and the amber ShortCode pill." width="760" height="1645" loading="eager">
+        <figcaption>The home screen, from the live app</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<!-- ============ HERO SHOWCASE - 3 whole screens + real component snippets ============ -->
+<section class="showcase" aria-label="The product">
+  <div class="wrap grid12">
+    <div class="show-head rise"><span>The product</span><span class="rule"></span><span>Create, pin, and the live state</span></div>
+    <div class="show-screens rise">
+      <figure>
+        <img src="assets/figma/create-code.png" alt="Creating a ShortCode: an amber field reads TANUJ12345 with a green Pataa is Available note and suggestion chips." width="760" height="1646" loading="lazy">
+        <figcaption><span class="fn">01</span> Create the code</figcaption>
+      </figure>
+      <figure>
+        <img src="assets/figma/create-block.png" alt="Select the accurate block: a map with the black-and-amber pin on one small block at a property entrance." width="760" height="1646" loading="lazy">
+        <figcaption><span class="fn">02</span> Pin the exact block</figcaption>
+      </figure>
+      <figure>
+        <img src="assets/figma/live-sharing.png" alt="Live location active: a maroon card on the home screen reads Sharing Now With KUMAR100, a Stop button, and a one-hour countdown." width="760" height="1645" loading="lazy">
+        <figcaption><span class="fn">03</span> The honest live state</figcaption>
+      </figure>
+    </div>
+    <div class="snips rise">
+      <p class="snips-label">Small pieces of the same app</p>
+      <div class="snips-row">
+        <span class="snip"><img src="assets/figma/snippet-toast.png" alt="A Pataa notification: 50 Pataas created, 5 minutes ago." style="width:150px"></span>
+        <span class="snip"><img src="assets/figma/voice-review.png" alt="A voice-direction card: the landmark Treasure Island Mall and a maroon audio waveform with a play control." style="width:300px"></span>
+        <span class="snip"><img src="assets/figma/now-share.png" alt="The Pataa share-location card: Now Share Your Location Instantly, with a Try Now action." style="width:200px"></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ THE WHOLE SURFACE (showcase1, landscape montage, near the top) ============ -->
+<section aria-label="The whole app surface">
+  <div class="wrap grid12">
+    <div class="show-head rise" style="margin-bottom:0"><span>The whole surface</span><span class="rule"></span></div>
+    <figure class="montage rise">
+      <img src="assets/showcase/showcase1.jpg" alt="A montage of Pataa app screens and components: the create-a-code flow, voice-direction cards, the ShortCode cards, the maroon live-location state, the QR scanner, maps, and notifications.">
+    </figure>
+  </div>
+</section>
+
+<!-- ============ SNAPSHOT - at a glance, typographic ============ -->
+<section aria-labelledby="snap-h">
+  <div class="wrap grid12">
+    <div class="snap-head rise"><span id="snap-h">At a glance</span><span class="tag">The thirty-second version</span></div>
+    <p class="snap-lead rise">A written address gets a rider to your area. Pataa gets them to your <span class="hl">door</span>, without the phone call. It does it three ways.</p>
+    <div class="three rise">
+      <div class="row"><div class="k">The code</div><div class="v">A handle you choose, seven to eleven characters, as easy to remember as a username.</div></div>
+      <div class="row"><div class="k">The block</div><div class="v">Under the code sits one <b>3 by 3 metre block</b>. The door, not the building.</div></div>
+      <div class="row"><div class="k">The voice</div><div class="v">The last few steps, recorded once in your own words, carried with the code.</div></div>
+    </div>
+    <div class="snap-reach rise">
+      <div class="v"><span class="u" aria-hidden="true"></span>7.5M+</div>
+      <div class="rl">Downloads the app has reached on Android and iOS. <b>That is the product's scale, not a metric I drove.</b> I was a UI / UX designer on the 2022 redesign team; the app was already past 3 million downloads by August 2021, before I joined.</div>
+    </div>
+    <div class="ambition rise">
+      <span class="t"><span class="d"></span>Pataa Family, one code per household</span>
+      <span class="t"><span class="d"></span>Drone-delivery pads</span>
+      <span class="t"><span class="d"></span>ISRO weather on the address</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ^01 CONTEXT ============ -->
+<section id="context" aria-labelledby="context-h">
+  <div class="wrap grid12">
+    <div class="eyebrow rise"><span class="num"><span class="caret" aria-hidden="true">^</span>01</span> <span class="lbl">Context</span> <span class="rule"></span><span class="tag">The problem</span></div>
+    <h2 class="title s-head rise" id="context-h">The address is where the journey starts, not where it ends.</h2>
+    <div class="lead-col rise"><p class="lead">Two people feel this on every order. The person who bought something and still gets the call. And the rider making that call forty times a shift, on a bike, in the rain, losing a minute to every vague address.</p></div>
+
+    <div class="scenario rise">
+      <q>I&rsquo;m near your area. Where exactly are you?</q>
+      <div class="cap"><span class="caret" aria-hidden="true">^</span> The call that happens on almost every delivery.</div>
+    </div>
+
+    <div class="data rise" role="group" aria-label="Why the gap is expensive">
+      <div class="di hot"><div class="fig">30%</div><div class="lab">of delivery cost in India is spent on the <b>last mile</b>, the final hop to the door.</div></div>
+      <div class="di"><div class="fig">10&ndash;12%</div><div class="lab">what the same leg costs in countries with <b>structured addresses</b>.</div></div>
+      <div class="di"><div class="fig">$10&ndash;14B</div><div class="lab">estimated yearly drag on the economy from the <b>addressing gap</b>.</div></div>
+    </div>
+    <div class="srcnote rise"><span class="caret" aria-hidden="true">^</span> Context, not our result. Figures: MIT Emerging World and Delhivery. This is the reason the product exists.</div>
+
+    <div class="rolehonest rise">
+      <p>Pataa already existed and was growing before we joined. It had passed <b>3 million downloads by August 2021</b>. We did not invent Pataa, the ShortCode, or the block system. Our job was to redesign the journeys inside it so a first-time user could trust them.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ^02 RESEARCH ============ -->
+<section id="research" aria-labelledby="research-h">
+  <div class="wrap grid12">
+    <div class="eyebrow rise"><span class="num"><span class="caret" aria-hidden="true">^</span>02</span> <span class="lbl">Research</span> <span class="rule"></span><span class="tag">The senior move</span></div>
+    <h2 class="title s-head rise" id="research-h">We rewrote the brief we were handed.</h2>
+    <div class="prose rise">
+      <p class="body">We ran six one-to-one interviews with delivery agents, logistics staff, and everyday travellers, then read every credible source we could find. The obvious brief was to make the address shorter, like a PIN code.</p>
+      <p class="body">The research said that was not enough. A shorter code still leaves the last twenty metres unsolved, and riders navigate by landmarks and cues, not coordinates. So we changed the problem.</p>
+    </div>
+
+    <div class="reframe rise">
+      <div class="brief old"><div class="k">The brief we were given</div><div class="t">Make the address shorter.</div></div>
+      <div class="brief new"><div class="k">The brief we shipped against</div><div class="t">Make an address people can trust at a glance and act on without a phone call.</div></div>
+    </div>
+
+    <div class="minis rise">
+      <div class="mini"><span class="sq" aria-hidden="true"></span><div class="n">6</div><div class="lab">Interviews</div></div>
+      <div class="mini"><span class="sq" aria-hidden="true"></span><div class="n">2</div><div class="lab">Testing rounds</div></div>
+      <div class="mini"><span class="sq" aria-hidden="true"></span><div class="n">1</div><div class="lab">Brief, rewritten</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ^03 PEOPLE ============ -->
+<section id="people" aria-labelledby="people-h">
+  <div class="wrap grid12">
+    <div class="eyebrow rise"><span class="num"><span class="caret" aria-hidden="true">^</span>03</span> <span class="lbl">People</span> <span class="rule"></span><span class="tag">Two sides of one address</span></div>
+    <h2 class="title s-head rise" id="people-h">Every address has two sides.</h2>
+    <div class="lead-col rise"><p class="lead">An address is created by one person and arrived at by another. A second thing, how comfortable each is with a phone, decides what the design has to carry.</p></div>
+
+    <div class="people rise">
+      <div class="person">
+        <div class="pf"><img src="assets/personas/rajesh.jpg" alt="Portrait representing Rajesh, a delivery rider." loading="lazy"><span class="badge">The finder</span></div>
+        <div class="nm">Rajesh <span class="age">28</span></div>
+        <div class="ro">Delivery rider &middot; Delhi</div>
+        <p class="nd"><b>Needs the exact door in one look.</b> A landmark he knows, a route he can start without calling, forty drops a shift with one hand on the bike.</p>
+      </div>
+      <div class="person">
+        <div class="pf"><img src="assets/personas/anjali.jpg" alt="Portrait representing Anjali, a marketing manager." loading="lazy"><span class="badge">The sender</span></div>
+        <div class="nm">Anjali <span class="age">31</span></div>
+        <div class="ro">Marketing manager &middot; Bangalore</div>
+        <p class="nd"><b>Needs one precise thing to share</b> that a stranger can act on without her narrating the way. Orders often, hosts, lives inside maps and chat.</p>
+      </div>
+      <div class="person">
+        <div class="pf"><img src="assets/personas/mohan.jpg" alt="Portrait representing Mohan, a retired schoolteacher." loading="lazy"><span class="badge">Both sides</span></div>
+        <div class="nm">Mohan <span class="age">65</span></div>
+        <div class="ro">Retired teacher &middot; Agartala</div>
+        <p class="nd"><b>Needs to hear the way in his own language.</b> First smartphone, reads slowly, weak signal at home, big obvious buttons, something that works offline.</p>
+      </div>
+    </div>
+
+    <div class="forcing rise">
+      <div class="k"><span class="caret" aria-hidden="true">^</span> Why Mohan set the bar</div>
+      <p>Build something Rajesh can fly through and you get a faster app. Build something Mohan can use at all and you are pushed into <b>voice, more than one language, and buttons large enough to hit without aiming</b>. Each choice, made for the person with the least, quietly made the app better for the two with more.</p>
+    </div>
+    
+  </div>
+</section>
+
+<!-- ============ ^04 APPROACH ============ -->
+<section id="approach" aria-labelledby="approach-h">
+  <div class="wrap grid12">
+    <div class="eyebrow rise"><span class="num"><span class="caret" aria-hidden="true">^</span>04</span> <span class="lbl">Approach</span> <span class="rule"></span><span class="tag">Priorities and divergence</span></div>
+    <h2 class="title s-head rise" id="approach-h">Priorities first, then a lot of bad ideas on purpose.</h2>
+    <div class="lead-col rise"><p class="lead">We sorted the whole surface into four priority bands, so the team argued about the ladder once instead of about every screen.</p></div>
+
+    <div class="ladder rise">
+      <div class="row p0"><div class="p">P0</div><div class="txt"><b>Accurate endpoint navigation</b><span>Land on the right block and resolve the complexity of a real address.</span></div></div>
+      <div class="row"><div class="p">P1</div><div class="txt"><b>Integration and personalization</b><span>Fit into the apps and habits people already have.</span></div></div>
+      <div class="row"><div class="p">P2</div><div class="txt"><b>Multilingual and dynamic routes</b><span>Meet people in their language and adapt to the way they move.</span></div></div>
+      <div class="row"><div class="p">P3</div><div class="txt"><b>Community features</b><span>The layer that only earns its place once the base is trusted.</span></div></div>
+    </div>
+
+    <div class="split grid12" style="grid-column:1/-1">
+      <div class="process-col rise"><p class="body">We ran Crazy Eights, including one round of deliberately terrible ideas to break the pull of the first decent one. Then we dot-voted every idea on three axes. We skipped a separate low-fidelity phase because the sketches were the low fidelity, went straight to mid-fidelity in Figma, and tested twice.</p></div>
+      <div class="axes rise">
+        <div class="k">Dot-voted on</div>
+        <ul>
+          <li><span class="d"></span>Feasible to build</li>
+          <li><span class="d"></span>Wanted by users</li>
+          <li><span class="d"></span>Worth building for the business</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="testing rise">
+      <p class="test-head"><span>Controlled sessions, in the room</span><span class="rule"></span></p>
+      <div class="test-grid">
+        <img src="assets/testing/controlled-1.jpg" alt="A moderated Pataa usability session: a participant holds the app while two team members watch, a whiteboard of product notes standing behind them." loading="lazy">
+        <img src="assets/testing/controlled-2.jpg" alt="A closer moment from the same session: the participant holds a Pataa screen while a teammate points something out." loading="lazy">
+        <img src="assets/testing/controlled-3.jpg" alt="A second participant is handed the app across the table during a moderated test." loading="lazy">
+        <img src="assets/testing/controlled-4.jpg" alt="Another participant works through a task on the app while a team member observes." loading="lazy">
+      </div>
+      <p class="test-cap"><b>Moderated testing.</b> Real sessions with people who stood in for Rajesh, Anjali and Mohan, watching where a screen helped and where it quietly got in the way.</p>
+      <p class="test-head" style="margin-top:var(--s7)"><span>In the field, where an address actually fails</span><span class="rule"></span></p>
+      <div class="test-field">
+        <figure>
+          <img src="assets/testing/field-1.jpg" alt="A field session: a team member shows the app to someone in a quiet doorway, working out an address on the spot." loading="lazy">
+          <figcaption class="test-cap"><b>And out in the world.</b> We also took it to the street and the doorway, where the address breaks in the first place.</figcaption>
+        </figure>
+      </div>
+    </div>
+
+    <blockquote class="pull small rise">
+      <q>The route preview felt a bit cluttered.</q>
+      <div class="attr"><span class="caret" aria-hidden="true">^</span> A user in testing. So we pulled it back. Six moderated sessions, matched to the personas.</div>
+    </blockquote>
+  </div>
+</section>
+
+<!-- ============ ^05 THE SHORTCODE ============ -->
+<section id="shortcode" aria-labelledby="shortcode-h">
+  <div class="wrap grid12">
+    <div class="eyebrow rise"><span class="num"><span class="caret" aria-hidden="true">^</span>05</span> <span class="lbl">The ShortCode</span> <span class="rule"></span><span class="tag">The solution</span></div>
+    <h2 class="title s-head rise" id="shortcode-h">A handle that is also a coordinate.</h2>
+    <div class="lead-col rise"><p class="lead">Seven to eleven characters, yours to choose, as easy to remember as a username. Underneath it is a precise geocode: one 3&nbsp;by&nbsp;3 metre block, out of the roughly fifty-seven trillion that tile the planet.</p></div>
+
+    <div class="anatomy rise">
+      <div class="code-big"><span class="caret" aria-hidden="true">^</span>KUMAR100</div>
+      <div class="anno">
+        <div class="a"><div class="k">The mark</div><div class="v">The amber caret is Pataa. It points at one exact block.</div></div>
+        <div class="a"><div class="k">Your handle</div><div class="v">Memorable, human, custom. You hand someone the name.</div></div>
+        <div class="a"><div class="k">A geocode underneath</div><div class="v">The app resolves the name to a single 3 by 3 metre square.</div></div>
+      </div>
+    </div>
+
+    <div class="seq rise">
+      <div class="seq-row">
+        <figure>
+          <img src="assets/figma/create-code.png" alt="Create screen: choosing a ShortCode. An amber field shows the code with a Pataa is Available note and suggestion chips." width="760" height="1646" loading="lazy">
+          <figcaption><span class="step">1</span>Choose your code, checked as you type.</figcaption>
+        </figure>
+        <figure>
+          <img src="assets/figma/create-details.png" alt="Create screen: the address-details form, with address type, house name and locality fields." width="760" height="1646" loading="lazy">
+          <figcaption><span class="step">2</span>Add the details that make it yours.</figcaption>
+        </figure>
+        <figure>
+          <img src="assets/figma/create-block.png" alt="Create screen: a map with the black-and-amber pin on one block, prompting to select the accurate block at the entrance." width="760" height="1646" loading="lazy">
+          <figcaption><span class="step">3</span>Drop one pin on the exact block.</figcaption>
+        </figure>
+      </div>
+      <p class="seq-cap">Three screens from the create flow, staged on purpose so it never asks for everything at once.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ^06 DIRECTIONS ============ -->
+<section id="directions" aria-labelledby="directions-h">
+  <div class="wrap grid12">
+    <div class="eyebrow rise"><span class="num"><span class="caret" aria-hidden="true">^</span>06</span> <span class="lbl">Directions</span> <span class="rule"></span><span class="tag">The heart of it</span></div>
+    <h2 class="title s-head rise" id="directions-h">The part that removes the phone call.</h2>
+
+    <div class="dir-a rise">
+      <p class="body">This is the piece I cared about most. A code lands you on the block. A person still needs the last few steps: which gate, which side, which landmark. So you record it once. A voice note, <i>go straight from Treasure Island Mall, the blue gate is on your right.</i> A photo of the entrance. A tagged landmark.</p>
+      <p class="body">It plays back on a clean waveform, in English or Hindi, or you type it and the app reads it aloud to whoever is on the way.</p>
+    </div>
+    <div class="dir-b rise">
+      <figure class="shot">
+        <img class="wide" src="assets/figma/voice-review.png" alt="The Pataa Review Voice Direction card: Voice Direction 1, the landmark Treasure Island Mall, and a maroon audio waveform with a play control and a 0:21 to 0:55 timeline." loading="lazy">
+        <figcaption><span class="fn-tag">Fig. 04 &middot; Voice direction</span><b>The waveform, and all.</b> Recorded once, it travels with the code to whoever you send it to.</figcaption>
+      </figure>
+    </div>
+
+    <div class="dir-key rise">
+      <p>Captured once, it travels with the code to everyone you share it with. So &ldquo;call me when you are close&rdquo; happens <span class="hl">zero</span> times, instead of every time.</p>
+    </div>
+
+    <div class="dir-photos rise">
+      <figure class="shot">
+        <img src="assets/figma/create-photo.png" alt="The Pataa Add Property Photos screen: a card to add up to three real photos of the entrance so a visitor can identify the door." width="760" height="1646" loading="lazy">
+        <figcaption><span class="fn-tag">Fig. 05</span><b>Add property photos.</b> Up to three of the entrance, added with the code.</figcaption>
+      </figure>
+      <div class="dp">
+        <div class="t">A photo does what a sentence cannot.</div>
+        <p class="body">For a place that is genuinely hard to describe, the entrance in a picture beats any amount of text. Up to three real photos ride along with the code, so the finder recognises the door before they reach it.</p>
+      </div>
+    </div>
+
+    <blockquote class="pull rise">
+      <q>A voice-guided navigation option would make this a game-changer for drivers.</q>
+      <div class="attr"><span class="caret" aria-hidden="true">^</span> One driver, in a moderated session. He said out loud the bet we had already made.</div>
+    </blockquote>
+  </div>
+</section>
+
+<!-- ============ ^07 HONESTY ============ -->
+<section id="honesty" aria-labelledby="honesty-h">
+  <div class="wrap grid12">
+    <div class="eyebrow rise"><span class="num"><span class="caret" aria-hidden="true">^</span>07</span> <span class="lbl">Honesty</span> <span class="rule"></span><span class="tag">The core</span></div>
+    <h2 class="title s-head rise" id="honesty-h">A state that is not allowed to lie.</h2>
+
+    <div class="hon-a rise">
+      <p class="body">Live-location sharing is the one feature where a quiet, ambiguous design is worse than an ugly one. If the app is broadcasting where you are, it has to say so loudly, and it has to be one tap from off.</p>
+      <p class="body">So while it is on, it is loud. A maroon card sits on the home screen and says exactly what is true: live location active, sharing now, with this person, for this long. A timer counts down in front of you, and the tap that turns it off is right there, not buried three menus deep.</p>
+    </div>
+    <div class="hon-b rise">
+      <figure class="shot">
+        <img src="assets/figma/live-sharing.png" alt="The Pataa home screen with live location active: a maroon card reads Sharing Now With KUMAR100, a Stop button, and a one-hour countdown dial." width="760" height="1645" loading="lazy">
+        <figcaption><span class="fn-tag">Fig. 06 &middot; Live location active</span><b>Nothing hidden or softened.</b> Stop is one tap, and one tap turns it genuinely off.</figcaption>
+      </figure>
+    </div>
+
+    <blockquote class="pull rise">
+      <q>Sharing where you are is not something a design should ever be quiet or dishonest about.</q>
+      <div class="attr"><span class="caret" aria-hidden="true">^</span> Neel Tengariya</div>
+    </blockquote>
+    <p class="hon-carry rise">Pataa is where I first treated honesty as a design material, the same as colour or type or space. It became the centre of how I work now.</p>
+  </div>
+</section>
+
+<!-- ============ ^08 THE SYSTEM ============ -->
+<section id="system" aria-labelledby="system-h">
+  <div class="wrap grid12">
+    <div class="eyebrow rise"><span class="num"><span class="caret" aria-hidden="true">^</span>08</span> <span class="lbl">The System</span> <span class="rule"></span><span class="tag">Around the code</span></div>
+    <h2 class="title s-head rise" id="system-h">Everything built around the code.</h2>
+    <div class="lead-col rise"><p class="lead">The ShortCode is the anchor. The rest of the app is what you do with it once you have one.</p></div>
+
+    <div class="syslist rise">
+      <div class="r"><span class="no">01</span><div><b>One-tap sharing</b><span>Send a precise place the way you send a contact.</span></div></div>
+      <div class="r"><span class="no">02</span><div><b>Time-boxed live location</b><span>An obvious Stop, a countdown you can see. Never on by accident.</span></div></div>
+      <div class="r"><span class="no">03</span><div><b>A family model</b><span>One base code with per-member extensions, <span class="ext">-MUM</span> and <span class="ext">-DAD</span>.</span></div></div>
+      <div class="r"><span class="no">04</span><div><b>QR and Square Code</b><span>Point the camera, land on the block. Even unnamed spots get a code.</span></div></div>
+      <div class="r"><span class="no">05</span><div><b>Favourites and history</b><span>Searchable, split into Searched For and Approached By.</span></div></div>
+    </div>
+    <div class="sys-aside rise">
+      <figure class="shot">
+        <img src="assets/figma/isro-weather.png" alt="The Pataa home with a weather card showing the temperature and a forecast tied to the saved address." width="760" height="1646" loading="lazy">
+        <figcaption><span class="fn-tag">Fig. 07</span><b>Weather on the address.</b> A precise block can carry more than a delivery.</figcaption>
+      </figure>
+    </div>
+
+    <div class="kit rise">
+      <figure class="shot">
+        <img src="assets/figma/square-code.png" alt="The Pataa Square Code screen: a map with a pin on one block and a card showing an alphanumeric square code with save and share." width="760" height="1646" loading="lazy">
+        <figcaption><span class="fn-tag">Fig. 08</span><b>Square Code.</b> A code for places that never had one: a field gate, a shop with no signboard. Point the camera, land on the exact block.</figcaption>
+      </figure>
+      <figure class="shot">
+        <img src="assets/figma/drone.png" alt="The Pataa drone screen: a photographic hero with a flying delivery drone and the line Pataa is the new language for drone deliveries." width="760" height="1646" loading="lazy">
+        <figcaption><span class="fn-tag">Fig. 09</span><b>Drone pad.</b> An early pilot. It only makes sense once an address is a single block instead of an area.</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ^09 IMPACT ============ -->
+<section id="impact" aria-labelledby="impact-h">
+  <div class="wrap grid12">
+    <div class="eyebrow rise"><span class="num"><span class="caret" aria-hidden="true">^</span>09</span> <span class="lbl">Where it stands</span> <span class="rule"></span><span class="tag">Impact, honestly</span></div>
+    <h2 class="title s-head rise" id="impact-h">A real app, and a real redesign.</h2>
+
+    <div class="impact-wrap rise">
+      <div class="impact-num">
+        <div class="mega">7.5M<span class="plus">+</span></div>
+        <div class="mega-lab">Downloads the app has reached, on Android and iOS</div>
+      </div>
+      <div class="impact-body">
+        <p>I helped redesign the journeys people use inside it. I am not going to hand you a wall of percentages I never measured. What I can tell you is that the work was <b>research-driven end to end</b>. Evidence rewrote the brief. We designed for the hardest user first. We tested before we committed. In sessions, users said the geotagging felt precise and helpful.</p>
+      </div>
+    </div>
+    <div class="badge rise"><span class="d"></span><span>Process and product. <span class="dim">Not a dashboard of numbers I cannot stand behind.</span></span></div>
+  </div>
+</section>
+
+<!-- ============ ^10 REFLECTION ============ -->
+<section id="reflection" aria-labelledby="reflection-h">
+  <div class="wrap grid12">
+    <div class="eyebrow rise"><span class="num"><span class="caret" aria-hidden="true">^</span>10</span> <span class="lbl">Reflection</span> <span class="rule"></span><span class="tag">Looking back</span></div>
+    <h2 class="title s-head rise" id="reflection-h">What I would keep, and what I would change.</h2>
+
+    <div class="refl rise">
+      <div class="r">
+        <div class="k"><span class="d"></span> Kept</div>
+        <div class="t">Refusing the obvious brief. <b>&ldquo;Make it shorter&rdquo; would have shipped something worse than &ldquo;make it trustable,&rdquo;</b> and only the research told us the two were different problems.</div>
+      </div>
+      <div class="r">
+        <div class="k"><span class="d"></span> Would change</div>
+        <div class="t">Test the onboarding earlier. Teaching a brand-new idea, <b>a code instead of an address</b>, is the real design problem, and we tested it late.</div>
+      </div>
+      <div class="r">
+        <div class="k"><span class="d"></span> Carried</div>
+        <div class="t">Honesty as a design material. It started here, on the live-location card, and <b>I have kept it in everything since</b>.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ THE INTERFACE (showcase2, tall montage, at the end) ============ -->
+<section aria-label="The interface, every screen">
+  <div class="wrap grid12">
+    <div class="show-head rise" style="margin-bottom:var(--s4)"><span>The interface</span><span class="rule"></span><span>Every screen, one system</span></div>
+    <p class="body prose rise">The full surface, end to end: create, share, find, voice, live-location, notifications, and family.</p>
+    <figure class="montage rise">
+      <img src="assets/showcase/showcase2.jpg" alt="A tall montage of the full Pataa interface: dozens of real screens across the create, share, find, voice, live-location, notifications, and family flows.">
+    </figure>
+  </div>
+</section>
+
 </main>
+
+<!-- ============ COLOPHON ============ -->
+<footer class="colophon">
+  <div class="wrap grid12">
+    <div class="cred rise">
+      <div class="brand"><span class="caret" aria-hidden="true">^</span>PATAA</div>
+      <p><b>Pataa 2022 redesign.</b> UI / UX designer on the team at Prefme Matrix and Pataa Navigations. My contribution: user research and synthesis, the create-and-share flows, and the rich-media direction experience. Team &ldquo;we&rdquo; throughout. I did not invent Pataa, the ShortCode, or the block system. They existed and were growing before I joined; my work was the redesign of the journeys inside the app.</p>
+      <p class="fine">Type is Archivo, set on a twelve-column grid in the International Typographic tradition. The one accent is Pataa amber, with maroon kept only for the states that are genuinely red in the app.</p>
+      <a class="backlink" href="/">&larr; Back to portfolio</a>
+    </div>
+    <div class="note rise">
+      <dl>
+        <div><dt>Type</dt><dd>Archivo</dd></div>
+        <div><dt>System</dt><dd>Twelve-column grid</dd></div>
+        <div><dt>Accent</dt><dd>One signal amber <span class="u" aria-hidden="true"></span></dd></div>
+        <div><dt>Sources</dt><dd>MIT Emerging World, Delhivery</dd></div>
+        <div><dt>Case study</dt><dd>Neel Tengariya, 2026</dd></div>
+      </dl>
+    </div>
+  </div>
+</footer>
+
 <script>
-  const V = [
-    ["02","editorial","The Editorial","A print-magazine feature. Fraunces serif, real app screens set as figures, one idea per page.",["warm ivory","editorial"]],
-    ["03","instrument-panel","The Instrument Panel","A dark technical console. Real app screens on warm near-black, SYS.00 to 09, one amber signal.",["near-black · amber","console"]],
-    ["04","vernacular","The Vernacular","Warm and humanist. Two people stuck on the same phone call, told close to the ground.",["warm cream","humanist"]],
-    ["06","swiss-grid","The Swiss Grid","International Typographic Style. Archivo Expanded, a strict grid, hairline rules, one amber accent.",["paper · amber","discipline"]],
-    ["07","interactive-demo","The Walkthrough","An evidence-led walkthrough. The real app flow shown screen by screen, the product as its own proof.",["warm light","walkthrough"]],
-    ["08","cinematic","The Cinematic","The human story, in daylight. Big Fraunces display, generous space, real screens given room to breathe.",["daylight · serif","cinematic"]],
-  ];
-  const grid = document.getElementById('grid');
-  V.forEach(([n,slug,name,concept,tags])=>{
-    const a = document.createElement('a');
-    a.className='card'; a.href=n+'-'+slug+'.html'; a.target='_blank'; a.rel='noopener';
-    a.setAttribute('aria-label', name+': '+concept);
-    a.innerHTML =
-      '<div class="thumb"><span class="num">'+n+'</span>'+
-      '<img src="thumbs/'+n+'-'+slug+'.png" alt="Preview of the '+name+' direction" loading="lazy"></div>'+
-      '<div class="body"><div class="name">'+name+'</div>'+
-      '<p class="concept">'+concept+'</p>'+
-      '<div class="tags">'+tags.map(t=>'<span class="tag">'+t+'</span>').join('')+'</div></div>';
-    grid.appendChild(a);
-  });
-  const io = new IntersectionObserver((es)=>es.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target);} }), {rootMargin:'0px 0px -8% 0px'});
-  document.querySelectorAll('.card').forEach((c,i)=>{ c.style.transitionDelay=(Math.min(i,8)*40)+'ms'; io.observe(c); });
+  // calm reveal only - no app UI is drawn in code, no keyframes
+  (function(){
+    var els = document.querySelectorAll('.rise');
+    if(!('IntersectionObserver' in window) || matchMedia('(prefers-reduced-motion: reduce)').matches){
+      els.forEach(function(e){e.classList.add('in')}); return;
+    }
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(en){ if(en.isIntersecting){ en.target.classList.add('in'); io.unobserve(en.target);} });
+    }, {rootMargin:'0px 0px -8% 0px', threshold:0.06});
+    els.forEach(function(e){io.observe(e)});
+  })();
 </script>
 </body>
 </html>
