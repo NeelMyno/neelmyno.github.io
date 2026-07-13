@@ -15,7 +15,11 @@
     <!-- Project card hover perf: promote each card to its own compositor
          layer so hover transforms don't repaint inline SVGs. -->
     <style>
-        .projects-list-item-link { will-change: transform; transform: translateZ(0); backface-visibility: hidden; }
+        /* No hover transform on the cards anymore (the inner is frozen at 0.85), so
+           the permanent will-change:transform was pure overhead — 6 cards x pre-allocated
+           GPU layers that punish a memory/GPU-constrained machine. Dropped; translateZ(0)
+           still gives a clean clip layer without the standing resource reservation. */
+        .projects-list-item-link { transform: translateZ(0); backface-visibility: hidden; }
         .projects-list-item-link svg { pointer-events: none; }
         .projects-list-item-link img { pointer-events: none; }
         /* Hover-lag fix: the card art is a complex inline SVG that also
@@ -29,7 +33,6 @@
            The hover still reads via the corner-radius shift, the custom
            cursor lock, and the close affordance. */
         .projects-list-item-link .project-list-img-inner {
-            will-change: transform;
             transform: scale(0.85) translateZ(0);
             backface-visibility: hidden;
             contain: paint;
@@ -55,6 +58,20 @@
         /* Force the Lumen card visible — the Webflow CMS export's runtime hides
            anything past the original item count; reveal it explicitly. */
         #w-node-tho8-capstone-case-study, #w-node-lumen-design-system, #w-node-trk-study, #w-node-tms-study, #w-node-shp-study, #w-node-pta-study { display: block !important; }
+        /* Pataa card-face (.pta-tile) — restored here; it had lived in the inline case-study <style> that was removed when the Pataa modal was excised. Fonts (Satoshi/Manrope/JetBrains) are still loaded by the other case-study blocks. */
+        .pta-tile { position: absolute; inset: 0; width: 100%; height: 100%; background: #EFEDE5; display: flex; align-items: center; justify-content: space-between; gap: 4cqw; padding: 0 6cqw; overflow: hidden; container-type: inline-size; }
+        .pta-tile .tile-copy { flex: 1 1 auto; min-width: 0; }
+        .pta-tile .tile-word { font-family: 'Satoshi','Manrope',-apple-system,sans-serif; font-weight: 900; font-size: max(30px, 11.5cqw); letter-spacing: -0.05em; color: #1A1712; line-height: 0.86; }
+        .pta-tile .tile-word .c { color: #F0A800; }
+        .pta-tile .tile-sub { font-family: 'Satoshi','Manrope',sans-serif; font-size: max(11px, 2.9cqw); color: #46423A; font-weight: 600; margin-top: 2.2cqw; letter-spacing: -0.02em; line-height: 1.25; }
+        .pta-tile .tile-scale { margin-top: 3.6cqw; display: flex; align-items: baseline; gap: 2cqw; flex-wrap: nowrap; }
+        .pta-tile .tile-scale .n { font-family:'Satoshi','Manrope',sans-serif; font-weight: 900; font-size: max(22px, 7cqw); letter-spacing: -0.04em; color: #1A1712; line-height: 1; }
+        .pta-tile .tile-scale .n .p { color: #8A5A00; }
+        .pta-tile .tile-scale .l { font-family:'JetBrains Mono',ui-monospace,monospace; font-size: max(9px, 1.7cqw); font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #8A5A00; max-width: 44cqw; line-height: 1.45; }
+        .pta-tile .tile-shots { flex: 0 0 auto; height: 100%; display: flex; align-items: center; }
+        .pta-tile .tile-shots img { display: block; height: 80%; width: auto; border-radius: 14px; border: 1px solid rgba(26,23,18,0.10); box-shadow: 0 16px 38px rgba(26,23,18,0.22); background: #fff; }
+        .pta-tile .tile-shots img.b { display: none; }
+        @container (max-width: 240px) { .pta-tile .tile-shots { display: none; } }
     </style>
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-0G48YWW7ZE"></script>
@@ -100,8 +117,11 @@
             }
 
             .is-locked {
+                /* The lock morph animates width/height/top/left (layout props) every
+                   frame it runs — cut the window 200ms -> 130ms so a constrained machine
+                   spends less time layout-animating the cursor onto each hovered card. */
                 transition-property: width, height, top, left, opacity;
-                transition-duration: 200ms;
+                transition-duration: 130ms;
                 transition-timing-function: cubic-bezier(.215, .61, .355, 1);
                 opacity: 30% !important;
             }
