@@ -103,6 +103,24 @@
   /* amber highlight on a single key word: ink on bright amber reads ~13:1 (sin 1 safe) */
   .hl{background:var(--pill);color:var(--on-amber);padding:.02em .2em;border-radius:4px;box-decoration-break:clone;-webkit-box-decoration-break:clone;font-weight:800}
 
+  /* ---- site header: Neel's site nav (cross-site consistency), on the paper canvas ---- */
+  .site-nav{background:var(--paper);border-bottom:1px solid var(--line)}
+  .site-nav .snav-inner{display:flex;align-items:center;justify-content:space-between;gap:24px;padding-block:12px}
+  .site-logo{display:inline-flex;align-items:center;line-height:0}
+  .site-logo img{height:26px;width:auto;display:block}
+  .site-links{display:flex;align-items:center;gap:clamp(14px,2.3vw,28px)}
+  .site-links a{font-family:var(--sans);font-size:var(--fs-sm);font-weight:500;text-decoration:none;letter-spacing:-.006em;padding:6px 2px;transition:color .15s var(--ease-out),background .15s var(--ease-out),border-color .15s var(--ease-out)}
+  .site-links a.plain{color:var(--ink-dim)}
+  .site-links a.plain:hover{color:var(--ink)}
+  .site-links a:focus-visible,.site-logo:focus-visible{outline:2px solid var(--amber);outline-offset:4px;border-radius:4px}
+  .site-links a.site-cta{color:var(--ink);font-weight:600;border:1px solid var(--line-strong);border-radius:9px;padding:8px 15px;display:inline-flex;align-items:center;gap:7px}
+  .site-links a.site-cta:hover{background:var(--ink);border-color:var(--ink);color:var(--paper)}
+  .site-cta .arw{font-weight:400;transform:translateY(.4px)}
+  @media (max-width:600px){
+    .site-links a.plain{display:none}
+    .site-links a.site-cta{padding:7px 13px}
+  }
+
   /* ---- masthead: a print-style running head, not sticky chrome ---- */
   .masthead{border-bottom:1px solid var(--line)}
   .masthead .row{display:flex;align-items:center;justify-content:space-between;gap:20px;padding-block:16px}
@@ -393,6 +411,20 @@
 </style>
 </head>
 <body>
+
+<!-- ============ SITE HEADER (Neel's site nav — cross-site consistency) ============ -->
+<header class="site-nav">
+  <div class="wrap snav-inner">
+    <a class="site-logo" href="/" aria-label="Neel Tengariya — home"><img src="/images/home/navbar/logo_full_black_copyright.svg" alt="Neel Tengariya" width="53" height="26"></a>
+    <nav class="site-links" aria-label="Primary">
+      <a class="plain" href="/#home">Home</a>
+      <a class="plain" href="/#work">Work</a>
+      <a class="plain" href="/#experience">Experience</a>
+      <a class="plain" href="/">About</a>
+      <a class="site-cta" href="/resume/neel_tengariya_resume.pdf" download>Download Resume<span class="arw" aria-hidden="true">&rsaquo;</span></a>
+    </nav>
+  </div>
+</header>
 
 <!-- ============ MASTHEAD (running head, not sticky) ============ -->
 <header class="masthead">
