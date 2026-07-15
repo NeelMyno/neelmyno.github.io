@@ -1,0 +1,935 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tho8, a thinking tool that shows its work · Neel Tengariya</title>
+<meta name="description" content="Tho8 (ZettelKraft): an explainable-AI note workspace that links ideas by meaning and shows a one-line reason behind the links it suggests. A University of Michigan HCDE capstone, designed and built solo in React and Supabase.">
+<!-- === site integration: parity with neelmyno.in (favicon, analytics, social preview) === -->
+<link href="/images/web/favicon_32x32.png" rel="shortcut icon" type="image/x-icon">
+<link href="/images/web/webclip_256x256.png" rel="apple-touch-icon">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Tho8, a thinking tool that shows its work">
+<meta property="og:description" content="An explainable-AI note workspace where connection happens by meaning and its link suggestions each carry a one-line reason. UMich HCDE capstone, designed and built solo.">
+<meta property="og:image" content="https://neelmyno.in/tho8/assets/workspace-hero.webp">
+<meta property="og:url" content="https://neelmyno.in/tho8/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Tho8, a thinking tool that shows its work">
+<meta name="twitter:description" content="An explainable-AI note workspace that shows its work. UMich HCDE capstone, built solo in React and Supabase.">
+<meta name="twitter:image" content="https://neelmyno.in/tho8/assets/workspace-hero.webp">
+<!-- Google Analytics — the same property as neelmyno.in, so /tho8/ visits are tracked -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-0G48YWW7ZE"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag() { dataLayer.push(arguments); }
+  gtag('js', new Date());
+  gtag('config', 'G-0G48YWW7ZE');
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<!-- The product's REAL typefaces, loaded only so the design-system specimen shows the truth
+     (Inter = UI/body, Outfit = display, JetBrains Mono = evidence). The page body stays Manrope. -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@500;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  /* ============================================================
+     THO8 · the explainable-AI telling
+     Brand-lock (Step 0), derived from the real product:
+       Canvas: a cool daylight off-white (the product ships a near-black dark,
+               #09090B on zinc neutrals; the case-study page is its calm light
+               inverse), never pure white, never accent-tinted.
+       Accent: this page uses the product's Ember orange #F2572B as its single
+               editorial mark. In the product itself orange is the BRAND accent
+               (selection, focus, the primary action, the live highlight on the
+               graph), a second violet #A78BFA marks the generative-AI moments,
+               and the explainability text (the "because", the evidence) stays
+               neutral zinc. One accent on this page; two, plus neutral, in the app.
+       Type:   the page is set in Manrope as its editorial face; the product
+               itself ships Inter (UI), Outfit (display) and JetBrains Mono
+               (evidence), shown truthfully in the design-system specimen below.
+     No UI is drawn in code. Every screen, diagram and board is a placeholder
+     image at an exact resolution. Captions describe the screen's content.
+     ============================================================ */
+  :root{
+    --paper:#F5F7FA;        /* body canvas, cool off-white, never pure #fff */
+    --paper-2:#ECEFF3;      /* tonal band / figure ground */
+    --paper-3:#E3E7ED;      /* deeper band */
+    --surface:#FFFFFF;      /* elevated card fill only */
+    --ink:#12161C;          /* cool near-black body text, echoes the app canvas */
+    --ink-2:#0B0E13;        /* deepest display ink */
+    --ink-dim:#444C57;      /* body secondary        ~8:1 */
+    --ink-faint:#5E6570;    /* small labels          ~5:1 */
+    --line:#E2E6EC;         /* hairline rules */
+    --line-strong:#CBD1DA;
+    --accent:#F2572B;       /* THE orange, one role: AI / system intelligence */
+    --accent-ink:#C02F06;   /* orange-as-small-text on light, AA (>5:1), from the app primary-700 */
+    --on-accent:#1A0F09;    /* ink ON an orange fill; measured near-black wins here (sin 1) */
+    --amber:var(--accent);  /* alias so any inherited shell rule resolves */
+    --amber-ink:var(--accent-ink);
+    /* neutral elevation only, no accent in any shadow (sin 2) */
+    --shadow-photo:0 2px 18px rgba(11,14,19,.07), 0 1px 3px rgba(11,14,19,.05);
+    --shadow-float:0 20px 50px rgba(11,14,19,.13), 0 4px 12px rgba(11,14,19,.06);
+    --sans:'Manrope','Segoe UI',system-ui,-apple-system,sans-serif;
+    --wide:'Manrope','Segoe UI',system-ui,sans-serif; /* single family; display = heavier weight + tight tracking */
+    --mono:ui-monospace,'SF Mono','JetBrains Mono',Menlo,Consolas,monospace;
+
+    --fs-mega:clamp(3.4rem,11vw,8rem);
+    --fs-display:clamp(2.5rem,6.6vw,5.4rem);
+    --fs-h1:clamp(1.95rem,4.2vw,3.35rem);
+    --fs-h2:clamp(1.45rem,2.6vw,2.05rem);
+    --fs-lead:clamp(1.16rem,1.7vw,1.5rem);
+    --fs-body:clamp(1.02rem,1.05vw,1.1rem);
+    --fs-sm:0.9375rem;
+    --fs-label:0.72rem;
+    --fs-micro:0.6875rem;
+
+    /* one modular spacing scale, 4px base */
+    --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:32px;
+    --s7:48px; --s8:64px; --s9:96px; --s10:128px; --s11:160px;
+
+    --maxw:1160px;
+    --pad:clamp(20px,5vw,60px);
+    --ease-out:cubic-bezier(0.22,1,0.36,1);
+    --ease-out-quint:cubic-bezier(0.23,1,0.32,1);
+    --ease-soft:cubic-bezier(0.32,0.72,0,1);
+  }
+
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+  body{
+    margin:0;background:var(--paper);color:var(--ink);
+    font-family:var(--sans);font-size:var(--fs-body);line-height:1.62;
+    font-feature-settings:"kern" 1,"liga" 1;
+    -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
+    overflow-x:hidden;
+  }
+  img{display:block;max-width:100%;height:auto}
+  ::selection{background:#FFE1D3;color:var(--on-accent)}
+  a{color:var(--accent-ink);text-underline-offset:.16em;text-decoration-thickness:.06em}
+  :focus-visible{outline:2.5px solid var(--accent-ink);outline-offset:3px;border-radius:4px}
+  /* tabular figures wherever a number carries meaning */
+  .tnum,.num,.meta dd,.stat .n,.mini .n,.ladder .rk,.loop .n,.spec-res,.ledger .big,.data .fig,.build b{font-feature-settings:"tnum" 1,"lnum" 1}
+
+  /* ---- rails: one centered container, one left edge for the whole document ---- */
+  .wrap{max-width:var(--maxw);margin-inline:auto;padding-inline:var(--pad)}
+  .grid12{display:grid;grid-template-columns:repeat(12,1fr);gap:clamp(20px,3vw,40px)}
+  .measure{max-width:58ch}
+  section{padding-block:clamp(56px,9vw,120px);position:relative}
+  section + section{border-top:1px solid var(--line)}
+
+  /* ---- type ---- */
+  h1,h2,h3{margin:0;font-weight:800}
+  .kicker{font-family:var(--sans);font-size:var(--fs-label);font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-dim);margin:0}
+  .dot{color:var(--accent)}
+  .eyebrow{grid-column:1/-1;display:flex;align-items:center;gap:16px;font-size:var(--fs-label);letter-spacing:.14em;text-transform:uppercase;color:var(--ink-dim);font-weight:700;margin:0 0 var(--s7)}
+  .eyebrow .num{font-family:var(--wide);font-weight:800;letter-spacing:.02em;color:var(--ink);font-feature-settings:"tnum" 1}
+  .eyebrow .num i{font-style:normal;color:var(--accent)}
+  .eyebrow .lbl{color:var(--ink);font-weight:800;letter-spacing:.12em}
+  .eyebrow .rule{flex:1;height:1px;background:var(--line-strong)}
+  .eyebrow .tag{color:var(--ink-faint);font-weight:600}
+  .title{font-family:var(--wide);font-weight:800;font-size:var(--fs-h1);line-height:1.04;letter-spacing:-.022em;color:var(--ink-2);max-width:20ch;text-wrap:balance}
+  .lead{font-size:var(--fs-lead);line-height:1.4;font-weight:500;color:var(--ink);letter-spacing:-.005em;max-width:34ch}
+  p{margin:0 0 1.05em;max-width:62ch}
+  /* text-wrap:pretty pulls the last word up so body copy never ends on a one-word runt
+     (Chromium honors it; a graceful no-op elsewhere). Headings use balance (see .title). */
+  p,li,.stat .c .l,.mini .lab{text-wrap:pretty}
+  .body{color:var(--ink-dim);max-width:58ch}
+  .body b,.lead b{color:var(--ink);font-weight:700}
+  .dim{color:var(--ink-dim)}.faint{color:var(--ink-faint)}
+  /* the ink highlight on a single key word: soft orange wash, ink stays near-black (~13:1) */
+  .hl{background:#FFE1D3;color:var(--on-accent);padding:.02em .22em;border-radius:5px;box-decoration-break:clone;-webkit-box-decoration-break:clone;font-weight:700}
+
+  /* the signature "because" device: the product's own evidence line, made into the page's margin note.
+     It reads as editorial page-chrome (an inset rule + mono), never as a replica of the app suggestion chip. */
+  .because{grid-column:1 / -1;font-family:var(--mono);font-size:var(--fs-sm);line-height:1.5;color:var(--ink-dim);
+    border-left:2px solid var(--accent);padding:2px 0 2px 16px;max-width:52ch;margin:var(--s5) 0 0}
+  .because em{font-style:normal;color:var(--accent-ink);font-weight:600}
+  .because b{color:var(--ink);font-weight:600}
+
+  /* ============================================================
+     SITE NAV: the REAL homepage component, rules copied verbatim from
+     css/index_mini.css so /tho8/ is a true extension of neelmyno.in:
+     same markup, same Inter Display font, same 1200px container, same
+     fixed+blur bar, same .cta--nav button, same nav-link hover. Generic
+     selectors are scoped under .nav so nothing bleeds into the case study.
+     ============================================================ */
+  @font-face{font-family:"Inter Display";src:url("https://assets.website-files.com/6279077bf697b924fac6e205/636dfe8261df29a8a191ebc6_Inter-Display.woff2") format("woff2");font-weight:400;font-style:normal;font-display:swap}
+  @font-face{font-family:"Inter Display";src:url("https://assets.website-files.com/6279077bf697b924fac6e205/636dfe98b0633015995d2554_Inter-DisplayBold.woff2") format("woff2");font-weight:700;font-style:normal;font-display:swap}
+  @font-face{font-family:"Inter Display";src:url("https://assets.website-files.com/6279077bf697b924fac6e205/636dfea34a3e3c1b85745887_Inter-DisplayLight.woff2") format("woff2");font-weight:300;font-style:normal;font-display:swap}
+  .nav{position:fixed;top:0;right:0;bottom:auto;left:0;z-index:100;background-color:hsla(0,0%,100%,.7);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);transition:background-color .2s,color .2s;font-family:"Inter Display",sans-serif;font-size:16px;line-height:1.5}
+  .nav.dark{color:#ecedee}
+  .nav .page-padding{padding-right:40px;padding-left:40px}
+  .nav .container{width:100%;max-width:1200px;margin-right:auto;margin-left:auto}
+  .nav-inner{position:relative;display:flex;padding-top:6px;padding-bottom:6px;justify-content:center;align-items:center;border-bottom:1px solid rgba(2,23,53,.1);transition:border-color .2s}
+  .nav-logo{position:absolute;top:auto;right:auto;bottom:auto;left:0;z-index:102;display:flex;align-items:center;margin-left:-16px;padding:6px 16px;font-size:17px;text-decoration:none;color:inherit}
+  .nav-logo img{width:60px;height:auto;display:block}
+  .nav-menu{display:flex;align-items:center}
+  .nav-link{position:relative;z-index:102;display:inline-block;padding:8px 14px;color:#687076;text-decoration:none}
+  .nav-link:hover{color:#151718}
+  .nav .cta{display:flex;align-items:center;font-weight:500;padding:8px 20px;color:#006adc;font-size:20px;text-decoration:none}
+  .nav .cta.cta--nav{position:absolute;right:0;z-index:102;margin-right:-20px;font-size:16px}
+  .nav .cta-chevron{display:flex;align-items:center;margin-left:6px}
+  .nav .cta-chevron svg{display:block}
+  /* the nav is fixed, like the homepage — offset the page so the masthead clears it (nav is 53px tall) */
+  body{padding-top:53px}
+  @media screen and (max-width:767px){
+    .nav .page-padding{padding-right:20px;padding-left:20px}
+    .nav-inner{justify-content:space-between}
+    .nav-logo{position:static;margin-left:0;padding-left:0}
+    .nav-menu{display:none}
+    .nav .cta.cta--nav{position:static;margin-right:0;font-size:15px}
+  }
+
+  /* ---- masthead: a running head, not sticky chrome ---- */
+  .masthead{border-bottom:1px solid var(--line)}
+  .masthead .row{display:flex;align-items:center;justify-content:space-between;gap:20px;padding-block:16px}
+  .brand{font-family:var(--wide);font-weight:800;letter-spacing:-.01em;font-size:1.15rem;display:inline-flex;align-items:baseline;gap:1px}
+  .brand .p{color:var(--accent)}
+  .masthead .ident{font-size:var(--fs-micro);letter-spacing:.13em;text-transform:uppercase;color:var(--ink-faint);font-weight:600;text-align:right}
+  @media (max-width:560px){.masthead .ident{display:none}}
+
+  /* ============ COVER ============ */
+  #cover{padding-block:clamp(40px,6vw,80px) clamp(48px,7vw,96px)}
+  .cover-copy{grid-column:1 / span 7}
+  .cover-side{grid-column:9 / span 4;align-self:end}
+  @media (max-width:920px){.cover-copy{grid-column:1/-1}.cover-side{grid-column:1/-1;margin-top:var(--s7)}}
+  .cover-kicker{margin-bottom:var(--s6)}
+  .cover-h1{font-family:var(--wide);font-weight:800;font-size:var(--fs-display);line-height:1.0;letter-spacing:-.032em;color:var(--ink-2);margin:0 0 var(--s5);text-wrap:balance}
+  .cover-h1 .l2{color:var(--ink)}
+  .cover-lead{font-size:var(--fs-lead);line-height:1.38;font-weight:500;color:var(--ink);max-width:36ch;margin:0 0 var(--s3)}
+  .cover-lead b{font-weight:700}
+  .cover-sub{font-size:var(--fs-sm);color:var(--ink-faint);font-weight:600;letter-spacing:.02em;margin:0 0 var(--s6)}
+  /* meta table hung on a strong ink rule */
+  .meta{border-top:2px solid var(--ink);margin:0;max-width:40rem}
+  .meta div{display:grid;grid-template-columns:7.5rem 1fr;gap:10px 18px;padding:12px 0;border-bottom:1px solid var(--line)}
+  .meta dt{font-size:var(--fs-micro);letter-spacing:.13em;text-transform:uppercase;color:var(--ink-faint);font-weight:700;padding-top:3px}
+  .meta dd{margin:0;font-size:var(--fs-sm);font-weight:600;color:var(--ink);line-height:1.45}
+  .meta dd b{color:var(--ink);font-weight:700}
+  /* the honest build strip on the cover side, clearly scale not impact */
+  .build{align-self:end}
+  .build .k{font-size:var(--fs-micro);letter-spacing:.14em;text-transform:uppercase;color:var(--ink-faint);font-weight:700;margin-bottom:var(--s4)}
+  .build ul{list-style:none;margin:0;padding:0;border-top:2px solid var(--ink)}
+  .build li{display:flex;align-items:baseline;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}
+  .build li b{font-family:var(--wide);font-weight:800;font-size:1.35rem;letter-spacing:-.01em;color:var(--ink);flex:0 0 auto;min-width:3.2ch;text-align:right}
+  .build li span{font-size:var(--fs-sm);color:var(--ink-dim);line-height:1.35}
+
+  /* ---- the placeholder image system: neutral labeled box at exact aspect, no fake UI, no accent ---- */
+  figure.shot{margin:0}
+  .ph{position:relative;aspect-ratio:var(--ar,16/10);border-radius:16px;overflow:hidden;
+    background:var(--paper-2);border:1px solid var(--line-strong);box-shadow:var(--shadow-photo);
+    transition:transform .16s var(--ease-out),box-shadow .16s var(--ease-out),border-color .16s var(--ease-out)}
+  /* the img starts invisible (no broken-glyph while the asset is unbuilt); the spec label shows.
+     When a real asset loads, JS adds .loaded → the image fades in and the label is removed. */
+  .ph img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:2;opacity:0;transition:opacity .3s var(--ease-out)}
+  .ph-spec{position:absolute;inset:0;z-index:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;text-align:center;padding:24px;font-family:var(--mono);color:var(--ink-faint)}
+  .ph-spec .spec-res{font-size:1.05rem;color:var(--ink-dim);font-weight:600;letter-spacing:.06em}
+  .ph-spec .spec-lbl{font-size:var(--fs-sm);max-width:44ch;line-height:1.5}
+  .ph.loaded img{opacity:1}
+  .ph.loaded .ph-spec{display:none}
+  a.shot-link .ph:hover,figure.shot .ph:hover{transform:translateY(-2px);box-shadow:var(--shadow-float);border-color:var(--line)}
+  figcaption{width:100%;margin-top:14px;font-size:var(--fs-sm);line-height:1.5;color:var(--ink-dim)}
+  figcaption b{color:var(--ink);font-weight:700;display:block;font-family:var(--wide);font-size:1rem;margin-bottom:3px;letter-spacing:-.01em}
+  .fn-tag{display:inline-block;font-family:var(--wide);font-weight:800;font-size:var(--fs-micro);letter-spacing:.08em;text-transform:uppercase;color:var(--accent-ink);margin-bottom:7px}
+  .fn-tag .u{display:inline-block;width:7px;height:7px;background:var(--accent);margin-right:7px;vertical-align:baseline}
+
+  /* full-bleed hero shot under the cover copy. `figure.hero-shot` (element+class) is used so this
+     margin beats `figure.shot{margin:0}`, which otherwise nullifies it and collapses the gap to the
+     bare 40px grid row-gap; ~72 total matches the page's copy/lead-to-figure standard. */
+  figure.hero-shot{grid-column:1/-1;margin-top:var(--s6)}
+
+  /* ============ SNAPSHOT (the short version) — typographic ============ */
+  .snap-head{grid-column:1/-1;display:flex;align-items:baseline;gap:16px;font-size:var(--fs-label);letter-spacing:.16em;text-transform:uppercase;color:var(--ink-dim);font-weight:800;margin-bottom:var(--s6)}
+  .snap-head .tag{color:var(--ink-faint);font-weight:600;letter-spacing:.1em}
+  .snap-lead{grid-column:1 / span 10;font-family:var(--wide);font-size:clamp(1.5rem,3.3vw,2.45rem);font-weight:700;line-height:1.14;letter-spacing:-.02em;margin:0 0 var(--s8);color:var(--ink-2)}
+  @media (max-width:920px){.snap-lead{grid-column:1/-1}}
+  .stat{grid-column:1/-1;display:grid;grid-template-columns:repeat(5,1fr);gap:clamp(16px,2.4vw,36px);border-top:2px solid var(--ink);padding-top:var(--s5)}
+  @media (max-width:820px){.stat{grid-template-columns:repeat(2,1fr);gap:var(--s6) var(--s7)}}
+  @media (max-width:420px){.stat{grid-template-columns:1fr}}
+  .stat .c .n{font-family:var(--wide);font-weight:800;font-size:clamp(2rem,4vw,2.9rem);line-height:.95;letter-spacing:-.02em;color:var(--ink);display:flex;align-items:baseline;gap:.16em}
+  .stat .c .n .u{width:11px;height:11px;background:var(--accent);align-self:center;flex:0 0 auto}
+  .stat .c .l{margin-top:10px;font-size:var(--fs-sm);color:var(--ink-dim);line-height:1.4;max-width:22ch}
+  .stat .c .l b{color:var(--ink);font-weight:700}
+
+  /* ============ generic section heads ============ */
+  .s-head{grid-column:1/-1;max-width:24ch;margin-bottom:var(--s6)}
+  .lead-col{grid-column:1 / span 8;margin-bottom:var(--s6)}
+  @media (max-width:920px){.lead-col{grid-column:1/-1}}
+  .prose{grid-column:1 / span 7}
+  @media (max-width:920px){.prose{grid-column:1/-1}}
+
+  /* pull quote */
+  /* margin-inline:0 resets the browser-default blockquote margin (1em 40px), so the pull
+     quote hangs off the same left edge as every other block — the one-left-edge discipline. */
+  .pull{grid-column:1/-1;margin:var(--s8) 0 0;border-top:2px solid var(--ink);border-bottom:2px solid var(--ink);padding:var(--s6) 0}
+  .pull q{quotes:none;display:block;font-family:var(--wide);font-weight:700;font-size:clamp(1.4rem,3.3vw,2.4rem);line-height:1.12;letter-spacing:-.018em;color:var(--ink-2);max-width:26ch;text-wrap:balance}
+  .pull q::before{content:"\201C"}.pull q::after{content:"\201D"}
+  .pull.small q{font-size:clamp(1.2rem,2.6vw,1.8rem)}
+  .pull .attr{margin-top:var(--s4);font-size:var(--fs-label);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-dim);font-weight:700;display:flex;gap:9px;align-items:baseline}
+  .pull .attr .u{width:8px;height:8px;background:var(--accent);flex:0 0 auto;align-self:center}
+
+  /* the three breaking points — a ruled list, not cards */
+  .breaks{grid-column:1/-1;margin-top:var(--s7);border-top:2px solid var(--ink)}
+  .breaks .b{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,6fr);gap:16px 40px;align-items:baseline;padding:24px 0;border-bottom:1px solid var(--line)}
+  @media (max-width:720px){.breaks .b{grid-template-columns:1fr;gap:8px}}
+  .breaks .b .t{font-family:var(--wide);font-weight:800;font-size:clamp(1.2rem,2.2vw,1.55rem);letter-spacing:-.015em;line-height:1.2;color:var(--ink)}
+  .breaks .b .d{color:var(--ink-dim);font-size:var(--fs-sm);line-height:1.55}
+  .breaks .b .d b{color:var(--ink);font-weight:700}
+
+  /* research: five phases + minis + benchmark */
+  .phases{grid-column:1/-1;margin-top:var(--s7);border-top:2px solid var(--ink)}
+  .phases .r{display:grid;grid-template-columns:2.4rem minmax(0,4fr) minmax(0,7fr);gap:16px 32px;align-items:baseline;padding:24px 0;border-bottom:1px solid var(--line)}
+  @media (max-width:720px){.phases .r{grid-template-columns:2.4rem 1fr;gap:6px 20px}.phases .r .ph-d{grid-column:2}}
+  .phases .r .no{font-family:var(--wide);font-weight:800;color:var(--accent-ink);font-feature-settings:"tnum" 1;font-size:1rem}
+  .phases .r b{font-family:var(--wide);font-weight:800;font-size:1.1rem;letter-spacing:-.01em;color:var(--ink)}
+  .phases .r .ph-d{color:var(--ink-dim);font-size:var(--fs-sm);line-height:1.5}
+  .minis{grid-column:1/-1;display:flex;gap:clamp(24px,4vw,56px);flex-wrap:wrap;margin-top:var(--s8);border-top:2px solid var(--ink);padding-top:var(--s5)}
+  /* center-align so the accent square tracks the number's optical center regardless of how
+     many lines the label wraps to — otherwise a 3-line label dragged the square below a 2-line one. */
+  .mini{display:flex;align-items:center;gap:12px}
+  .mini .n{font-family:var(--wide);font-weight:800;font-size:clamp(1.8rem,3.6vw,2.7rem);line-height:.9;color:var(--ink)}
+  .mini .sq{width:11px;height:11px;background:var(--accent);align-self:center;flex:0 0 auto}
+  .mini .lab{font-size:var(--fs-micro);letter-spacing:.1em;text-transform:uppercase;color:var(--ink-dim);font-weight:700;max-width:14ch}
+  .bench{grid-column:1/-1;margin-top:var(--s9)}
+  .bench-head{margin-bottom:var(--s5)}
+  /* the benchmark is a sub-section of Research, so its heading steps DOWN one level from the
+     section H2 (--fs-h1) to --fs-h2 — clearly subordinate. The ch-measure crush is removed
+     (a `ch` cap on the wrapper resolves at body font, ~16px, and jammed the 33px heading into
+     ~320px); the heading now sits on one clean line at desktop and balances when it wraps. */
+  .bench-head .title{font-size:var(--fs-h2);line-height:1.14;letter-spacing:-.014em;max-width:40ch}
+  .bench-take{grid-column:1/-1;display:flex;gap:10px;flex-wrap:wrap;margin-top:var(--s6)}
+  .bench-take .t{display:inline-flex;align-items:center;gap:9px;border:1px solid var(--line-strong);background:var(--paper);padding:8px 14px;border-radius:999px;font-size:var(--fs-sm);font-weight:600;color:var(--ink)}
+  /* square marker, matching every other accent bullet on the page (one marker vocabulary). */
+  .bench-take .t .d{width:8px;height:8px;background:var(--accent);flex:0 0 auto}
+  .artifact{grid-column:1/-1;margin-top:var(--s7)}
+  .artifact.narrow{grid-column:1 / span 9}
+  @media (max-width:920px){.artifact.narrow{grid-column:1/-1}}
+
+  /* editorial diagram: a LIGHT design artifact (a real research/IA visual), rendered as an image
+     and sitting seamlessly on the page — deliberately NOT a dark screen card. Diagrams carry the
+     ideas that used to be walls of text; product screens stay the dark carded .ph figures. */
+  .diagram{grid-column:1/-1;margin:var(--s7) 0 0}
+  .diagram.narrow{grid-column:2 / span 10}
+  @media (max-width:920px){.diagram.narrow{grid-column:1/-1}}
+  .diagram img{display:block;width:100%;height:auto}
+  .diagram figcaption{width:100%;margin-top:16px;font-size:var(--fs-sm);line-height:1.5;color:var(--ink-dim);text-align:center}
+  .diagram figcaption b{color:var(--ink);font-weight:700}
+
+  /* people: a typographic roster, no invented faces */
+  .roster{grid-column:1/-1;margin-top:var(--s7);border-top:2px solid var(--ink);display:grid;grid-template-columns:repeat(3,1fr);gap:0}
+  @media (max-width:720px){.roster{grid-template-columns:1fr}}
+  .roster .p{padding:20px 24px;border-bottom:1px solid var(--line);border-right:1px solid var(--line);display:flex;gap:14px;align-items:baseline}
+  .roster .p:nth-child(3n){border-right:0}
+  /* first cell of each row hugs the page left edge; inner cells get symmetric 24px gutters
+     so a number never kisses the column divider on its left. */
+  .roster .p:nth-child(3n+1){padding-left:0}
+  /* single-column at mobile: zero the desktop inner-cell gutter too, so every row hangs flush
+     at the page left edge (otherwise rows 2,3,5,6 keep their 24px gutter and the edge zigzags). */
+  @media (max-width:720px){.roster .p{border-right:0;padding-left:0}}
+  .roster .p .no{font-family:var(--mono);font-size:var(--fs-sm);color:var(--accent-ink);font-weight:600;flex:0 0 auto}
+  .roster .p .who{font-family:var(--wide);font-weight:700;font-size:1.05rem;letter-spacing:-.01em;color:var(--ink);line-height:1.25}
+  .roster .p .who span{display:block;font-family:var(--sans);font-weight:600;font-size:var(--fs-micro);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-faint);margin-top:5px}
+
+  /* the trust ladder — ranked type, strongest first, orange marks the top rung */
+  .ladder{grid-column:1/-1;margin-top:var(--s7);border-top:2px solid var(--ink)}
+  .ladder .row{display:grid;grid-template-columns:3.2rem minmax(0,4fr) minmax(0,6fr);gap:18px 32px;align-items:baseline;padding:24px 0;border-bottom:1px solid var(--line)}
+  @media (max-width:640px){.ladder .row{grid-template-columns:2.4rem 1fr;gap:6px 18px}.ladder .row .rd{grid-column:2}}
+  .ladder .rk{font-family:var(--wide);font-weight:800;font-size:clamp(1.5rem,3vw,2.1rem);line-height:.9;letter-spacing:-.01em;color:var(--ink-faint)}
+  .ladder .row.top .rk{color:var(--accent-ink)}
+  .ladder .rt{position:relative;font-family:var(--wide);font-weight:800;font-size:clamp(1.1rem,2vw,1.4rem);letter-spacing:-.012em;line-height:1.15;color:var(--ink)}
+  /* the top-rung marker hangs into the rank→title gutter (absolute), so the marked title text
+     starts on the SAME x as rows 02-04 instead of being shoved 20px right by the in-flow square. */
+  .ladder .row.top .rt .u{position:absolute;left:-22px;top:.4em;width:10px;height:10px;background:var(--accent)}
+  .ladder .rd{color:var(--ink-dim);font-size:var(--fs-sm);line-height:1.5}
+  .ladder .rd b{color:var(--ink);font-weight:700}
+
+  /* four loops — one ruled system */
+  .loops{grid-column:1/-1;margin-top:var(--s7);border-top:2px solid var(--ink)}
+  .loop{display:grid;grid-template-columns:2.6rem minmax(0,4fr) minmax(0,7fr);gap:18px 32px;align-items:baseline;padding:24px 0;border-bottom:1px solid var(--line)}
+  @media (max-width:760px){.loop{grid-template-columns:2.6rem 1fr;gap:8px 18px}.loop .lf{grid-column:2}}
+  .loop .n{font-family:var(--wide);font-weight:800;color:var(--accent-ink);font-feature-settings:"tnum" 1;font-size:1.05rem}
+  .loop .lt b{font-family:var(--wide);font-weight:800;font-size:clamp(1.2rem,2.2vw,1.55rem);letter-spacing:-.015em;color:var(--ink);display:block}
+  .loop .lt .thr{margin-top:6px;font-size:var(--fs-sm);color:var(--accent-ink);font-weight:700;font-feature-settings:"tnum" 1}
+  .loop .lf{color:var(--ink-dim);font-size:var(--fs-sm);line-height:1.55}
+  .loop .lf b{color:var(--ink);font-weight:700}
+  .surface-note{grid-column:1 / span 9;margin-top:var(--s7);padding-left:20px;border-left:3px solid var(--accent)}
+  .surface-note p{margin:0;font-size:var(--fs-lead);line-height:1.42;font-weight:500;color:var(--ink);max-width:56ch}
+  .surface-note p b{font-weight:800}
+  /* a figure right after a surface-note (loops) would otherwise butt against it at the bare 40px
+     grid-gap — give it the ~72 image-approach gap the rest of the page uses. */
+  .surface-note + figure.shot{margin-top:var(--s6)}
+  @media (max-width:920px){.surface-note{grid-column:1/-1}}
+
+  /* a two-up product row: image beside prose, alternating side */
+  .feat{grid-column:1/-1;display:grid;grid-template-columns:repeat(12,1fr);gap:clamp(24px,3.5vw,52px);align-items:center;margin-top:var(--s8)}
+  /* #flows is the one section with no lead, so its first feature sits directly under the title;
+     the default .feat top margin (tuned to follow a lead) left a ~136px void. Tighten it so the
+     title-to-content gap reads intentional (~88), not like a deleted element. */
+  #flows .feat:not(.flip){margin-top:var(--s4)}
+  .feat .fig{grid-column:1 / span 7}
+  .feat .txt{grid-column:8 / span 5}
+  .feat.flip .fig{grid-column:6 / span 7}
+  .feat.flip .txt{grid-column:1 / span 5;grid-row:1}
+  @media (max-width:920px){.feat .fig,.feat .txt,.feat.flip .fig,.feat.flip .txt{grid-column:1/-1;grid-row:auto}}
+  .feat .txt h3{font-family:var(--wide);font-weight:800;font-size:clamp(1.3rem,2.4vw,1.8rem);letter-spacing:-.018em;line-height:1.14;color:var(--ink-2);margin:0 0 var(--s4)}
+  .feat .txt p{color:var(--ink-dim);font-size:var(--fs-sm);line-height:1.6;max-width:44ch}
+  .feat .txt p b{color:var(--ink);font-weight:700}
+
+  /* explainability — the heart, a large centered screen */
+  .heart-shot{grid-column:1/-1;margin-top:var(--s7)}
+  .heart-shot.narrow{grid-column:2 / span 10}
+  @media (max-width:920px){.heart-shot.narrow{grid-column:1/-1}}
+  .heart-carry{grid-column:1 / span 9;margin-top:var(--s7);font-size:var(--fs-lead);font-weight:500;color:var(--ink);line-height:1.4;max-width:52ch}
+  .heart-carry b{font-weight:800}
+  @media (max-width:920px){.heart-carry{grid-column:1/-1}}
+
+  /* honesty ledger — the signature centerpiece */
+  .ledger{grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr;gap:clamp(28px,4vw,64px);margin-top:var(--s7)}
+  @media (max-width:760px){.ledger{grid-template-columns:1fr;gap:var(--s7)}}
+  .ledger .col{padding-top:var(--s4);border-top:2px solid var(--ink)}
+  .ledger .col.prove{border-top-color:var(--accent)}
+  .ledger .col .k{font-size:var(--fs-micro);letter-spacing:.14em;text-transform:uppercase;font-weight:800;margin-bottom:var(--s5);display:inline-flex;align-items:center;gap:9px;color:var(--ink)}
+  .ledger .col.prove .k{color:var(--accent-ink)}
+  .ledger .col .k .u{width:9px;height:9px;background:var(--accent);flex:0 0 auto}
+  .ledger .col ul{list-style:none;margin:0;padding:0}
+  .ledger .col li{padding:16px 0;border-bottom:1px solid var(--line);font-size:var(--fs-sm);line-height:1.55;color:var(--ink-dim)}
+  .ledger .col li b{color:var(--ink);font-weight:700}
+  .ledger-note{grid-column:1/-1;margin-top:var(--s8);border-top:2px solid var(--ink);border-bottom:2px solid var(--ink);padding:var(--s6) 0}
+  .ledger-note p{font-family:var(--wide);font-size:clamp(1.25rem,2.6vw,1.85rem);font-weight:700;line-height:1.24;letter-spacing:-.015em;margin:0;max-width:44ch;color:var(--ink-2)}
+  .ledger-note p b{color:var(--accent-ink);font-weight:800}
+
+  /* design system — palette + type specimen + board */
+  .sys-lead{grid-column:1 / span 8;margin-bottom:var(--s6)}
+  @media (max-width:920px){.sys-lead{grid-column:1/-1}}
+  .swatches{grid-column:1 / span 7;margin-top:var(--s2)}
+  .type-spec{grid-column:9 / span 4;align-self:start;margin-top:var(--s2)}
+  @media (max-width:920px){.swatches,.type-spec{grid-column:1/-1}.type-spec{margin-top:var(--s7)}}
+  .swatches .k,.type-spec .k{font-size:var(--fs-micro);letter-spacing:.14em;text-transform:uppercase;color:var(--ink-faint);font-weight:700;margin-bottom:var(--s4)}
+  .sw{display:flex;align-items:center;gap:14px;padding:12px 0;border-top:1px solid var(--line)}
+  .sw:first-of-type{border-top:2px solid var(--ink)}
+  .sw .chip{width:34px;height:34px;border-radius:8px;flex:0 0 auto;border:1px solid rgba(11,14,19,.14)}
+  .sw .meta2{display:flex;flex-direction:column;gap:1px}
+  .sw .meta2 .hex{font-family:var(--mono);font-size:var(--fs-sm);color:var(--ink);font-weight:600;letter-spacing:.02em}
+  .sw .meta2 .role{font-size:var(--fs-micro);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-faint);font-weight:600}
+  .type-spec .row{border-top:1px solid var(--line);padding:14px 0;display:flex;align-items:baseline;justify-content:space-between;gap:16px}
+  .type-spec .row:first-of-type{border-top:2px solid var(--ink)}
+  .type-spec .row .g{font-family:var(--wide);color:var(--ink);letter-spacing:-.01em}
+  .type-spec .row .lbl{font-size:var(--fs-micro);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-faint);font-weight:600;flex:0 0 auto}
+  .sys-board{grid-column:1/-1;margin-top:var(--s8)}
+  .sys-disc{grid-column:1 / span 9;margin-top:var(--s7);padding-left:20px;border-left:3px solid var(--accent)}
+  .sys-disc p{margin:0;color:var(--ink-dim);font-size:var(--fs-sm);line-height:1.6;max-width:60ch}
+  .sys-disc p b{color:var(--ink)}
+  @media (max-width:920px){.sys-disc{grid-column:1/-1}}
+
+  /* reflection — the first paragraph is the section's lead (fs-lead), so it sits at the same
+     72px title-to-lead gap as every other section (was +32 on an undocumented margin-top). */
+  .refl{grid-column:1 / span 9;margin-top:0}
+  @media (max-width:920px){.refl{grid-column:1/-1}}
+  .refl p{font-size:var(--fs-lead);line-height:1.46;color:var(--ink);font-weight:500;max-width:56ch;margin:0 0 1.2em}
+  .refl p b{font-weight:700;color:var(--ink-2)}
+  .refl .honest{margin-top:var(--s6);padding-top:var(--s5);border-top:1px solid var(--line-strong)}
+  .refl .honest p{font-size:var(--fs-body);color:var(--ink-dim);max-width:60ch}
+  .refl .honest p b{color:var(--ink)}
+  .livelink{grid-column:1/-1;margin-top:var(--s8);display:inline-flex;align-items:center;gap:12px;font-family:var(--wide);font-weight:800;font-size:clamp(1.1rem,2vw,1.4rem);letter-spacing:-.01em;color:var(--ink);text-decoration:none;transition:gap .16s var(--ease-out)}
+  .livelink:hover{gap:18px}
+  .livelink:active{transform:translateY(1px)}
+  .livelink .u{width:10px;height:10px;background:var(--accent);flex:0 0 auto}
+  .livelink .ar{color:var(--accent-ink)}
+
+  /* closing montage */
+  .closing-head{grid-column:1/-1;display:flex;align-items:center;gap:16px;font-size:var(--fs-label);letter-spacing:.14em;text-transform:uppercase;color:var(--ink-dim);font-weight:700;margin-bottom:var(--s6)}
+  .closing-head .rule{flex:1;height:1px;background:var(--line-strong)}
+  /* on narrow phones the two labels + connecting rule can't share a line; drop the secondary
+     label and the rule (matching how the eyebrow hides its secondary tag), leaving a clean head. */
+  @media (max-width:560px){.closing-head .rule,.closing-head span:last-child{display:none}}
+  .closing-shot{grid-column:1/-1}
+
+  /* colophon */
+  .colophon{background:var(--paper-2);border-top:1px solid var(--line)}
+  .colophon .wrap{padding-block:clamp(52px,7vw,88px)}
+  .colophon .cred{grid-column:1 / span 7}
+  .colophon .note{grid-column:9 / span 4;align-self:start}
+  @media (max-width:920px){.colophon .cred,.colophon .note{grid-column:1/-1}.colophon .note{margin-top:var(--s7)}}
+  .colophon .brand{font-family:var(--wide);font-weight:800;font-size:clamp(1.8rem,5vw,3rem);letter-spacing:-.02em;margin-bottom:var(--s5);display:inline-flex;align-items:baseline;gap:1px}
+  .colophon .brand .p{color:var(--accent)}
+  .colophon .cred p{color:var(--ink-dim);font-size:var(--fs-sm);line-height:1.6;max-width:60ch}
+  .colophon .cred p b{color:var(--ink)}
+  .colophon .cred .fine{font-size:var(--fs-micro);letter-spacing:.02em;color:var(--ink-faint);margin-top:var(--s5);line-height:1.6}
+  .colophon .note dl{margin:0;border-top:2px solid var(--ink)}
+  .colophon .note div{display:grid;grid-template-columns:auto 1fr;gap:10px 18px;padding:11px 0;border-bottom:1px solid var(--line);align-items:baseline}
+  .colophon .note dt{font-size:var(--fs-micro);letter-spacing:.12em;text-transform:uppercase;color:var(--ink-faint);font-weight:700}
+  .colophon .note dd{margin:0;font-size:var(--fs-sm);color:var(--ink);font-weight:600;text-align:right}
+  .colophon .note dd .u{display:inline-block;width:10px;height:10px;background:var(--accent);vertical-align:baseline;margin-left:6px}
+  .backlink{grid-column:1/-1;display:inline-flex;align-items:center;gap:.5rem;margin-top:var(--s7);font-size:var(--fs-sm);color:var(--ink-dim);text-decoration:none;font-weight:700}
+  .backlink:hover{color:var(--ink)}
+
+  /* calm reveal — CSS transition only, no keyframes; reduced-motion safe */
+  .rise{opacity:0;transform:translateY(14px);transition:opacity .6s var(--ease-out-quint),transform .6s var(--ease-out-quint)}
+  .rise.in{opacity:1;transform:none}
+  .rise.d1{transition-delay:.06s}.rise.d2{transition-delay:.12s}.rise.d3{transition-delay:.18s}.rise.d4{transition-delay:.24s}.rise.d5{transition-delay:.30s}
+  @media (prefers-reduced-motion:reduce){.rise,.rise.d1,.rise.d2,.rise.d3,.rise.d4,.rise.d5{opacity:1;transform:none;transition:none}
+    .ph,.ph img,.livelink,.feat .fig .ph{transition:none}}
+  /* very narrow phones: drop the secondary eyebrow tag so the marker never crowds */
+  @media (max-width:430px){.eyebrow .tag,.snap-head .tag{display:none}}
+</style>
+</head>
+<body>
+
+<!-- ============ SITE NAV — the real homepage component (identical markup to neelmyno.in) ============ -->
+<div class="nav">
+  <div class="page-padding">
+    <div class="container">
+      <div class="nav-inner">
+        <a href="/" aria-current="page" class="nav-logo w-inline-block w--current" aria-label="Neel Tengariya — home">
+          <div><img width="60" src="/images/home/navbar/logo_full_black_copyright.svg" alt="Neel logo"></div>
+        </a>
+        <div class="nav-menu">
+          <a href="/#home" class="nav-link">Home</a>
+          <a href="/#work" class="nav-link">Work</a>
+          <a href="/#experience" class="nav-link">Experience</a>
+          <a href="/" class="nav-link">About</a>
+          <a href="/resume/neel_tengariya_resume.pdf" class="cta cta--nav w-inline-block" download>
+            <div>Download Resume</div>
+            <div class="cta-chevron w-embed"><svg width="7" height="10" xmlns="http://www.w3.org/2000/svg"><path d="M1.566.434 6.131 5 1.566 9.566.434 8.434 3.869 5 .434 1.566z" fill="currentColor" /></svg></div>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ MASTHEAD (running head, not sticky) ============ -->
+<header class="masthead">
+  <div class="wrap row">
+    <div class="brand">Tho8<span class="p">.</span></div>
+    <div class="ident">ZettelKraft &middot; UMich HCDE Capstone &middot; Case study</div>
+  </div>
+</header>
+
+<main>
+
+<!-- ============ COVER ============ -->
+<section id="cover" aria-label="Cover">
+  <div class="wrap grid12">
+    <div class="cover-copy">
+      <p class="kicker cover-kicker rise">Explainable-AI note workspace &middot; MS-HCDE capstone &middot; React and Supabase</p>
+      <h1 class="cover-h1 rise d1">A thinking tool<br><span class="l2">that shows its work.</span></h1>
+      <p class="cover-lead rise d2">People don&rsquo;t lose ideas when they write them down. They lose them <b>on the way back.</b></p>
+      <p class="cover-sub rise d2">The one thing I kept seeing across six interviews.</p>
+      <dl class="meta rise d3">
+        <div><dt>What I did</dt><dd>Research, product and UI design, the design system, and the full-stack build. I directed the AI that wrote most of the code, and I owned every judgment call.</dd></div>
+        <div><dt>Team</dt><dd>Two people, Luhmann&rsquo;s Quorum. I owned the design and the build.</dd></div>
+        <div><dt>Context</dt><dd>MS Human-Centered Design and Engineering, University of Michigan.</dd></div>
+        <div><dt>Live</dt><dd>A working prototype, built end to end, never publicly released. No users, and that is the truth of it.</dd></div>
+      </dl>
+    </div>
+    <div class="cover-side build rise d4">
+      <div class="k">What I built</div>
+      <ul>
+        <li><b>30</b><span>commits, all mine, across the capstone build</span></li>
+        <li><b>8</b><span>surfaces in one workspace</span></li>
+        <li><b>6.5</b><span>out of ten, on my own hard audit</span></li>
+      </ul>
+    </div>
+
+    <figure class="shot hero-shot rise">
+      <div class="ph" style="--ar:2880/1620">
+        <img src="assets/workspace-hero.webp" alt="The Tho8 three-pane workspace on a near-black canvas: a note library and folders on the left, a note open in the center rich-text editor, and the Insights rail on the right with Outline, Backlinks, Link suggestions, Resurface, and Comments. The link suggestions and resurfaced notes each carry a one-line reason in neutral text." width="2880" height="1620" loading="eager">
+        <span class="ph-spec"><span class="spec-res">2880 &times; 1620</span><span class="spec-lbl">The three-pane workspace: library, note editor, and the Insights rail</span></span>
+      </div>
+      <figcaption><span class="fn-tag"><span class="u" aria-hidden="true"></span>The workspace</span><b>Library, editor, and the Insights rail, side by side.</b> The AI lives next to the cursor, not in its own window. The right rail holds Outline, Backlinks, Link suggestions, Resurface, and Comments. The suggestions and resurfaced notes each carry a one-line reason.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ============ THE SHORT VERSION ============ -->
+<section id="short" aria-labelledby="short-h">
+  <div class="wrap grid12">
+    <div class="snap-head rise"><span id="short-h">The short version</span><span class="tag">The thirty-second read</span></div>
+    <p class="snap-lead rise d1">Six knowledge workers lost ideas, forgot their own note titles, and gave up on search in under thirty seconds. So I designed a workspace where capture is effortless, connection happens by meaning, and every AI nudge earns trust with a one-line reason and, with transparency on, the source notes behind it.</p>
+    <div class="stat rise d2">
+      <div class="c"><div class="n">6</div><div class="l"><b>Interviews</b>, sixty minutes each, in real note setups</div></div>
+      <div class="c"><div class="n">6</div><div class="l"><b>Tools benchmarked</b>, three note apps and three AI-native, on five dimensions</div></div>
+      <div class="c"><div class="n">2</div><div class="l"><b>Rounds</b> of moderated usability testing, V1 to V2</div></div>
+      <div class="c"><div class="n">30</div><div class="l"><b>Commits</b>, all mine, one real full-stack app</div></div>
+      <div class="c"><div class="n">6.5<span class="u" aria-hidden="true"></span></div><div class="l"><b>My own audit</b> of the build, out of ten, written down in full</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 01 THE PROBLEM ============ -->
+<section id="problem" aria-labelledby="problem-h">
+  <div class="wrap grid12">
+    <div class="eyebrow rise"><span class="num"><i>^</i>01</span> <span class="lbl">The problem</span> <span class="rule"></span><span class="tag">Where ideas die</span></div>
+    <h2 class="title s-head rise" id="problem-h">Ideas don&rsquo;t die at capture. They die on the way back.</h2>
+    <div class="lead-col rise"><p class="lead">Across every interview the same loop kept breaking. People wrote the idea down, then couldn&rsquo;t find it, couldn&rsquo;t link it, or couldn&rsquo;t trust the AI that tried to help them with it.</p></div>
+
+    <figure class="diagram rise">
+      <img src="assets/problem-lifecycle.webp" alt="The lifecycle of an idea, broken on the return. 01 Capture is alive, two taps in the lightest tool. Then the rail snaps at the handoff between a team system and a private vault, with Slack and email in between, and the later stages stay ghosted and never reached: 02 Connect breaks on title recall, 03 Retrieve takes twenty to thirty seconds then people recreate the note, and 04 Resurface is the gap nobody fills." width="2480" height="784" loading="lazy">
+    </figure>
+
+    <blockquote class="pull rise">
+      <q>If I still do not find it in thirty seconds I write a new block with what I remember and move on.</q>
+      <div class="attr"><span class="u" aria-hidden="true"></span> A participant, on what happens when the search fails.</div>
+    </blockquote>
+  </div>
+</section>
+
+<!-- ============ 02 RESEARCH ============ -->
+<section id="research" aria-labelledby="research-h">
+  <div class="wrap grid12">
+    <div class="eyebrow rise"><span class="num"><i>^</i>02</span> <span class="lbl">Research</span> <span class="rule"></span><span class="tag">Two semesters, five phases</span></div>
+    <h2 class="title s-head rise" id="research-h">Problem discovery first. Solutions last.</h2>
+    <div class="lead-col rise"><p class="lead">Every decision had to trace back to an observation, a quote, or a measured friction point. A finding only reached the requirements if it showed up in at least two of three independent sources.</p></div>
+
+    <figure class="diagram rise">
+      <img src="assets/research-method.webp" alt="The research method as a five-phase spine, problem discovery first and solutions last. The four discovery phases: 01 Literature Review, foundations and prior art; 02 Benchmarking, six tools across five dimensions; 03 User Interviews, six people at sixty minutes each; 04 Synthesis, ten findings and ten requirements. Then, past a divider, the lone solutions phase: 05 Design and Test, lo-fi to hi-fi across two rounds." width="2480" height="784" loading="lazy">
+    </figure>
+
+    <div class="bench rise">
+      <div class="bench-head">
+        <h3 class="title">What today&rsquo;s tools get right, and wrong.</h3>
+      </div>
+      <p class="body">We ran the same tasks through six networked-note tools, three established note apps and three AI-native ones, and graded each on the same five dimensions. Two columns came back thin across every one of them: nobody surfaces the right note at the right moment, and nobody shows the proof behind a suggested link. Those two gaps became the product.</p>
+      <div class="bench-take">
+        <span class="t"><span class="d"></span>Capture: fast beats fancy</span>
+        <span class="t"><span class="d"></span>Connect: link by idea, show the proof</span>
+        <span class="t"><span class="d"></span>Retrieve: strong, but heavy under time</span>
+        <span class="t"><span class="d"></span>Resurface: the gap nobody fills</span>
+        <span class="t"><span class="d"></span>Trust: evidence, or it is ignored</span>
+      </div>
+      <figure class="shot artifact">
+        <div class="ph" style="--ar:2560/1600">
+          <img src="assets/benchmark-grid.webp" alt="The competitive benchmark grid: six networked-note tools, Obsidian, Notion, Logseq, Tana, Mem, and Readwise, graded down five dimensions, capture, connection, retrieval, resurfacing, and trust, with a short verdict on each." width="2560" height="1600" loading="lazy">
+          <span class="ph-spec"><span class="spec-res">2560 &times; 1600</span><span class="spec-lbl">Six tools graded across five dimensions, with a verdict per cell</span></span>
+        </div>
+        <figcaption><span class="fn-tag"><span class="u" aria-hidden="true"></span>Benchmark</span><b>Six tools, five dimensions, one verdict per cell.</b> Three established note apps, Obsidian, Notion, and Logseq, and three AI-native, Tana, Mem, and Readwise, graded on capture, connection, retrieval, resurfacing, and trust. The two thin columns were resurfacing and proof, the space almost nobody builds.</figcaption>
+      </figure>
+      <blockquote class="pull small">
+        <q>I tried Mem for a month because I liked the idea of asking questions across my notes, but I ran into trust issues when it guessed wrong about a link, so I stopped.</q>
+        <div class="attr"><span class="u" aria-hidden="true"></span> A participant, on quitting an AI tool that guessed wrong.</div>
+      </blockquote>
+      <figure class="shot artifact">
+        <div class="ph" style="--ar:2880/1620">
+          <img src="assets/lofi-to-hifi.webp" alt="A design progression: annotated low-fidelity wireframes of the workspace on the left resolving into the high-fidelity dark-theme screen on the right, showing the three-pane shell taking its final shape." width="2880" height="1620" loading="lazy">
+          <span class="ph-spec"><span class="spec-res">2880 &times; 1620</span><span class="spec-lbl">Low-fidelity wireframes resolving into the high-fidelity workspace</span></span>
+        </div>
+        <figcaption><span class="fn-tag"><span class="u" aria-hidden="true"></span>Design and test</span><b>From annotated wireframes to the built screen.</b> The three-pane shell held its shape from low-fi to high-fi. Two rounds of moderated testing changed what happened inside it.</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 03 THE PEOPLE ============ -->
+<section id="people" aria-labelledby="people-h">
+  <div class="wrap grid12">
+    <div class="eyebrow rise"><span class="num"><i>^</i>03</span> <span class="lbl">The people</span> <span class="rule"></span><span class="tag">Six setups, one story</span></div>
+    <h2 class="title s-head rise" id="people-h">Six people. Six setups. One story.</h2>
+    <div class="lead-col rise"><p class="lead">Sixty minutes each, screen-sharing their real vaults, thinking aloud through four task probes in the tools they already use: make two notes relate, find a note they could not name, judge what else on the page they would trust, and explain why two things belonged together. No hypotheticals. Every observation traces to a real moment of friction.</p></div>
+
+    <figure class="diagram rise">
+      <img src="assets/people-roster.webp" alt="Six anonymized research participants with six different setups, all converging on one shared finding. 01 Doctoral student, deep research vault; 02 Master's student, local Markdown vault; 03 Master's student, Logseq and journals first; 04 Product Manager, meeting to memory; 05 Strategy Consultant, careful with sources; 06 Senior UX Researcher, evidence over recall. The one friction all six shared: linking by title recall." width="2480" height="784" loading="lazy">
+    </figure>
+
+    <blockquote class="pull small rise">
+      <q>I&rsquo;d remove the need to remember titles. If I type a phrase, propose precise candidates with a short because.</q>
+      <div class="attr"><span class="u" aria-hidden="true"></span> A participant, on how linking should feel.</div>
+    </blockquote>
+    <blockquote class="pull small rise">
+      <q>I never tag on the phone. It slows me down. Capture has to be a sentence and a title, that is it.</q>
+      <div class="attr"><span class="u" aria-hidden="true"></span> A participant, on the front door.</div>
+    </blockquote>
+  </div>
+</section>
+
+<!-- ============ 04 THE TRUST LADDER ============ -->
+<section id="trust" aria-labelledby="trust-h">
+  <div class="wrap grid12">
+    <div class="eyebrow rise"><span class="num"><i>^</i>04</span> <span class="lbl">The trust ladder</span> <span class="rule"></span><span class="tag">What earns a click</span></div>
+    <h2 class="title s-head rise" id="trust-h">The trust ladder.</h2>
+    <div class="lead-col rise"><p class="lead">When we asked what would make you trust this suggestion, participants ranked evidence types in a strikingly consistent order. I turned that order into the design of every AI surface in Tho8.</p></div>
+
+    <figure class="diagram rise">
+      <img src="assets/trust-ladder.webp" alt="The trust ladder, four evidence types ranked by what earns a click. Three earn a click: 01 A shared source, both notes cite the same paper; 02 A two-hop path, A to B to C, a route you can follow; 03 A specific term, a non-generic phrase they share. Then a cut-line, and past it 04 Tags or recency, weak and easy to distrust, is dismissed." width="2480" height="784" loading="lazy">
+    </figure>
+
+    <div class="because rise">
+      <em>because</em> &middot; shared tags, <b>#memory</b> and <b>#trust</b>. The reason is the match itself, and with transparency on the source notes sit one click away.
+    </div>
+
+    <blockquote class="pull small rise">
+      <q>Seeing the citation match gives me confidence. If both notes cite the same paper I trust the link.</q>
+      <div class="attr"><span class="u" aria-hidden="true"></span> A participant, ranking the evidence.</div>
+    </blockquote>
+  </div>
+</section>
+
+<!-- ============ 05 FOUR LOOPS ============ -->
+<section id="loops" aria-labelledby="loops-h">
+  <div class="wrap grid12">
+    <div class="eyebrow rise"><span class="num"><i>^</i>05</span> <span class="lbl">The shape</span> <span class="rule"></span><span class="tag">Four loops, one surface</span></div>
+    <h2 class="title s-head rise" id="loops-h">Four loops. One surface.</h2>
+    <div class="lead-col rise"><p class="lead">Knowledge work isn&rsquo;t a funnel. It is four nested loops that reinforce each other, and each one has an effort threshold people walk away from the moment you cross it. If any loop breaks, the whole thing feels broken.</p></div>
+
+    <figure class="diagram rise">
+      <img src="assets/loops-cycle.webp" alt="The four loops of knowledge work on one spine, closed into a cycle, not a funnel: 01 Capture (don't lose it, in one keystroke), 02 Connect (link by meaning, not titles), 03 Retrieve (find it in thirty seconds or less), and 04 Resurface (right idea, right moment). An ember return arc loops from Resurface back to Capture around a three-pane shell labelled one shell, eight surfaces, one workspace." width="2480" height="784" loading="lazy">
+    </figure>
+
+    <div class="surface-note rise">
+      <p>A three-pane shell anchors the product: library on the left, note canvas in the middle, intelligence panel on the right. <b>Eight surfaces, one coherent workspace.</b> AI never opens in its own app. It lives next to the cursor.</p>
+    </div>
+
+    <figure class="shot artifact narrow rise">
+      <div class="ph" style="--ar:2560/1600">
+        <img src="assets/new-note.webp" alt="A new empty note on Cmd+N in the Tho8 editor: the prompt Start typing or press slash for commands, a Use template button, a Draft with AI button, and a row of quick-action template chips. No required fields." width="2560" height="1600" loading="lazy">
+        <span class="ph-spec"><span class="spec-res">2560 &times; 1600</span><span class="spec-lbl">A new note on Cmd+N: start typing, use a template, or Draft with AI</span></span>
+      </div>
+      <figcaption><span class="fn-tag"><span class="u" aria-hidden="true"></span>Capture</span><b>Cmd+N, and a note is ready for the idea.</b> The empty note asks for nothing. Start typing, press slash for commands, reach for a template, or hand the first draft to AI. Nothing to fill in first, no friction at the front door.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ============ 06 EXPLAINABILITY — THE HEART ============ -->
+<section id="explain" aria-labelledby="explain-h">
+  <div class="wrap grid12">
+    <div class="eyebrow rise"><span class="num"><i>^</i>06</span> <span class="lbl">Explainable AI</span> <span class="rule"></span><span class="tag">The heart of it</span></div>
+    <h2 class="title s-head rise" id="explain-h">No suggestion is a black box.</h2>
+    <div class="lead-col rise"><p class="lead">Every suggestion starts from a real similarity match, embeddings and cosine distance, so nothing shows up on a hunch. Then it tells you the basis in one line: the tags two notes share, a note they both touch, or a plain concept match. Open Details and it names the tag the link leans on, the one whose removal would weaken it. Turn on Transparency and the source notes appear as chips you can open. No confidence percentage, no black box. The reason is the match, shown plainly, and it is the price of showing up.</p></div>
+
+    <figure class="shot heart-shot narrow rise">
+      <div class="ph" style="--ar:2560/1600">
+        <img src="assets/link-suggestions.webp" alt="The Link suggestions card in the Insights rail on a near-black canvas: a header reading Based on this note plus two related notes, then a suggested note with its title and an Open link, a one-line because in neutral text, a relation dropdown set to supports, Accept and Dismiss buttons, a Details toggle revealing the counterfactual, and an Evidence row of clickable source-note chips." width="2560" height="1600" loading="lazy">
+        <span class="ph-spec"><span class="spec-res">2560 &times; 1600</span><span class="spec-lbl">The Link suggestions rail card: a because, a relation, Accept or Dismiss, Details, and evidence chips</span></span>
+      </div>
+      <figcaption><span class="fn-tag"><span class="u" aria-hidden="true"></span>Explainability</span><b>The reason rides with the suggestion, inline in the rail.</b> Each candidate shows why it matched, the shared tags or the concept similarity, and a relation you can set. Open Details and it names the tag the link leans on. With Transparency on, an Evidence row lists the source notes as chips you can open. Accept or Dismiss in a click, no modal in the way.</figcaption>
+    </figure>
+
+    <p class="heart-carry rise">I put the reason in the data model, not the copy. Every suggestion is stored with its <b>because</b>, its evidence notes, and the tag it leans on, all computed from the real match, the shared tags, the shared neighbor, the embedding similarity. So the reason is the mechanism itself, surfaced honestly, never an AI story written after the fact to sound convincing. It lives at the contract level, where it cannot drift from what the interface claims.</p>
+  </div>
+</section>
+
+<!-- ============ 07 FIND IT, LINK IT ============ -->
+<section id="flows" aria-labelledby="flows-h">
+  <div class="wrap grid12">
+    <div class="eyebrow rise"><span class="num"><i>^</i>07</span> <span class="lbl">Retrieve and connect</span> <span class="rule"></span><span class="tag">The everyday loops</span></div>
+    <h2 class="title s-head rise" id="flows-h">Find it, or ask about it, without leaving the keyboard.</h2>
+
+    <div class="feat rise">
+      <div class="fig">
+        <figure class="shot">
+          <div class="ph" style="--ar:2560/1600">
+            <img src="assets/command-palette.webp" alt="The Cmd+K command palette over the workspace: a search field reading Type a command or search notes, results grouped under Recent, Actions, and Notes, the matched letters of the query highlighted, and an esc hint." width="2560" height="1600" loading="lazy">
+            <span class="ph-spec"><span class="spec-res">2560 &times; 1600</span><span class="spec-lbl">Cmd+K: search notes and commands, grouped into Recent, Actions, and Notes</span></span>
+          </div>
+          <figcaption><span class="fn-tag"><span class="u" aria-hidden="true"></span>Retrieve</span><b>Cmd+K, and any note is a few letters away.</b></figcaption>
+        </figure>
+      </div>
+      <div class="txt">
+        <h3>Find it in under thirty seconds.</h3>
+        <p>Cmd+K opens a fuzzy search over every note and command, grouped into Recent, Actions, and Notes, with the matched letters lit as you type. Built to the <b>thirty-second budget</b> the research demanded. People gave search one query and one hop before they gave up and rewrote the note, so finding it has to land inside that. Enter jumps straight to the note.</p>
+      </div>
+    </div>
+
+    <div class="feat flip rise">
+      <div class="fig">
+        <figure class="shot">
+          <div class="ph" style="--ar:2560/1600">
+            <img src="assets/ai-ask.webp" alt="The editor AI panel with the Ask pill active: pills for Ask, Summarize, Continue, and Draft, a line reading Using the full note, a question typed in, and an answer card below labeled Based on this note only, an Evidence chip, and actions to Insert below, Create note, and Copy." width="2560" height="1600" loading="lazy">
+            <span class="ph-spec"><span class="spec-res">2560 &times; 1600</span><span class="spec-lbl">The editor AI panel: Ask, Summarize, Continue, or Draft, with an answer grounded in the note</span></span>
+          </div>
+          <figcaption><span class="fn-tag"><span class="u" aria-hidden="true"></span>Ask</span><b>Ask in your own words, and the answer names its note.</b></figcaption>
+        </figure>
+      </div>
+      <div class="txt">
+        <h3>Ask the note you are on.</h3>
+        <p>The editor&rsquo;s AI panel runs on the note in front of you, Ask, Summarize, Continue, or Draft. The answer comes back in a card labeled <b>Based on this note only</b>, with the source note shown when Transparency is on. One click inserts it below, replaces the selection, spins it into a new note, or copies it.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 08 THE GRAPH ============ -->
+<section id="graph" aria-labelledby="graph-h">
+  <div class="wrap grid12">
+    <div class="eyebrow rise"><span class="num"><i>^</i>08</span> <span class="lbl">The graph</span> <span class="rule"></span><span class="tag">For thinking, not decoration</span></div>
+    <h2 class="title s-head rise" id="graph-h">A graph you can actually stand in.</h2>
+    <div class="lead-col rise"><p class="lead">The graph is global, but it does not throw the whole hairball at you. Click any node and it lights up with its neighbors while the rest dims, and a Focused Node panel fills with the note, its connections, and a place to generate ideas. A legend, an onboarding card, and a Back-to-notes button keep you oriented. The full graph overwhelmed people in testing, so focus and a clear way out became the point. A few also asked it to show the exact block they linked, not just a line between two pages.</p></div>
+
+    <figure class="shot artifact rise">
+      <div class="ph" style="--ar:2560/1600">
+        <img src="assets/graph-view.webp" alt="The global graph on a near-black canvas: many note nodes and edges, with one note selected so it and its neighbors glow orange while the rest dim. A Focused Node panel on the right shows the note title, when it was updated, a preview, Open and New-tab buttons, and its connections. A legend reads notes gray, tags orange, folders blue, with hints to click, drag, scroll, and press Esc." width="2560" height="1600" loading="lazy">
+        <span class="ph-spec"><span class="spec-res">2560 &times; 1600</span><span class="spec-lbl">The global graph with a node focused: neighbors lit, the rest dimmed, and the Focused Node rail</span></span>
+      </div>
+      <figcaption><span class="fn-tag"><span class="u" aria-hidden="true"></span>The graph</span><b>Select a node and the graph focuses: it and its neighbors light up, the rest fades back.</b> The Focused Node rail turns the selection into a next step, its connections and a place to generate ideas. A legend, an onboarding card, and a Back-to-notes button keep you from getting lost. It is built for thinking, not for looking impressive.</figcaption>
+    </figure>
+
+    <blockquote class="pull small rise">
+      <q>The global graph is too chaotic for me &hellip; Local graph plus backlinks is enough.</q>
+      <div class="attr"><span class="u" aria-hidden="true"></span> A participant, on the global graph, and why Backlinks carry the load.</div>
+    </blockquote>
+
+    <div class="surface-note rise">
+      <p>In the first build the graph rendered a black screen and crashed the app. <b>I found it in my own audit</b>, and wrapped the graph view in an error boundary with a real fallback, a &ldquo;Graph view crashed&rdquo; message with a way back to your notes, instead of a dead screen. The crash became a caught, recoverable state, not a patch.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 09 EXPLORE RELATED THINKING ============ -->
+<section id="generate" aria-labelledby="generate-h">
+  <div class="wrap grid12">
+    <div class="eyebrow rise"><span class="num"><i>^</i>09</span> <span class="lbl">Generate</span> <span class="rule"></span><span class="tag">Surfacing, not inventing</span></div>
+    <h2 class="title s-head rise" id="generate-h">Explore related thinking.</h2>
+    <div class="lead-col rise"><p class="lead">In the graph rail it is called AI Ideas. Select a note, and it generates ideas from that note and its neighbors. Each one comes back as a card with a title and a one-line summary, and a single button to turn it into a note. It reads as connecting what you already wrote, not conjuring something new.</p></div>
+
+    <figure class="shot artifact rise">
+      <div class="ph" style="--ar:2560/1600">
+        <img src="assets/ai-ideas.webp" alt="The AI Ideas panel in the graph rail on a near-black canvas: a violet Generate more ideas button with a spark icon, then a few idea cards, each with a title, a one-line summary, and a single Create note button. The panel uses the app's violet AI accent, not the brand orange." width="2560" height="1600" loading="lazy">
+        <span class="ph-spec"><span class="spec-res">2560 &times; 1600</span><span class="spec-lbl">AI Ideas from a selected note: a title, a summary, and a Create note button on each</span></span>
+      </div>
+      <figcaption><span class="fn-tag"><span class="u" aria-hidden="true"></span>Generate</span><b>Ideas grown from the note you selected, each a title and a summary.</b> One button turns any idea into a note. This panel is the app&rsquo;s one violet moment, marking generative AI apart from the brand orange everywhere else.</figcaption>
+    </figure>
+
+    <blockquote class="pull small rise">
+      <q>This feels less like generating something new and more like connecting things I&rsquo;ve already written.</q>
+      <div class="attr"><span class="u" aria-hidden="true"></span> A participant, on the idea generator. It set how I frame the feature: surfacing what is already there, not inventing.</div>
+    </blockquote>
+  </div>
+</section>
+
+<!-- ============ 10 WHERE IT STANDS — THE HONESTY LEDGER ============ -->
+<section id="stands" aria-labelledby="stands-h">
+  <div class="wrap grid12">
+    <div class="eyebrow rise"><span class="num"><i>^</i>10</span> <span class="lbl">Where it stands</span> <span class="rule"></span><span class="tag">Honest about what it is</span></div>
+    <h2 class="title s-head rise" id="stands-h">Honest about what it is, and isn&rsquo;t.</h2>
+    <div class="lead-col rise"><p class="lead">Tho8 is a working, deployed prototype, built as a graduate capstone. It was never released, and it has no user numbers. That is the truth, and it is not the point.</p></div>
+
+    <figure class="diagram rise">
+      <img src="assets/honesty-ledger.webp" alt="A two-sided honesty ledger. What I can prove: designed and coded it solo, thirty commits all mine; ran the research, six interviews, a six-tool benchmark, two test rounds; audited my own build, 6.5 out of 10, my own score. What I won't claim: that anyone used it, no adoption and no active users; any before-and-after number, six people find confusion, not a lift." width="2480" height="784" loading="lazy">
+    </figure>
+
+    <div class="ledger-note rise">
+      <p>I tested with six people and turned their confusion into specific fixes. A save state they could finally see. A graph that stopped crashing. A reason attached to every suggestion. <b>That part is real, and it is the part worth judging.</b></p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 11 DESIGN SYSTEM ============ -->
+<section id="system" aria-labelledby="system-h">
+  <div class="wrap grid12">
+    <div class="eyebrow rise"><span class="num"><i>^</i>11</span> <span class="lbl">Design system</span> <span class="rule"></span><span class="tag">A quiet interface for loud thinking</span></div>
+    <h2 class="title s-head rise" id="system-h">A quiet interface for loud thinking.</h2>
+    <div class="sys-lead rise"><p class="lead">Calm near-black surfaces so the words stand out. Two accents, and only two: Ember orange for the brand, selection, focus, and the live highlight, and a violet for the generative-AI moments. The reasons themselves, the because and its evidence, stay in neutral zinc, so a reason reads like a fact and not a pitch. I built the system alongside the UI, not after it, so every screen spoke the same language as it was drawn.</p></div>
+
+    <div class="swatches rise">
+      <div class="k">The product palette, from tokens.css</div>
+      <div class="sw"><span class="chip" style="background:#09090B" aria-hidden="true"></span><div class="meta2"><span class="hex">#09090B</span><span class="role">Base canvas, near-black, not pure</span></div></div>
+      <div class="sw"><span class="chip" style="background:#18181B" aria-hidden="true"></span><div class="meta2"><span class="hex">#18181B</span><span class="role">Raised surface</span></div></div>
+      <div class="sw"><span class="chip" style="background:#F2572B" aria-hidden="true"></span><div class="meta2"><span class="hex">#F2572B</span><span class="role">Ember, brand accent</span></div></div>
+      <div class="sw"><span class="chip" style="background:#A78BFA" aria-hidden="true"></span><div class="meta2"><span class="hex">#A78BFA</span><span class="role">AI accent, violet</span></div></div>
+      <div class="sw"><span class="chip" style="background:#FAFAFA" aria-hidden="true"></span><div class="meta2"><span class="hex">#FAFAFA</span><span class="role">Text, primary</span></div></div>
+      <div class="sw"><span class="chip" style="background:#A1A1AA" aria-hidden="true"></span><div class="meta2"><span class="hex">#A1A1AA</span><span class="role">Text, secondary (zinc)</span></div></div>
+      <div class="sw"><span class="chip" style="background:#71717A" aria-hidden="true"></span><div class="meta2"><span class="hex">#71717A</span><span class="role">Text, muted (zinc)</span></div></div>
+    </div>
+
+    <div class="type-spec rise">
+      <div class="k">Inter, Outfit, JetBrains Mono</div>
+      <div class="row"><span class="g" style="font-family:'Outfit',sans-serif;font-weight:800;font-size:2rem;letter-spacing:-.02em">Display</span><span class="lbl">Outfit 800</span></div>
+      <div class="row"><span class="g" style="font-family:'Outfit',sans-serif;font-weight:700;font-size:1.4rem;letter-spacing:-.01em">Headline</span><span class="lbl">Outfit 700</span></div>
+      <div class="row"><span class="g" style="font-family:'Inter',sans-serif;font-weight:400;font-size:1.05rem">Body copy</span><span class="lbl">Inter 400</span></div>
+      <div class="row"><span class="g" style="font-family:'JetBrains Mono',monospace;font-size:.9rem">note_links &middot; &#8984;K</span><span class="lbl">Mono, kbd &amp; code</span></div>
+    </div>
+
+    <figure class="shot sys-board rise">
+      <div class="ph" style="--ar:2400/1600">
+        <img src="assets/design-system.webp" alt="The Tho8 design-system board on a near-black canvas: semantic color tokens as labeled swatches (base #09090B, raised #18181B, Ember #F2572B, AI violet #A78BFA, and the zinc text scale), radius and elevation samples, an Inter and Outfit type specimen with a JetBrains Mono line, and the Ember primary scale from 50 to 900." width="2400" height="1600" loading="lazy">
+        <span class="ph-spec"><span class="spec-res">2400 &times; 1600</span><span class="spec-lbl">Semantic tokens, the Ember and violet accents, the type specimen, and the changelog</span></span>
+      </div>
+      <figcaption><span class="fn-tag"><span class="u" aria-hidden="true"></span>The system</span><b>Semantic tokens, a written single source of truth, and a changelog.</b> Color, radius, and elevation live as CSS custom properties the build consumes by role, never by raw value. A four-pixel spacing grid and lucide icons sized to their labels keep spacing and glyphs on one ruler. The changelog reads like a design log because it was one.</figcaption>
+    </figure>
+
+    <div class="sys-disc rise">
+      <p><b>Fixes from the audit landed in the tokens, not the screens.</b> A failing contrast value became a token change every component inherited. A missing error state became a reusable error boundary. That is how the same defect does not come back.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 12 REFLECTION ============ -->
+<section id="reflection" aria-labelledby="reflection-h">
+  <div class="wrap grid12">
+    <div class="eyebrow rise"><span class="num"><i>^</i>12</span> <span class="lbl">Reflection</span> <span class="rule"></span><span class="tag">What it taught me</span></div>
+    <h2 class="title s-head rise" id="reflection-h">Trust is a design problem, not a model problem.</h2>
+
+    <div class="refl rise">
+      <p>The thing I had backwards at the start was treating trust as something the model earns by being good enough. It isn&rsquo;t. People believed a suggestion the moment they could see why it was there, and ignored it when they couldn&rsquo;t, <b>however good it was underneath.</b></p>
+      <p>So the real work was never the model. It was making the reason visible, making the save state visible, making the graph start somewhere a person could actually stand. Small, unglamorous things. That is where the trust came from.</p>
+      <p>The fastest way to find what is broken is to measure your own work a new way each round, not to walk the same screens again. Six people, two rounds, and a hard look at my own build taught me more than another week of polish would have.</p>
+      <div class="honest">
+        <p><b>By the bar I hold now, a few things date it.</b> An accent glow token that should have stayed neutral. A capstone deck that leaned on stock AI imagery. The research rigor and the systems discipline are the parts that hold up, and they are the parts I kept.</p>
+      </div>
+    </div>
+
+    <p class="livelink rise" style="cursor:default;gap:12px">
+      <span class="u" aria-hidden="true"></span> A working prototype, built end to end, kept private.
+    </p>
+  </div>
+</section>
+
+<!-- ============ THE WHOLE SURFACE (closing montage) ============ -->
+<section aria-label="The whole surface">
+  <div class="wrap grid12">
+    <div class="closing-head rise"><span>The whole surface</span><span class="rule"></span><span>Every screen, one system</span></div>
+    <figure class="shot closing-shot rise">
+      <div class="ph" style="--ar:2880/1620">
+        <img src="assets/interface-montage.webp" alt="A montage of the Tho8 interface end to end on its near-black canvas: the three-pane workspace, a new note on Cmd+N, the Cmd+K command palette, the editor AI Ask panel, the Link suggestions rail, the global graph, the AI Ideas panel, and the settings screen." width="2880" height="1620" loading="lazy">
+        <span class="ph-spec"><span class="spec-res">2880 &times; 1620</span><span class="spec-lbl">The interface end to end: workspace, new note, search, ask, suggestions, graph, ideas</span></span>
+      </div>
+      <figcaption><span class="fn-tag"><span class="u" aria-hidden="true"></span>The interface</span><b>Capture, connect, retrieve, resurface, all in one shell.</b> The four loops share a single three-pane workspace, with Ember orange for the brand and the live highlight, and a violet held back for the AI ideas.</figcaption>
+    </figure>
+  </div>
+</section>
+
+</main>
+
+<!-- ============ COLOPHON ============ -->
+<footer class="colophon">
+  <div class="wrap grid12">
+    <div class="cred rise">
+      <div class="brand">Tho8<span class="p">.</span></div>
+      <p><b>Tho8, also ZettelKraft.</b> An MS-HCDE capstone at the University of Michigan, built by a two-person team, Luhmann&rsquo;s Quorum. I ran the research, designed the product and the system, and built the working full-stack app in React and Supabase, directing the AI that wrote most of the code. I owned every judgment call.</p>
+      <p class="fine">Type is Manrope, a single family, set on a twelve-column grid. Orange marks one thing on this page: the product&rsquo;s Ember accent, borrowed as the single editorial signal. In the product itself Ember is the brand and a second violet marks the AI, while the reasons stay neutral. Everything else here stays disciplined neutral. Screens are clean recreations of the real app.</p>
+      <a class="backlink" href="/">&larr; Back to portfolio</a>
+    </div>
+    <div class="note rise">
+      <dl>
+        <div><dt>Type</dt><dd>Manrope</dd></div>
+        <div><dt>System</dt><dd>Twelve-column grid</dd></div>
+        <div><dt>Accent</dt><dd>Ember, brand <span class="u" aria-hidden="true"></span></dd></div>
+        <div><dt>Stack</dt><dd>React, Supabase</dd></div>
+        <div><dt>Case study</dt><dd>Neel Tengariya, 2026</dd></div>
+      </dl>
+    </div>
+  </div>
+</footer>
+
+<!-- ============ calm reveal + placeholder resolve (no app UI is drawn in code) ============ -->
+<script>
+  (function(){
+    // 1) scroll-reveal: one-time opacity/translate, reduced-motion safe
+    var els = document.querySelectorAll('.rise');
+    if(!('IntersectionObserver' in window) || matchMedia('(prefers-reduced-motion: reduce)').matches){
+      els.forEach(function(e){e.classList.add('in')});
+    } else {
+      var io = new IntersectionObserver(function(entries){
+        entries.forEach(function(en){ if(en.isIntersecting){ en.target.classList.add('in'); io.unobserve(en.target);} });
+      }, {rootMargin:'0px 0px -8% 0px', threshold:0.06});
+      els.forEach(function(e){io.observe(e)});
+    }
+    // 2) placeholder resolve: when a real asset loads, hide its spec label so the box becomes the image
+    document.querySelectorAll('.ph img').forEach(function(img){
+      function done(){ if(img.naturalWidth>0){ img.closest('.ph').classList.add('loaded'); } }
+      if(img.complete){ done(); } else { img.addEventListener('load', done); }
+    });
+  })();
+</script>
+</body>
+</html>
