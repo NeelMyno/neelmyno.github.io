@@ -115,7 +115,7 @@
   .wrap{max-width:var(--maxw);margin-inline:auto;padding-inline:var(--pad)}
   .grid12{display:grid;grid-template-columns:repeat(12,1fr);gap:clamp(20px,3vw,40px)}
   .measure{max-width:58ch}
-  section{padding-block:clamp(56px,9vw,120px);position:relative}
+  section{padding-block:clamp(30px,4.2vw,60px);position:relative}
   section + section{border-top:1px solid var(--line)}
 
   /* ---- type ---- */
@@ -190,11 +190,11 @@
   @media (max-width:560px){.masthead .ident{display:none}}
 
   /* ============ COVER ============ */
-  #cover{padding-block:clamp(40px,6vw,80px) clamp(48px,7vw,96px)}
+  #cover{padding-block:clamp(32px,4.5vw,60px) clamp(36px,5vw,72px)}
   .cover-copy{grid-column:1 / span 7}
   .cover-side{grid-column:9 / span 4;align-self:end}
-  @media (max-width:920px){.cover-copy{grid-column:1/-1}.cover-side{grid-column:1/-1;margin-top:var(--s7)}}
-  .cover-kicker{margin-bottom:var(--s6)}
+  @media (max-width:920px){.cover-copy{grid-column:1/-1}.cover-side{grid-column:1/-1;margin-top:var(--s6)}}
+  .cover-kicker{margin-bottom:var(--s5)}
   .cover-h1{font-family:var(--wide);font-weight:800;font-size:var(--fs-display);line-height:1.0;letter-spacing:-.032em;color:var(--ink-2);margin:0 0 var(--s5);text-wrap:balance}
   .cover-h1 .l2{color:var(--ink)}
   .cover-lead{font-size:var(--fs-lead);line-height:1.38;font-weight:500;color:var(--ink);max-width:36ch;margin:0 0 var(--s3)}
@@ -239,7 +239,7 @@
   figure.hero-shot{grid-column:1/-1;margin-top:var(--s6)}
 
   /* ============ SNAPSHOT (the short version) — typographic ============ */
-  .snap-head{grid-column:1/-1;display:flex;align-items:baseline;gap:16px;font-size:var(--fs-label);letter-spacing:.16em;text-transform:uppercase;color:var(--ink-dim);font-weight:800;margin-bottom:var(--s6)}
+  .snap-head{grid-column:1/-1;display:flex;align-items:baseline;gap:16px;font-size:var(--fs-label);letter-spacing:.16em;text-transform:uppercase;color:var(--ink-dim);font-weight:800;margin-bottom:var(--s5)}
   .snap-head .tag{color:var(--ink-faint);font-weight:600;letter-spacing:.1em}
   .snap-lead{grid-column:1 / span 10;font-family:var(--wide);font-size:clamp(1.5rem,3.3vw,2.45rem);font-weight:700;line-height:1.14;letter-spacing:-.02em;margin:0 0 var(--s8);color:var(--ink-2)}
   @media (max-width:920px){.snap-lead{grid-column:1/-1}}
@@ -252,8 +252,8 @@
   .stat .c .l b{color:var(--ink);font-weight:700}
 
   /* ============ generic section heads ============ */
-  .s-head{grid-column:1/-1;max-width:24ch;margin-bottom:var(--s6)}
-  .lead-col{grid-column:1 / span 8;margin-bottom:var(--s6)}
+  .s-head{grid-column:1/-1;max-width:24ch;margin-bottom:var(--s5)}
+  .lead-col{grid-column:1 / span 8;margin-bottom:var(--s5)}
   @media (max-width:920px){.lead-col{grid-column:1/-1}}
   .prose{grid-column:1 / span 7}
   @media (max-width:920px){.prose{grid-column:1/-1}}
@@ -269,7 +269,7 @@
   .pull .attr .u{width:8px;height:8px;background:var(--accent);flex:0 0 auto;align-self:center}
 
   /* the three breaking points — a ruled list, not cards */
-  .breaks{grid-column:1/-1;margin-top:var(--s7);border-top:2px solid var(--ink)}
+  .breaks{grid-column:1/-1;margin-top:var(--s6);border-top:2px solid var(--ink)}
   .breaks .b{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,6fr);gap:16px 40px;align-items:baseline;padding:24px 0;border-bottom:1px solid var(--line)}
   @media (max-width:720px){.breaks .b{grid-template-columns:1fr;gap:8px}}
   .breaks .b .t{font-family:var(--wide);font-weight:800;font-size:clamp(1.2rem,2.2vw,1.55rem);letter-spacing:-.015em;line-height:1.2;color:var(--ink)}
@@ -277,20 +277,20 @@
   .breaks .b .d b{color:var(--ink);font-weight:700}
 
   /* research: five phases + minis + benchmark */
-  .phases{grid-column:1/-1;margin-top:var(--s7);border-top:2px solid var(--ink)}
+  .phases{grid-column:1/-1;margin-top:var(--s6);border-top:2px solid var(--ink)}
   .phases .r{display:grid;grid-template-columns:2.4rem minmax(0,4fr) minmax(0,7fr);gap:16px 32px;align-items:baseline;padding:24px 0;border-bottom:1px solid var(--line)}
   @media (max-width:720px){.phases .r{grid-template-columns:2.4rem 1fr;gap:6px 20px}.phases .r .ph-d{grid-column:2}}
   .phases .r .no{font-family:var(--wide);font-weight:800;color:var(--accent-ink);font-feature-settings:"tnum" 1;font-size:1rem}
   .phases .r b{font-family:var(--wide);font-weight:800;font-size:1.1rem;letter-spacing:-.01em;color:var(--ink)}
   .phases .r .ph-d{color:var(--ink-dim);font-size:var(--fs-sm);line-height:1.5}
-  .minis{grid-column:1/-1;display:flex;gap:clamp(24px,4vw,56px);flex-wrap:wrap;margin-top:var(--s8);border-top:2px solid var(--ink);padding-top:var(--s5)}
+  .minis{grid-column:1/-1;display:flex;gap:clamp(24px,4vw,56px);flex-wrap:wrap;margin-top:var(--s7);border-top:2px solid var(--ink);padding-top:var(--s5)}
   /* center-align so the accent square tracks the number's optical center regardless of how
      many lines the label wraps to — otherwise a 3-line label dragged the square below a 2-line one. */
   .mini{display:flex;align-items:center;gap:12px}
   .mini .n{font-family:var(--wide);font-weight:800;font-size:clamp(1.8rem,3.6vw,2.7rem);line-height:.9;color:var(--ink)}
   .mini .sq{width:11px;height:11px;background:var(--accent);align-self:center;flex:0 0 auto}
   .mini .lab{font-size:var(--fs-micro);letter-spacing:.1em;text-transform:uppercase;color:var(--ink-dim);font-weight:700;max-width:14ch}
-  .bench{grid-column:1/-1;margin-top:var(--s9)}
+  .bench{grid-column:1/-1;margin-top:var(--s6)}
   .bench-head{margin-bottom:var(--s5)}
   /* the benchmark is a sub-section of Research, so its heading steps DOWN one level from the
      section H2 (--fs-h1) to --fs-h2 — clearly subordinate. The ch-measure crush is removed
@@ -301,7 +301,7 @@
   .bench-take .t{display:inline-flex;align-items:center;gap:9px;border:1px solid var(--line-strong);background:var(--paper);padding:8px 14px;border-radius:999px;font-size:var(--fs-sm);font-weight:600;color:var(--ink)}
   /* square marker, matching every other accent bullet on the page (one marker vocabulary). */
   .bench-take .t .d{width:8px;height:8px;background:var(--accent);flex:0 0 auto}
-  .artifact{grid-column:1/-1;margin-top:var(--s7)}
+  .artifact{grid-column:1/-1;margin-top:var(--s6)}
   .artifact.narrow{grid-column:1 / span 9}
   @media (max-width:920px){.artifact.narrow{grid-column:1/-1}}
 
@@ -316,7 +316,7 @@
   .diagram figcaption b{color:var(--ink);font-weight:700}
 
   /* people: a typographic roster, no invented faces */
-  .roster{grid-column:1/-1;margin-top:var(--s7);border-top:2px solid var(--ink);display:grid;grid-template-columns:repeat(3,1fr);gap:0}
+  .roster{grid-column:1/-1;margin-top:var(--s6);border-top:2px solid var(--ink);display:grid;grid-template-columns:repeat(3,1fr);gap:0}
   @media (max-width:720px){.roster{grid-template-columns:1fr}}
   .roster .p{padding:20px 24px;border-bottom:1px solid var(--line);border-right:1px solid var(--line);display:flex;gap:14px;align-items:baseline}
   .roster .p:nth-child(3n){border-right:0}
@@ -331,7 +331,7 @@
   .roster .p .who span{display:block;font-family:var(--sans);font-weight:600;font-size:var(--fs-micro);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-faint);margin-top:5px}
 
   /* the trust ladder — ranked type, strongest first, orange marks the top rung */
-  .ladder{grid-column:1/-1;margin-top:var(--s7);border-top:2px solid var(--ink)}
+  .ladder{grid-column:1/-1;margin-top:var(--s6);border-top:2px solid var(--ink)}
   .ladder .row{display:grid;grid-template-columns:3.2rem minmax(0,4fr) minmax(0,6fr);gap:18px 32px;align-items:baseline;padding:24px 0;border-bottom:1px solid var(--line)}
   @media (max-width:640px){.ladder .row{grid-template-columns:2.4rem 1fr;gap:6px 18px}.ladder .row .rd{grid-column:2}}
   .ladder .rk{font-family:var(--wide);font-weight:800;font-size:clamp(1.5rem,3vw,2.1rem);line-height:.9;letter-spacing:-.01em;color:var(--ink-faint)}
@@ -344,7 +344,7 @@
   .ladder .rd b{color:var(--ink);font-weight:700}
 
   /* four loops — one ruled system */
-  .loops{grid-column:1/-1;margin-top:var(--s7);border-top:2px solid var(--ink)}
+  .loops{grid-column:1/-1;margin-top:var(--s6);border-top:2px solid var(--ink)}
   .loop{display:grid;grid-template-columns:2.6rem minmax(0,4fr) minmax(0,7fr);gap:18px 32px;align-items:baseline;padding:24px 0;border-bottom:1px solid var(--line)}
   @media (max-width:760px){.loop{grid-template-columns:2.6rem 1fr;gap:8px 18px}.loop .lf{grid-column:2}}
   .loop .n{font-family:var(--wide);font-weight:800;color:var(--accent-ink);font-feature-settings:"tnum" 1;font-size:1.05rem}
@@ -352,7 +352,7 @@
   .loop .lt .thr{margin-top:6px;font-size:var(--fs-sm);color:var(--accent-ink);font-weight:700;font-feature-settings:"tnum" 1}
   .loop .lf{color:var(--ink-dim);font-size:var(--fs-sm);line-height:1.55}
   .loop .lf b{color:var(--ink);font-weight:700}
-  .surface-note{grid-column:1 / span 9;margin-top:var(--s7);padding-left:20px;border-left:3px solid var(--accent)}
+  .surface-note{grid-column:1 / span 9;margin-top:var(--s6);padding-left:20px;border-left:3px solid var(--accent)}
   .surface-note p{margin:0;font-size:var(--fs-lead);line-height:1.42;font-weight:500;color:var(--ink);max-width:56ch}
   .surface-note p b{font-weight:800}
   /* a figure right after a surface-note (loops) would otherwise butt against it at the bare 40px
@@ -361,7 +361,7 @@
   @media (max-width:920px){.surface-note{grid-column:1/-1}}
 
   /* a two-up product row: image beside prose, alternating side */
-  .feat{grid-column:1/-1;display:grid;grid-template-columns:repeat(12,1fr);gap:clamp(24px,3.5vw,52px);align-items:center;margin-top:var(--s8)}
+  .feat{grid-column:1/-1;display:grid;grid-template-columns:repeat(12,1fr);gap:clamp(24px,3.5vw,52px);align-items:center;margin-top:var(--s7)}
   /* #flows is the one section with no lead, so its first feature sits directly under the title;
      the default .feat top margin (tuned to follow a lead) left a ~136px void. Tighten it so the
      title-to-content gap reads intentional (~88), not like a deleted element. */
@@ -376,15 +376,15 @@
   .feat .txt p b{color:var(--ink);font-weight:700}
 
   /* explainability — the heart, a large centered screen */
-  .heart-shot{grid-column:1/-1;margin-top:var(--s7)}
+  .heart-shot{grid-column:1/-1;margin-top:var(--s6)}
   .heart-shot.narrow{grid-column:2 / span 10}
   @media (max-width:920px){.heart-shot.narrow{grid-column:1/-1}}
-  .heart-carry{grid-column:1 / span 9;margin-top:var(--s7);font-size:var(--fs-lead);font-weight:500;color:var(--ink);line-height:1.4;max-width:52ch}
+  .heart-carry{grid-column:1 / span 9;margin-top:var(--s6);font-size:var(--fs-lead);font-weight:500;color:var(--ink);line-height:1.4;max-width:52ch}
   .heart-carry b{font-weight:800}
   @media (max-width:920px){.heart-carry{grid-column:1/-1}}
 
   /* honesty ledger — the signature centerpiece */
-  .ledger{grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr;gap:clamp(28px,4vw,64px);margin-top:var(--s7)}
+  .ledger{grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr;gap:clamp(28px,4vw,64px);margin-top:var(--s6)}
   @media (max-width:760px){.ledger{grid-template-columns:1fr;gap:var(--s7)}}
   .ledger .col{padding-top:var(--s4);border-top:2px solid var(--ink)}
   .ledger .col.prove{border-top-color:var(--accent)}
@@ -394,16 +394,16 @@
   .ledger .col ul{list-style:none;margin:0;padding:0}
   .ledger .col li{padding:16px 0;border-bottom:1px solid var(--line);font-size:var(--fs-sm);line-height:1.55;color:var(--ink-dim)}
   .ledger .col li b{color:var(--ink);font-weight:700}
-  .ledger-note{grid-column:1/-1;margin-top:var(--s8);border-top:2px solid var(--ink);border-bottom:2px solid var(--ink);padding:var(--s6) 0}
+  .ledger-note{grid-column:1/-1;margin-top:var(--s7);border-top:2px solid var(--ink);border-bottom:2px solid var(--ink);padding:var(--s6) 0}
   .ledger-note p{font-family:var(--wide);font-size:clamp(1.25rem,2.6vw,1.85rem);font-weight:700;line-height:1.24;letter-spacing:-.015em;margin:0;max-width:44ch;color:var(--ink-2)}
   .ledger-note p b{color:var(--accent-ink);font-weight:800}
 
   /* design system — palette + type specimen + board */
-  .sys-lead{grid-column:1 / span 8;margin-bottom:var(--s6)}
+  .sys-lead{grid-column:1 / span 8;margin-bottom:var(--s5)}
   @media (max-width:920px){.sys-lead{grid-column:1/-1}}
   .swatches{grid-column:1 / span 7;margin-top:var(--s2)}
   .type-spec{grid-column:9 / span 4;align-self:start;margin-top:var(--s2)}
-  @media (max-width:920px){.swatches,.type-spec{grid-column:1/-1}.type-spec{margin-top:var(--s7)}}
+  @media (max-width:920px){.swatches,.type-spec{grid-column:1/-1}.type-spec{margin-top:var(--s6)}}
   .swatches .k,.type-spec .k{font-size:var(--fs-micro);letter-spacing:.14em;text-transform:uppercase;color:var(--ink-faint);font-weight:700;margin-bottom:var(--s4)}
   .sw{display:flex;align-items:center;gap:14px;padding:12px 0;border-top:1px solid var(--line)}
   .sw:first-of-type{border-top:2px solid var(--ink)}
@@ -415,8 +415,8 @@
   .type-spec .row:first-of-type{border-top:2px solid var(--ink)}
   .type-spec .row .g{font-family:var(--wide);color:var(--ink);letter-spacing:-.01em}
   .type-spec .row .lbl{font-size:var(--fs-micro);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-faint);font-weight:600;flex:0 0 auto}
-  .sys-board{grid-column:1/-1;margin-top:var(--s8)}
-  .sys-disc{grid-column:1 / span 9;margin-top:var(--s7);padding-left:20px;border-left:3px solid var(--accent)}
+  .sys-board{grid-column:1/-1;margin-top:var(--s7)}
+  .sys-disc{grid-column:1 / span 9;margin-top:var(--s6);padding-left:20px;border-left:3px solid var(--accent)}
   .sys-disc p{margin:0;color:var(--ink-dim);font-size:var(--fs-sm);line-height:1.6;max-width:60ch}
   .sys-disc p b{color:var(--ink)}
   @media (max-width:920px){.sys-disc{grid-column:1/-1}}
@@ -430,14 +430,14 @@
   .refl .honest{margin-top:var(--s6);padding-top:var(--s5);border-top:1px solid var(--line-strong)}
   .refl .honest p{font-size:var(--fs-body);color:var(--ink-dim);max-width:60ch}
   .refl .honest p b{color:var(--ink)}
-  .livelink{grid-column:1/-1;margin-top:var(--s8);display:inline-flex;align-items:center;gap:12px;font-family:var(--wide);font-weight:800;font-size:clamp(1.1rem,2vw,1.4rem);letter-spacing:-.01em;color:var(--ink);text-decoration:none;transition:gap .16s var(--ease-out)}
+  .livelink{grid-column:1/-1;margin-top:var(--s7);display:inline-flex;align-items:center;gap:12px;font-family:var(--wide);font-weight:800;font-size:clamp(1.1rem,2vw,1.4rem);letter-spacing:-.01em;color:var(--ink);text-decoration:none;transition:gap .16s var(--ease-out)}
   .livelink:hover{gap:18px}
   .livelink:active{transform:translateY(1px)}
   .livelink .u{width:10px;height:10px;background:var(--accent);flex:0 0 auto}
   .livelink .ar{color:var(--accent-ink)}
 
   /* closing montage */
-  .closing-head{grid-column:1/-1;display:flex;align-items:center;gap:16px;font-size:var(--fs-label);letter-spacing:.14em;text-transform:uppercase;color:var(--ink-dim);font-weight:700;margin-bottom:var(--s6)}
+  .closing-head{grid-column:1/-1;display:flex;align-items:center;gap:16px;font-size:var(--fs-label);letter-spacing:.14em;text-transform:uppercase;color:var(--ink-dim);font-weight:700;margin-bottom:var(--s5)}
   .closing-head .rule{flex:1;height:1px;background:var(--line-strong)}
   /* on narrow phones the two labels + connecting rule can't share a line; drop the secondary
      label and the rule (matching how the eyebrow hides its secondary tag), leaving a clean head. */
@@ -446,10 +446,10 @@
 
   /* colophon */
   .colophon{background:var(--paper-2);border-top:1px solid var(--line)}
-  .colophon .wrap{padding-block:clamp(52px,7vw,88px)}
+  .colophon .wrap{padding-block:clamp(40px,5.4vw,66px)}
   .colophon .cred{grid-column:1 / span 7}
   .colophon .note{grid-column:9 / span 4;align-self:start}
-  @media (max-width:920px){.colophon .cred,.colophon .note{grid-column:1/-1}.colophon .note{margin-top:var(--s7)}}
+  @media (max-width:920px){.colophon .cred,.colophon .note{grid-column:1/-1}.colophon .note{margin-top:var(--s6)}}
   .colophon .brand{font-family:var(--wide);font-weight:800;font-size:clamp(1.8rem,5vw,3rem);letter-spacing:-.02em;margin-bottom:var(--s5);display:inline-flex;align-items:baseline;gap:1px}
   .colophon .brand .p{color:var(--accent)}
   .colophon .cred p{color:var(--ink-dim);font-size:var(--fs-sm);line-height:1.6;max-width:60ch}
@@ -460,7 +460,7 @@
   .colophon .note dt{font-size:var(--fs-micro);letter-spacing:.12em;text-transform:uppercase;color:var(--ink-faint);font-weight:700}
   .colophon .note dd{margin:0;font-size:var(--fs-sm);color:var(--ink);font-weight:600;text-align:right}
   .colophon .note dd .u{display:inline-block;width:10px;height:10px;background:var(--accent);vertical-align:baseline;margin-left:6px}
-  .backlink{grid-column:1/-1;display:inline-flex;align-items:center;gap:.5rem;margin-top:var(--s7);font-size:var(--fs-sm);color:var(--ink-dim);text-decoration:none;font-weight:700}
+  .backlink{grid-column:1/-1;display:inline-flex;align-items:center;gap:.5rem;margin-top:var(--s6);font-size:var(--fs-sm);color:var(--ink-dim);text-decoration:none;font-weight:700}
   .backlink:hover{color:var(--ink)}
 
   /* calm reveal — CSS transition only, no keyframes; reduced-motion safe */
@@ -517,8 +517,8 @@
       <p class="cover-lead rise d2">People don&rsquo;t lose ideas when they write them down. They lose them <b>on the way back.</b></p>
       <p class="cover-sub rise d2">The one thing I kept seeing across six interviews.</p>
       <dl class="meta rise d3">
-        <div><dt>What I did</dt><dd>Research, product and UI design, the design system, and the full-stack build. I directed the AI that wrote most of the code, and I owned every judgment call.</dd></div>
-        <div><dt>Team</dt><dd>Two people, Luhmann&rsquo;s Quorum. I owned the design and the build.</dd></div>
+        <div><dt>Role</dt><dd>Product and visual design, the design system, and the full-stack build. I led the product and interface and directed the AI that wrote most of the code.</dd></div>
+        <div><dt>Team</dt><dd>Luhmann&rsquo;s Quorum, a two-person team with <a href="https://www.linkedin.com/in/ruhivadsariya/" target="_blank" rel="noopener">Ruhi Vadsariya</a>. Advised by Prof. Sang-Hwan Kim.</dd></div>
         <div><dt>Context</dt><dd>MS Human-Centered Design and Engineering, University of Michigan.</dd></div>
         <div><dt>Live</dt><dd>A working prototype, built end to end, never publicly released. No users, and that is the truth of it.</dd></div>
       </dl>
@@ -569,8 +569,8 @@
     </figure>
 
     <blockquote class="pull rise">
-      <q>If I still do not find it in thirty seconds I write a new block with what I remember and move on.</q>
-      <div class="attr"><span class="u" aria-hidden="true"></span> A participant, on what happens when the search fails.</div>
+      <q>If I still could not find it I would stop and write a new note. That is the painful truth.</q>
+      <div class="attr"><span class="u" aria-hidden="true"></span> A participant, when the search runs out.</div>
     </blockquote>
   </div>
 </section>
@@ -586,11 +586,16 @@
       <img src="assets/research-method.webp" alt="The research method as a five-phase spine, problem discovery first and solutions last. The four discovery phases: 01 Literature Review, foundations and prior art; 02 Benchmarking, six tools across five dimensions; 03 User Interviews, six people at sixty minutes each; 04 Synthesis, ten findings and ten requirements. Then, past a divider, the lone solutions phase: 05 Design and Test, lo-fi to hi-fi across two rounds." width="2480" height="784" loading="lazy">
     </figure>
 
+    <figure class="diagram rise">
+      <img src="assets/triangulation.webp" alt="A triangulation matrix of the six core findings against three independent sources: literature, the tool benchmark, and the interviews. Every finding surfaced in the interviews and the benchmark; the literature backed all but one, so each holds across at least two of the three sources." width="2480" height="996" loading="lazy">
+      <figcaption><b>Six core findings, each triangulated.</b> Every one surfaced in the interviews and the benchmark; the literature backed all but one. The one-line <em>because</em>, the reason people come to trust, held across all three.</figcaption>
+    </figure>
+
     <div class="bench rise">
       <div class="bench-head">
         <h3 class="title">What today&rsquo;s tools get right, and wrong.</h3>
       </div>
-      <p class="body">We ran the same tasks through six networked-note tools, three established note apps and three AI-native ones, and graded each on the same five dimensions. Two columns came back thin across every one of them: nobody surfaces the right note at the right moment, and nobody shows the proof behind a suggested link. Those two gaps became the product.</p>
+      <p class="body">We ran the same tasks through six networked-note tools, three established note apps and three AI-native ones, and assessed each on the same five dimensions. Two columns came back thin across every one of them: nobody surfaces the right note at the right moment, and nobody shows the proof behind a suggested link. Those two gaps became the product.</p>
       <div class="bench-take">
         <span class="t"><span class="d"></span>Capture: fast beats fancy</span>
         <span class="t"><span class="d"></span>Connect: link by idea, show the proof</span>
@@ -600,22 +605,15 @@
       </div>
       <figure class="shot artifact">
         <div class="ph" style="--ar:2560/1600">
-          <img src="assets/benchmark-grid.webp" alt="The competitive benchmark grid: six networked-note tools, Obsidian, Notion, Logseq, Tana, Mem, and Readwise, graded down five dimensions, capture, connection, retrieval, resurfacing, and trust, with a short verdict on each." width="2560" height="1600" loading="lazy">
-          <span class="ph-spec"><span class="spec-res">2560 &times; 1600</span><span class="spec-lbl">Six tools graded across five dimensions, with a verdict per cell</span></span>
+          <img src="assets/benchmark-grid.webp" alt="The competitive benchmark grid: six networked-note tools, Obsidian, Notion, Logseq, Tana, Mem, and Readwise, assessed across five dimensions, capture, connection, retrieval, resurfacing, and trust, with a short verdict on each." width="2560" height="1600" loading="lazy">
+          <span class="ph-spec"><span class="spec-res">2560 &times; 1600</span><span class="spec-lbl">Six tools assessed across five dimensions, with a verdict per cell</span></span>
         </div>
-        <figcaption><span class="fn-tag"><span class="u" aria-hidden="true"></span>Benchmark</span><b>Six tools, five dimensions, one verdict per cell.</b> Three established note apps, Obsidian, Notion, and Logseq, and three AI-native, Tana, Mem, and Readwise, graded on capture, connection, retrieval, resurfacing, and trust. The two thin columns were resurfacing and proof, the space almost nobody builds.</figcaption>
+        <figcaption><span class="fn-tag"><span class="u" aria-hidden="true"></span>Benchmark</span><b>Six tools, five dimensions, one verdict per cell.</b> Three established note apps, Obsidian, Notion, and Logseq, and three AI-native, Tana, Mem, and Readwise, assessed on capture, connection, retrieval, resurfacing, and trust. The two thin columns were resurfacing and proof, the space almost nobody builds.</figcaption>
       </figure>
       <blockquote class="pull small">
         <q>I tried Mem for a month because I liked the idea of asking questions across my notes, but I ran into trust issues when it guessed wrong about a link, so I stopped.</q>
         <div class="attr"><span class="u" aria-hidden="true"></span> A participant, on quitting an AI tool that guessed wrong.</div>
       </blockquote>
-      <figure class="shot artifact">
-        <div class="ph" style="--ar:2880/1620">
-          <img src="assets/lofi-to-hifi.webp" alt="A design progression: annotated low-fidelity wireframes of the workspace on the left resolving into the high-fidelity dark-theme screen on the right, showing the three-pane shell taking its final shape." width="2880" height="1620" loading="lazy">
-          <span class="ph-spec"><span class="spec-res">2880 &times; 1620</span><span class="spec-lbl">Low-fidelity wireframes resolving into the high-fidelity workspace</span></span>
-        </div>
-        <figcaption><span class="fn-tag"><span class="u" aria-hidden="true"></span>Design and test</span><b>From annotated wireframes to the built screen.</b> The three-pane shell held its shape from low-fi to high-fi. Two rounds of moderated testing changed what happened inside it.</figcaption>
-      </figure>
     </div>
   </div>
 </section>
@@ -631,12 +629,20 @@
       <img src="assets/people-roster.webp" alt="Six anonymized research participants with six different setups, all converging on one shared finding. 01 Doctoral student, deep research vault; 02 Master's student, local Markdown vault; 03 Master's student, Logseq and journals first; 04 Product Manager, meeting to memory; 05 Strategy Consultant, careful with sources; 06 Senior UX Researcher, evidence over recall. The one friction all six shared: linking by title recall." width="2480" height="784" loading="lazy">
     </figure>
 
+    <figure class="shot artifact rise">
+      <div class="ph" style="--ar:3525/1591">
+        <img src="assets/artifact-screener.webp" alt="The real interview screener, a Google Form titled Capstone 1: Interview Screener Form, with nine questions: role, how often they capture notes, which note tools they use, how often they link or tag, willingness to screen-share a real vault for sixty minutes, time zone, contact, devices, and a short prompt asking them to describe the last time they tried to find an old note." width="3525" height="1591" loading="lazy">
+        <span class="ph-spec"><span class="spec-res">The screener</span><span class="spec-lbl">The real Google Form we recruited the six participants with</span></span>
+      </div>
+      <figcaption><span class="fn-tag"><span class="u" aria-hidden="true"></span>How we recruited</span><b>The real screener, not a description of one.</b> Nine questions to find six people who live in their notes. The last one, describe the last time you tried to find an old note, is the whole problem in a single line.</figcaption>
+    </figure>
+
     <blockquote class="pull small rise">
-      <q>I&rsquo;d remove the need to remember titles. If I type a phrase, propose precise candidates with a short because.</q>
+      <q>If I type a phrase the system should propose a handful of precise candidates with a short because.</q>
       <div class="attr"><span class="u" aria-hidden="true"></span> A participant, on how linking should feel.</div>
     </blockquote>
     <blockquote class="pull small rise">
-      <q>I never tag on the phone. It slows me down. Capture has to be a sentence and a title, that is it.</q>
+      <q>I never tag on the phone. It slows me down.</q>
       <div class="attr"><span class="u" aria-hidden="true"></span> A participant, on the front door.</div>
     </blockquote>
   </div>
@@ -694,7 +700,7 @@
   <div class="wrap grid12">
     <div class="eyebrow rise"><span class="num"><i>^</i>06</span> <span class="lbl">Explainable AI</span> <span class="rule"></span><span class="tag">The heart of it</span></div>
     <h2 class="title s-head rise" id="explain-h">No suggestion is a black box.</h2>
-    <div class="lead-col rise"><p class="lead">Every suggestion starts from a real similarity match, embeddings and cosine distance, so nothing shows up on a hunch. Then it tells you the basis in one line: the tags two notes share, a note they both touch, or a plain concept match. Open Details and it names the tag the link leans on, the one whose removal would weaken it. Turn on Transparency and the source notes appear as chips you can open. No confidence percentage, no black box. The reason is the match, shown plainly, and it is the price of showing up.</p></div>
+    <div class="lead-col rise"><p class="lead">Every suggestion starts from a real similarity match, not a hunch. It shows the basis in one line: the tags two notes share, a note they both touch, or a plain concept match. Open Details and it names the tag the link leans on. Turn on Transparency and the source notes appear as chips you can open. No confidence percentage, no black box, just the match, shown plainly.</p></div>
 
     <figure class="shot heart-shot narrow rise">
       <div class="ph" style="--ar:2560/1600">
@@ -704,7 +710,7 @@
       <figcaption><span class="fn-tag"><span class="u" aria-hidden="true"></span>Explainability</span><b>The reason rides with the suggestion, inline in the rail.</b> Each candidate shows why it matched, the shared tags or the concept similarity, and a relation you can set. Open Details and it names the tag the link leans on. With Transparency on, an Evidence row lists the source notes as chips you can open. Accept or Dismiss in a click, no modal in the way.</figcaption>
     </figure>
 
-    <p class="heart-carry rise">I put the reason in the data model, not the copy. Every suggestion is stored with its <b>because</b>, its evidence notes, and the tag it leans on, all computed from the real match, the shared tags, the shared neighbor, the embedding similarity. So the reason is the mechanism itself, surfaced honestly, never an AI story written after the fact to sound convincing. It lives at the contract level, where it cannot drift from what the interface claims.</p>
+    <p class="heart-carry rise">I put the reason in the data model, not the copy. Every suggestion is stored with its <b>because</b>, its evidence notes, and the tag it leans on, all computed from the real match. So the reason is the mechanism itself, not an AI story written afterward to sound convincing. It lives where it cannot drift from what the interface claims.</p>
   </div>
 </section>
 
@@ -753,7 +759,7 @@
   <div class="wrap grid12">
     <div class="eyebrow rise"><span class="num"><i>^</i>08</span> <span class="lbl">The graph</span> <span class="rule"></span><span class="tag">For thinking, not decoration</span></div>
     <h2 class="title s-head rise" id="graph-h">A graph you can actually stand in.</h2>
-    <div class="lead-col rise"><p class="lead">The graph is global, but it does not throw the whole hairball at you. Click any node and it lights up with its neighbors while the rest dims, and a Focused Node panel fills with the note, its connections, and a place to generate ideas. A legend, an onboarding card, and a Back-to-notes button keep you oriented. The full graph overwhelmed people in testing, so focus and a clear way out became the point. A few also asked it to show the exact block they linked, not just a line between two pages.</p></div>
+    <div class="lead-col rise"><p class="lead">The graph is global, but it never throws the whole hairball at you. Click a node and it lights up with its neighbors while the rest dims; a Focused Node panel fills with the note, its connections, and a place to generate ideas. The full graph overwhelmed people in testing, so focus and a clear way out became the point.</p></div>
 
     <figure class="shot artifact rise">
       <div class="ph" style="--ar:2560/1600">
@@ -763,23 +769,18 @@
       <figcaption><span class="fn-tag"><span class="u" aria-hidden="true"></span>The graph</span><b>Select a node and the graph focuses: it and its neighbors light up, the rest fades back.</b> The Focused Node rail turns the selection into a next step, its connections and a place to generate ideas. A legend, an onboarding card, and a Back-to-notes button keep you from getting lost. It is built for thinking, not for looking impressive.</figcaption>
     </figure>
 
+    <div class="surface-note rise">
+      <p>In the first build the graph rendered a black screen and crashed the app. <b>I found it in my own audit</b>, and wrapped the graph view in an error boundary with a real fallback, a &ldquo;Graph view crashed&rdquo; message with a way back to your notes, instead of a dead screen. The crash became a caught, recoverable state, not a patch.</p>
+    </div>
+
     <blockquote class="pull small rise">
       <q>The global graph is too chaotic for me &hellip; Local graph plus backlinks is enough.</q>
       <div class="attr"><span class="u" aria-hidden="true"></span> A participant, on the global graph, and why Backlinks carry the load.</div>
     </blockquote>
 
     <div class="surface-note rise">
-      <p>In the first build the graph rendered a black screen and crashed the app. <b>I found it in my own audit</b>, and wrapped the graph view in an error boundary with a real fallback, a &ldquo;Graph view crashed&rdquo; message with a way back to your notes, instead of a dead screen. The crash became a caught, recoverable state, not a patch.</p>
+      <p><b>From the graph rail, Explore Related Thinking.</b> Select a note and it grows ideas from that note and its neighbors, each a card with a title, a one-line summary, and one button to turn it into a note. It reads as connecting what you already wrote, not conjuring something new.</p>
     </div>
-  </div>
-</section>
-
-<!-- ============ 09 EXPLORE RELATED THINKING ============ -->
-<section id="generate" aria-labelledby="generate-h">
-  <div class="wrap grid12">
-    <div class="eyebrow rise"><span class="num"><i>^</i>09</span> <span class="lbl">Generate</span> <span class="rule"></span><span class="tag">Surfacing, not inventing</span></div>
-    <h2 class="title s-head rise" id="generate-h">Explore related thinking.</h2>
-    <div class="lead-col rise"><p class="lead">In the graph rail it is called AI Ideas. Select a note, and it generates ideas from that note and its neighbors. Each one comes back as a card with a title and a one-line summary, and a single button to turn it into a note. It reads as connecting what you already wrote, not conjuring something new.</p></div>
 
     <figure class="shot artifact rise">
       <div class="ph" style="--ar:2560/1600">
@@ -788,20 +789,28 @@
       </div>
       <figcaption><span class="fn-tag"><span class="u" aria-hidden="true"></span>Generate</span><b>Ideas grown from the note you selected, each a title and a summary.</b> One button turns any idea into a note. This panel is the app&rsquo;s one violet moment, marking generative AI apart from the brand orange everywhere else.</figcaption>
     </figure>
-
-    <blockquote class="pull small rise">
-      <q>This feels less like generating something new and more like connecting things I&rsquo;ve already written.</q>
-      <div class="attr"><span class="u" aria-hidden="true"></span> A participant, on the idea generator. It set how I frame the feature: surfacing what is already there, not inventing.</div>
-    </blockquote>
   </div>
 </section>
 
-<!-- ============ 10 WHERE IT STANDS — THE HONESTY LEDGER ============ -->
-<section id="stands" aria-labelledby="stands-h">
+<!-- ============ 09 THE TESTING ============ -->
+<section id="testing" aria-labelledby="testing-h">
   <div class="wrap grid12">
-    <div class="eyebrow rise"><span class="num"><i>^</i>10</span> <span class="lbl">Where it stands</span> <span class="rule"></span><span class="tag">Honest about what it is</span></div>
-    <h2 class="title s-head rise" id="stands-h">Honest about what it is, and isn&rsquo;t.</h2>
-    <div class="lead-col rise"><p class="lead">Tho8 is a working, deployed prototype, built as a graduate capstone. It was never released, and it has no user numbers. That is the truth, and it is not the point.</p></div>
+    <div class="eyebrow rise"><span class="num"><i>^</i>09</span> <span class="lbl">The testing</span> <span class="rule"></span><span class="tag">Six people, two rounds</span></div>
+    <h2 class="title s-head rise" id="testing-h">What the testing changed.</h2>
+    <div class="lead-col rise"><p class="lead">Two rounds of moderated testing, V1 to V2. The same confusions surfaced again and again, and each one pointed at a specific fix. I shipped the fixes, then tested the build again.</p></div>
+
+    <div class="breaks rise">
+      <div class="b"><div class="t">The graph overwhelmed people before it helped.</div><div class="d">A <b>context-first graph</b>: it opens focused on the note you clicked, with an onboarding cue and a clear way back, instead of the whole hairball at once.</div></div>
+      <div class="b"><div class="t">People could not tell what the AI was working from.</div><div class="d"><b>Source labels on every answer</b>, Based on this note or Based on three related notes, so the scope is never a guess.</div></div>
+      <div class="b"><div class="t">Idea generation only clicked when it was tied to a note.</div><div class="d">Renamed it <b>Explore Related Thinking</b> and anchored it to a selection, never a blank prompt.</div></div>
+      <div class="b"><div class="t">People could not tell whether a note had saved.</div><div class="d">A visible <b>save state</b>, Saved just now, so no one has to wonder.</div></div>
+      <div class="b"><div class="t">Trust rose the moment people could see the reasoning.</div><div class="d">Made <b>Why this</b> a primary layer, the evidence one click away, not a buried toggle.</div></div>
+      <div class="b"><div class="t">The rail asked for too much at once.</div><div class="d"><b>Progressive disclosure</b>: the essentials first, the rest on interaction.</div></div>
+    </div>
+
+    <div class="surface-note rise">
+      <p>Six people is a small sample, and no one has used this in the wild, so I will not dress it up as a measured win. What two rounds of testing bought was <b>precision</b>: the confusion was specific, so the fixes could be too.</p>
+    </div>
 
     <figure class="diagram rise">
       <img src="assets/honesty-ledger.webp" alt="A two-sided honesty ledger. What I can prove: designed and coded it solo, thirty commits all mine; ran the research, six interviews, a six-tool benchmark, two test rounds; audited my own build, 6.5 out of 10, my own score. What I won't claim: that anyone used it, no adoption and no active users; any before-and-after number, six people find confusion, not a lift." width="2480" height="784" loading="lazy">
@@ -813,10 +822,10 @@
   </div>
 </section>
 
-<!-- ============ 11 DESIGN SYSTEM ============ -->
+<!-- ============ 10 DESIGN SYSTEM ============ -->
 <section id="system" aria-labelledby="system-h">
   <div class="wrap grid12">
-    <div class="eyebrow rise"><span class="num"><i>^</i>11</span> <span class="lbl">Design system</span> <span class="rule"></span><span class="tag">A quiet interface for loud thinking</span></div>
+    <div class="eyebrow rise"><span class="num"><i>^</i>10</span> <span class="lbl">Design system</span> <span class="rule"></span><span class="tag">A quiet interface for loud thinking</span></div>
     <h2 class="title s-head rise" id="system-h">A quiet interface for loud thinking.</h2>
     <div class="sys-lead rise"><p class="lead">Calm near-black surfaces so the words stand out. Two accents, and only two: Ember orange for the brand, selection, focus, and the live highlight, and a violet for the generative-AI moments. The reasons themselves, the because and its evidence, stay in neutral zinc, so a reason reads like a fact and not a pitch. I built the system alongside the UI, not after it, so every screen spoke the same language as it was drawn.</p></div>
 
@@ -839,24 +848,16 @@
       <div class="row"><span class="g" style="font-family:'JetBrains Mono',monospace;font-size:.9rem">note_links &middot; &#8984;K</span><span class="lbl">Mono, kbd &amp; code</span></div>
     </div>
 
-    <figure class="shot sys-board rise">
-      <div class="ph" style="--ar:2400/1600">
-        <img src="assets/design-system.webp" alt="The Tho8 design-system board on a near-black canvas: semantic color tokens as labeled swatches (base #09090B, raised #18181B, Ember #F2572B, AI violet #A78BFA, and the zinc text scale), radius and elevation samples, an Inter and Outfit type specimen with a JetBrains Mono line, and the Ember primary scale from 50 to 900." width="2400" height="1600" loading="lazy">
-        <span class="ph-spec"><span class="spec-res">2400 &times; 1600</span><span class="spec-lbl">Semantic tokens, the Ember and violet accents, the type specimen, and the changelog</span></span>
-      </div>
-      <figcaption><span class="fn-tag"><span class="u" aria-hidden="true"></span>The system</span><b>Semantic tokens, a written single source of truth, and a changelog.</b> Color, radius, and elevation live as CSS custom properties the build consumes by role, never by raw value. A four-pixel spacing grid and lucide icons sized to their labels keep spacing and glyphs on one ruler. The changelog reads like a design log because it was one.</figcaption>
-    </figure>
-
     <div class="sys-disc rise">
       <p><b>Fixes from the audit landed in the tokens, not the screens.</b> A failing contrast value became a token change every component inherited. A missing error state became a reusable error boundary. That is how the same defect does not come back.</p>
     </div>
   </div>
 </section>
 
-<!-- ============ 12 REFLECTION ============ -->
+<!-- ============ 11 REFLECTION ============ -->
 <section id="reflection" aria-labelledby="reflection-h">
   <div class="wrap grid12">
-    <div class="eyebrow rise"><span class="num"><i>^</i>12</span> <span class="lbl">Reflection</span> <span class="rule"></span><span class="tag">What it taught me</span></div>
+    <div class="eyebrow rise"><span class="num"><i>^</i>11</span> <span class="lbl">Reflection</span> <span class="rule"></span><span class="tag">What it taught me</span></div>
     <h2 class="title s-head rise" id="reflection-h">Trust is a design problem, not a model problem.</h2>
 
     <div class="refl rise">
@@ -874,20 +875,6 @@
   </div>
 </section>
 
-<!-- ============ THE WHOLE SURFACE (closing montage) ============ -->
-<section aria-label="The whole surface">
-  <div class="wrap grid12">
-    <div class="closing-head rise"><span>The whole surface</span><span class="rule"></span><span>Every screen, one system</span></div>
-    <figure class="shot closing-shot rise">
-      <div class="ph" style="--ar:2880/1620">
-        <img src="assets/interface-montage.webp" alt="A montage of the Tho8 interface end to end on its near-black canvas: the three-pane workspace, a new note on Cmd+N, the Cmd+K command palette, the editor AI Ask panel, the Link suggestions rail, the global graph, the AI Ideas panel, and the settings screen." width="2880" height="1620" loading="lazy">
-        <span class="ph-spec"><span class="spec-res">2880 &times; 1620</span><span class="spec-lbl">The interface end to end: workspace, new note, search, ask, suggestions, graph, ideas</span></span>
-      </div>
-      <figcaption><span class="fn-tag"><span class="u" aria-hidden="true"></span>The interface</span><b>Capture, connect, retrieve, resurface, all in one shell.</b> The four loops share a single three-pane workspace, with Ember orange for the brand and the live highlight, and a violet held back for the AI ideas.</figcaption>
-    </figure>
-  </div>
-</section>
-
 </main>
 
 <!-- ============ COLOPHON ============ -->
@@ -895,8 +882,8 @@
   <div class="wrap grid12">
     <div class="cred rise">
       <div class="brand">Tho8<span class="p">.</span></div>
-      <p><b>Tho8, also ZettelKraft.</b> An MS-HCDE capstone at the University of Michigan, built by a two-person team, Luhmann&rsquo;s Quorum. I ran the research, designed the product and the system, and built the working full-stack app in React and Supabase, directing the AI that wrote most of the code. I owned every judgment call.</p>
-      <p class="fine">Type is Manrope, a single family, set on a twelve-column grid. Orange marks one thing on this page: the product&rsquo;s Ember accent, borrowed as the single editorial signal. In the product itself Ember is the brand and a second violet marks the AI, while the reasons stay neutral. Everything else here stays disciplined neutral. Screens are clean recreations of the real app.</p>
+      <p><b>Tho8, also ZettelKraft.</b> An MS-HCDE capstone at the University of Michigan by <b>Luhmann&rsquo;s Quorum</b>, a two-person team with <a href="https://www.linkedin.com/in/ruhivadsariya/" target="_blank" rel="noopener">Ruhi Vadsariya</a>, advised by Prof. Sang-Hwan Kim. Ruhi partnered on the research, ideation, evaluation, and testing; the design and the product build were mine. I designed the product and the system and shipped the working full-stack app in React and Supabase, directing the AI that wrote most of the code.</p>
+      <p class="fine">Type is Manrope on a twelve-column grid. Orange appears once here, the product&rsquo;s Ember accent, borrowed as the single editorial signal; in the app itself Ember is the brand and a violet marks the AI. Screens and diagrams are clean recreations of the real work; the interview screener is the real Google Form, one email blurred.</p>
       <a class="backlink" href="/">&larr; Back to portfolio</a>
     </div>
     <div class="note rise">
