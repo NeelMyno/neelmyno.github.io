@@ -1,0 +1,1190 @@
+<!doctype html>
+<html lang="en">
+<head>
+<!-- [SHARED-VERBATIM] charset + viewport -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- [PAGE-CUSTOM] title + description -->
+<title>Lumen, Warp's design system built to be read by AI · Neel Tengariya</title>
+<meta name="description" content="Lumen is Warp's LLM-first design system: one Obsidian canvas, one Spring Green accent, one typeface, and rules that fail the build when they break. Sole architect, directing the AI that wrote most of the code.">
+
+<!-- [SHARED-VERBATIM] site integration: favicon + apple-touch-icon (parity with neelmyno.in) -->
+<link href="/images/web/favicon_32x32.png" rel="shortcut icon" type="image/x-icon">
+<link href="/images/web/webclip_256x256.png" rel="apple-touch-icon">
+
+<!-- [PAGE-CUSTOM] social preview (OG + Twitter) -->
+<meta property="og:type" content="article">
+<meta property="og:title" content="Lumen, Warp's design system, built to be read by AI">
+<meta property="og:description" content="One Obsidian canvas, one Spring Green accent, one typeface, and rules that fail the build when they break. The green-shadow fix-the-class story, told in the system's own language.">
+<meta property="og:image" content="https://neelmyno.in/lumen/assets/hero-system-montage.jpg">
+<meta property="og:url" content="https://neelmyno.in/lumen/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Lumen, Warp's design system, built to be read by AI">
+<meta name="twitter:description" content="A design system that enforces its own rules, on a shrinking team where the AI is usually holding the keyboard.">
+<meta name="twitter:image" content="https://neelmyno.in/lumen/assets/hero-system-montage.jpg">
+
+<!-- [SHARED-VERBATIM] Google Analytics — the same property as neelmyno.in, so page visits are tracked -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-0G48YWW7ZE"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag() { dataLayer.push(arguments); }
+  gtag('js', new Date());
+  gtag('config', 'G-0G48YWW7ZE');
+</script>
+
+<!-- [PAGE-CUSTOM] the case-study BODY typeface. The HEADER does NOT use this (it self-hosts Inter
+     Display via @font-face in the CSS below), so this swap is free. Satoshi is Lumen's own typeface,
+     from Fontshare, so the case study is set in the system it describes. -->
+<link rel="preconnect" href="https://api.fontshare.com" crossorigin>
+<link rel="preconnect" href="https://cdn.fontshare.com" crossorigin>
+<link href="https://api.fontshare.com/v2/css?f=satoshi@300,400,500,700,900&display=swap" rel="stylesheet">
+
+<style>
+  /* ============================================================
+     LUMEN · THE SPECIMEN MUSEUM
+     A design-system case study set in the system's own language.
+     Brand-lock, derived from the real Lumen (Step 0):
+       Canvas  Obsidian #0D0D0D, a true neutral near-black, R = G = B, no green tilt.
+       Accent  Spring Green #00FA8A, ONE role only (action, live, success), under ~5% of surface.
+       Type    Satoshi, one family, every job, tabular figures on the numerals.
+       Shadow  neutral only, everywhere. The green never lives in light. (This system is the
+               one that retired green from every shadow, so the page must obey its own law.)
+       Motion  decelerate, never bounce; calm scroll-reveal; reduced-motion is first class.
+     Structure, header, and shell are copied from the shared scaffold so the page is a true
+     extension of neelmyno.in. The design-system specimens (color, type, the two-file contract,
+     the two guards, the primitives) are drawn LIVE in HTML/CSS from the real token values, so the
+     page demonstrates the system it describes. The real product surfaces (hero, SaaS, Commerce,
+     Mobile, the contact sheet) are webp crops of the real deployed renders in assets/.
+     ============================================================ */
+  :root{
+    /* canvas + surfaces - dark elevation is a LIGHTER surface, not a shadow */
+    --paper:#0D0D0D;         /* Obsidian canvas, never pure #000 */
+    --paper-2:#111111;       /* tonal band / figure ground */
+    --paper-3:#161616;       /* raised band */
+    --surface:#151515;       /* card */
+    --surface-2:#1B1B1B;     /* raised card */
+    --ph:#141414;            /* specimen placeholder ground */
+
+    /* ink - measured on the Obsidian canvas */
+    --ink:#F4F4F5;           /* primary          ~18:1 */
+    --ink-2:#FAFAFA;         /* brightest display */
+    --ink-dim:#AEAEB3;       /* body secondary   ~9:1  */
+    --ink-faint:#8A8A90;     /* small labels     ~5.5:1 */
+
+    /* hairlines - separation before shadows */
+    --line:rgba(255,255,255,.08);
+    --line-strong:rgba(255,255,255,.16);
+
+    /* the one accent + the near-black ink that rides ON it (measured, ~15:1) */
+    --accent:#00FA8A;        /* Spring Green - action, live, success. Nothing else. */
+    --on-accent:#05100B;     /* near-black ink for text on the bright accent */
+    /* shell aliases: the scaffold rules reference these names, so we point them at the accent */
+    --amber:var(--accent);
+    --amber-ink:#00FA8A;     /* accent-as-text on dark reads AA+; also the focus ring + links */
+    --pill:var(--accent);
+    --on-amber:var(--on-accent);
+
+    /* polite status hues - dot + label always, never hue alone (sin 5) */
+    --ok:#00FA8A;
+    --warn:#F5B118;          /* at risk · status.warning.500 */
+    --err:#E5484D;           /* late / error · status.danger.500 */
+
+    /* neutral elevation only, zero accent anywhere in a shadow (sin 2) */
+    --shadow-photo:0 2px 20px rgba(0,0,0,.55), 0 1px 3px rgba(0,0,0,.5);
+    --shadow-float:0 26px 60px rgba(0,0,0,.62), 0 6px 16px rgba(0,0,0,.5);
+
+    --sans:'Satoshi','Helvetica Neue',Helvetica,Arial,system-ui,sans-serif;
+    --wide:'Satoshi','Helvetica Neue',Arial,sans-serif;
+
+    --fs-mega:clamp(3.6rem,12vw,9rem);
+    --fs-display:clamp(2.6rem,8vw,6.4rem);
+    --fs-h1:clamp(1.95rem,4.4vw,3.4rem);
+    --fs-h2:clamp(1.5rem,2.8vw,2.15rem);
+    --fs-lead:clamp(1.18rem,1.8vw,1.55rem);
+    --fs-body:clamp(1.02rem,1.05vw,1.1rem);
+    --fs-sm:0.9375rem;
+    --fs-label:0.72rem;
+    --fs-micro:0.6875rem;
+
+    /* one modular spacing scale, 4px base */
+    --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:32px;
+    --s7:48px; --s8:64px; --s9:96px; --s10:128px; --s11:160px;
+
+    --maxw:1160px;
+    --pad:clamp(20px,5vw,60px);
+
+    /* named easing tokens - never the bland bare keyword */
+    --ease-out:cubic-bezier(0.22,1,0.36,1);
+    --ease-out-quint:cubic-bezier(0.23,1,0.32,1);
+    --ease-soft:cubic-bezier(0.32,0.72,0,1);
+  }
+
+  /* ============================================================
+     [SHARED-VERBATIM] base reset / normalize (consumes the tokens above, so it follows the theme)
+     ============================================================ */
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+  body{
+    margin:0;background:var(--paper);color:var(--ink);
+    font-family:var(--sans);font-size:var(--fs-body);line-height:1.6;
+    font-feature-settings:"kern" 1,"liga" 1;
+    -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
+    overflow-x:hidden;
+  }
+  img{display:block;max-width:100%;height:auto}
+  ::selection{background:var(--pill);color:var(--on-amber)}
+  a{color:var(--amber-ink);text-underline-offset:.16em;text-decoration-thickness:.06em}
+  :focus-visible{outline:2.5px solid var(--amber-ink);outline-offset:3px;border-radius:3px}
+  /* tabular figures wherever a number carries meaning */
+  .tnum,.num,.res,.n,.meta dd,.scale .n,.spec dd,figcaption .fn{font-feature-settings:"tnum" 1,"lnum" 1}
+
+  /* ---- rails: ONE left edge for the whole document ---- */
+  .wrap{max-width:var(--maxw);margin-inline:auto;padding-inline:var(--pad)}
+  .grid12{display:grid;grid-template-columns:repeat(12,1fr);gap:clamp(20px,3vw,40px)}
+  .measure{max-width:58ch}
+  section{padding-block:clamp(56px,9vw,120px);position:relative}
+  section + section{border-top:1px solid var(--line)}
+
+  /* [SHARED-VERBATIM] the amber caret mark rule (kept for shell compatibility; Lumen's mark is a dot) */
+  .caret{color:var(--amber);font-family:var(--wide);font-weight:900;font-style:normal}
+
+  /* ============================================================
+     [SHARED-VERBATIM] SITE NAV — the REAL homepage component, byte-for-byte from the scaffold.
+     Self-hosts Inter Display and depends on ZERO :root tokens, so it stays a light frosted bar
+     over the Obsidian page, exactly as on neelmyno.in. Do not rebuild this.
+     ============================================================ */
+  @font-face{font-family:"Inter Display";src:url("https://assets.website-files.com/6279077bf697b924fac6e205/636dfe8261df29a8a191ebc6_Inter-Display.woff2") format("woff2");font-weight:400;font-style:normal;font-display:swap}
+  @font-face{font-family:"Inter Display";src:url("https://assets.website-files.com/6279077bf697b924fac6e205/636dfe98b0633015995d2554_Inter-DisplayBold.woff2") format("woff2");font-weight:700;font-style:normal;font-display:swap}
+  @font-face{font-family:"Inter Display";src:url("https://assets.website-files.com/6279077bf697b924fac6e205/636dfea34a3e3c1b85745887_Inter-DisplayLight.woff2") format("woff2");font-weight:300;font-style:normal;font-display:swap}
+  .nav{position:fixed;top:0;right:0;bottom:auto;left:0;z-index:100;background-color:hsla(0,0%,100%,.7);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);transition:background-color .2s,color .2s;font-family:"Inter Display",sans-serif;font-size:16px;line-height:1.5}
+  .nav.dark{color:#ecedee}
+  .nav .page-padding{padding-right:40px;padding-left:40px}
+  .nav .container{width:100%;max-width:1200px;margin-right:auto;margin-left:auto}
+  .nav-inner{position:relative;display:flex;padding-top:6px;padding-bottom:6px;justify-content:center;align-items:center;border-bottom:1px solid rgba(2,23,53,.1);transition:border-color .2s}
+  .nav-logo{position:absolute;top:auto;right:auto;bottom:auto;left:0;z-index:102;display:flex;align-items:center;margin-left:-16px;padding:6px 16px;font-size:17px;text-decoration:none;color:inherit}
+  .nav-logo img{width:60px;height:auto;display:block}
+  .nav-menu{display:flex;align-items:center}
+  .nav-link{position:relative;z-index:102;display:inline-block;padding:8px 14px;color:#687076;text-decoration:none}
+  .nav-link:hover{color:#151718}
+  .nav .cta{display:flex;align-items:center;font-weight:500;padding:8px 20px;color:#006adc;font-size:20px;text-decoration:none}
+  .nav .cta.cta--nav{position:absolute;right:0;z-index:102;margin-right:-20px;font-size:16px}
+  .nav .cta-chevron{display:flex;align-items:center;margin-left:6px}
+  .nav .cta-chevron svg{display:block}
+  /* the nav is fixed, like the homepage — offset the page so the masthead clears it (nav is 53px tall) */
+  body{padding-top:53px}
+  @media screen and (max-width:767px){
+    .nav .page-padding{padding-right:20px;padding-left:20px}
+    .nav-inner{justify-content:space-between}
+    .nav-logo{position:static;margin-left:0;padding-left:0}
+    .nav-menu{display:none}
+    .nav .cta.cta--nav{position:static;margin-right:0;font-size:15px}
+  }
+
+  /* ============================================================
+     [PAGE-CUSTOM] the Lumen live-dot mark - a filled green dot, no glow (the LiveDot motif, static)
+     ============================================================ */
+  .dot{width:9px;height:9px;border-radius:50%;background:var(--accent);flex:0 0 auto;display:inline-block}
+  .dot.ring{position:relative}
+  .dot.ring::after{content:"";position:absolute;inset:-4px;border:1.5px solid var(--accent);border-radius:50%;opacity:.35}
+
+  /* ---- masthead: a print-style running head, not sticky chrome ---- */
+  .masthead{border-bottom:1px solid var(--line);background:var(--paper)}
+  .masthead .row{display:flex;align-items:center;justify-content:space-between;gap:20px;padding-block:16px}
+  .brand{font-family:var(--wide);font-weight:900;letter-spacing:-.01em;font-size:1.04rem;text-transform:uppercase;display:inline-flex;align-items:center;gap:11px;color:var(--ink)}
+  .masthead .ident{font-size:var(--fs-micro);letter-spacing:.14em;text-transform:uppercase;color:var(--ink-faint);font-weight:500;text-align:right}
+  @media (max-width:560px){.masthead .ident{display:none}}
+
+  /* ============================================================
+     [PAGE-CUSTOM] BODY - the museum
+     ============================================================ */
+  h1,h2,h3{margin:0;font-weight:700}
+  .kicker{font-size:var(--fs-label);font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-dim);margin:0;display:inline-flex;align-items:center;gap:11px}
+  .title{font-family:var(--wide);font-weight:700;font-size:var(--fs-h1);line-height:1.03;letter-spacing:-.028em;color:var(--ink-2);max-width:20ch}
+  .lead{font-size:var(--fs-lead);line-height:1.42;font-weight:400;color:var(--ink);letter-spacing:-.006em;max-width:34ch}
+  p{margin:0 0 1.05em;max-width:62ch}
+  .body{color:var(--ink-dim);max-width:58ch}
+  .body b,.lead b,p b{color:var(--ink);font-weight:700}
+  .dim{color:var(--ink-dim)}.faint{color:var(--ink-faint)}
+  .mono-accent{color:var(--accent);font-weight:700}
+  /* accent highlight on a single key word: near-black on bright green ~15:1 (sin 1 safe) */
+  .hl{background:var(--accent);color:var(--on-accent);padding:.02em .22em;border-radius:4px;box-decoration-break:clone;-webkit-box-decoration-break:clone;font-weight:700}
+
+  /* section eyebrow - the museum plate marker */
+  .eyebrow{grid-column:1/-1;display:flex;align-items:center;gap:16px;font-size:var(--fs-label);letter-spacing:.14em;text-transform:uppercase;color:var(--ink-dim);font-weight:700;margin:0 0 var(--s7)}
+  .eyebrow .pnum{font-family:var(--wide);font-weight:900;letter-spacing:.02em;color:var(--ink);display:inline-flex;align-items:center;gap:9px}
+  .eyebrow .lbl{color:var(--ink);font-weight:700;letter-spacing:.12em}
+  .eyebrow .rule{flex:1;height:1px;background:var(--line-strong)}
+  .eyebrow .tag{color:var(--ink-faint);font-weight:500}
+  .s-head{grid-column:1/-1;max-width:24ch;margin-bottom:var(--s6)}
+  .lead-col{grid-column:1 / span 8;margin-bottom:var(--s6)}
+  .prose{grid-column:1 / span 7}
+  @media (max-width:920px){.lead-col,.prose{grid-column:1/-1}}
+
+  /* ---- the real-render plate: a framed box that a webp crop of a real screen fades into ---- */
+  figure.plate{margin:0;width:100%}
+  figure.plate.full{grid-column:1/-1}
+  .ph{position:relative;width:100%;background:var(--ph);border:1px solid var(--line-strong);border-radius:16px;overflow:hidden;display:grid;place-items:center;box-shadow:var(--shadow-photo)}
+  .ph img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .55s var(--ease-out-quint)}
+  .ph img.loaded{opacity:1}
+  @media (prefers-reduced-motion:reduce){.ph img{transition:none}}
+  figure.plate figcaption{width:100%;margin-top:16px;font-size:var(--fs-sm);line-height:1.5;color:var(--ink-dim)}
+  figure.plate figcaption b{color:var(--ink);font-weight:700;display:block;font-family:var(--wide);font-size:1rem;margin-bottom:3px;letter-spacing:-.01em}
+  .plate-tag{display:inline-block;font-family:var(--wide);font-weight:700;font-size:var(--fs-micro);letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin-bottom:7px}
+
+  /* ============ COVER ============ */
+  #cover{padding-block:clamp(40px,6vw,84px) clamp(48px,7vw,96px)}
+  .cover-copy{grid-column:1 / span 11}
+  @media (max-width:920px){.cover-copy{grid-column:1/-1}}
+  .cover-kicker{margin-bottom:var(--s7)}
+  .cover-h1{font-family:var(--wide);font-weight:900;font-size:var(--fs-mega);line-height:.9;letter-spacing:-.045em;color:var(--ink-2);margin:0 0 var(--s6)}
+  .cover-h1 .stop{color:var(--accent)}
+  .cover-lead{font-size:var(--fs-lead);line-height:1.42;font-weight:400;color:var(--ink);max-width:52ch;margin:0 0 var(--s7)}
+  .cover-lead b{font-weight:700}
+  /* meta spec table, hung on a strong ink rule */
+  .meta{grid-column:1 / span 7;border-top:2px solid var(--ink);margin:var(--s2) 0 0;max-width:42rem}
+  @media (max-width:920px){.meta{grid-column:1/-1}}
+  .meta div{display:grid;grid-template-columns:8.5rem 1fr;gap:10px 20px;padding:12px 0;border-bottom:1px solid var(--line)}
+  .meta dt{font-size:var(--fs-micro);letter-spacing:.14em;text-transform:uppercase;color:var(--ink-faint);font-weight:700;padding-top:3px}
+  .meta dd{margin:0;font-size:var(--fs-sm);font-weight:500;color:var(--ink);line-height:1.45}
+  .meta dd a{font-weight:700}
+  .cover-hero{grid-column:1/-1;margin-top:var(--s8)}
+
+  /* ============ SHORT VERSION + SCALE ============ */
+  .short-lead{grid-column:1 / span 10;font-family:var(--wide);font-size:clamp(1.5rem,3.6vw,2.6rem);font-weight:500;line-height:1.14;letter-spacing:-.02em;color:var(--ink);margin:0 0 var(--s8)}
+  @media (max-width:920px){.short-lead{grid-column:1/-1}}
+  .short-lead b{font-weight:700;color:var(--ink-2)}
+  .scale{grid-column:1/-1;border-top:2px solid var(--ink);display:flex;flex-wrap:wrap;gap:clamp(28px,5vw,72px);padding-top:var(--s6)}
+  .scale .unit{display:flex;flex-direction:column;gap:8px}
+  .scale .n{font-family:var(--wide);font-weight:900;font-size:clamp(2.6rem,6vw,4.4rem);line-height:.85;letter-spacing:-.03em;color:var(--ink-2)}
+  .scale .n .pl{color:var(--accent)}
+  .scale .u{font-size:var(--fs-micro);letter-spacing:.13em;text-transform:uppercase;color:var(--ink-faint);font-weight:700}
+  .scale-note{grid-column:1/-1;margin-top:var(--s6);font-size:var(--fs-sm);color:var(--ink-dim);max-width:60ch;display:flex;gap:10px;align-items:baseline}
+  .scale-note .dot{margin-top:5px}
+
+  /* ---- typographic list (failure modes, primitives, templates) ---- */
+  .stack{grid-column:1/-1;margin-top:var(--s7);border-top:2px solid var(--ink)}
+  .stack .r{display:grid;grid-template-columns:2.6rem 1fr;gap:20px 24px;padding:26px 0;border-bottom:1px solid var(--line);align-items:baseline}
+  @media (max-width:560px){.stack .r{grid-template-columns:1fr;gap:8px}}
+  .stack .no{font-family:var(--wide);font-weight:900;color:var(--ink-faint);font-size:1rem;font-feature-settings:"tnum" 1}
+  .stack .r b{font-family:var(--wide);font-weight:700;font-size:clamp(1.15rem,2.2vw,1.5rem);letter-spacing:-.015em;display:block;margin-bottom:8px;color:var(--ink-2)}
+  .stack .r .d{color:var(--ink-dim);font-size:var(--fs-body);line-height:1.55;max-width:64ch}
+  .stack .r .d b{display:inline;font-family:var(--sans);font-size:inherit;color:var(--ink);margin:0}
+
+  /* two-column typographic groups (synthesis, foundations detail) ---- */
+  .cols2{grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr;gap:clamp(28px,5vw,64px);margin-top:var(--s7)}
+  @media (max-width:760px){.cols2{grid-template-columns:1fr;gap:var(--s6)}}
+  .col .k{font-size:var(--fs-micro);letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:var(--accent);margin-bottom:14px;display:flex;align-items:center;gap:9px}
+  .col .kt{font-family:var(--wide);font-weight:700;font-size:clamp(1.2rem,2.4vw,1.6rem);letter-spacing:-.015em;color:var(--ink-2);margin:0 0 12px}
+  .col p{color:var(--ink-dim);font-size:var(--fs-sm);line-height:1.6;max-width:46ch}
+  .col p b{color:var(--ink)}
+
+  /* emit-targets matrix (typographic, tabular) */
+  .emit{grid-column:1/-1;margin-top:var(--s8);border-top:2px solid var(--ink)}
+  .emit-head{display:flex;align-items:baseline;justify-content:space-between;gap:16px;padding:var(--s5) 0 var(--s2)}
+  .emit-head .t{font-family:var(--wide);font-weight:700;font-size:1.15rem;letter-spacing:-.01em;color:var(--ink-2)}
+  .emit-head .c{font-size:var(--fs-micro);letter-spacing:.14em;text-transform:uppercase;color:var(--ink-faint);font-weight:700}
+  .emit-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border-top:1px solid var(--line)}
+  @media (max-width:720px){.emit-grid{grid-template-columns:1fr 1fr}}
+  @media (max-width:460px){.emit-grid{grid-template-columns:1fr}}
+  .emit-grid .e{display:flex;align-items:baseline;gap:12px;padding:15px 18px 15px 0;border-bottom:1px solid var(--line)}
+  .emit-grid .e .en{font-family:var(--wide);font-weight:900;font-size:.82rem;color:var(--ink-faint);font-feature-settings:"tnum" 1;min-width:1.6rem}
+  .emit-grid .e .et{font-size:var(--fs-sm);font-weight:500;color:var(--ink)}
+  .emit-note{grid-column:1/-1;margin-top:var(--s5);padding-left:20px;border-left:3px solid var(--accent);font-size:var(--fs-sm);color:var(--ink-dim);max-width:64ch}
+  .emit-note b{color:var(--ink)}
+
+  /* pull quote */
+  .pull{grid-column:1/-1;margin-top:var(--s8);border-top:2px solid var(--ink);border-bottom:2px solid var(--ink);padding:var(--s6) 0}
+  .pull q{quotes:none;display:block;font-family:var(--wide);font-weight:700;font-size:clamp(1.5rem,3.8vw,2.7rem);line-height:1.08;letter-spacing:-.02em;color:var(--ink-2);max-width:24ch}
+  .pull q::before{content:"\201C"}.pull q::after{content:"\201D"}
+  .pull .attr{margin-top:var(--s4);font-size:var(--fs-label);letter-spacing:.1em;text-transform:uppercase;color:var(--ink-dim);font-weight:700;display:flex;gap:9px;align-items:center}
+
+  /* audit ladder */
+  .ladder{grid-column:1/-1;margin-top:var(--s7);border-top:2px solid var(--ink)}
+  .ladder .row{display:grid;grid-template-columns:minmax(76px,1fr) 11fr;gap:20px 32px;align-items:baseline;padding:22px 0;border-bottom:1px solid var(--line)}
+  @media (max-width:560px){.ladder .row{grid-template-columns:1fr;gap:8px}}
+  .ladder .p{font-family:var(--wide);font-weight:900;font-size:clamp(1.2rem,2.4vw,1.7rem);line-height:.9;letter-spacing:-.01em;color:var(--ink-faint);font-feature-settings:"tnum" 1}
+  .ladder .row.hot .p{color:var(--accent)}
+  .ladder .txt b{font-family:var(--wide);font-size:clamp(1.05rem,2vw,1.35rem);font-weight:700;letter-spacing:-.01em;display:block;margin-bottom:5px;color:var(--ink-2)}
+  .ladder .txt span{color:var(--ink-dim);font-size:var(--fs-sm);line-height:1.5}
+
+  /* two before/after plates side by side */
+  .pair{grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr;gap:clamp(24px,4vw,48px);margin-top:var(--s8)}
+  @media (max-width:760px){.pair{grid-template-columns:1fr;gap:var(--s7)}}
+  .pair figure.plate{width:100%}
+
+  /* proof ledger - what I can prove / won't claim */
+  .ledger{grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr;gap:clamp(28px,5vw,64px);margin-top:var(--s7)}
+  @media (max-width:820px){.ledger{grid-template-columns:1fr;gap:var(--s7)}}
+  .ledger .lh{font-size:var(--fs-micro);letter-spacing:.14em;text-transform:uppercase;font-weight:700;margin-bottom:var(--s4);padding-bottom:12px;border-bottom:2px solid var(--ink);display:flex;align-items:center;gap:9px}
+  .ledger .can .lh{color:var(--ink-2)}
+  .ledger .wont .lh{color:var(--ink-faint)}
+  .ledger ul{list-style:none;margin:0;padding:0}
+  .ledger li{padding:16px 0;border-bottom:1px solid var(--line);font-size:var(--fs-sm);line-height:1.55;color:var(--ink-dim)}
+  .ledger li b{color:var(--ink);font-weight:700}
+  .ledger .can li{display:grid;grid-template-columns:auto 1fr;gap:12px}
+  .ledger .can li .m{width:7px;height:7px;border-radius:50%;background:var(--accent);margin-top:8px;flex:0 0 auto}
+  .ledger .wont li{color:var(--ink-faint)}
+  .status-note{grid-column:1/-1;margin-top:var(--s7);font-size:var(--fs-lead);font-weight:400;line-height:1.42;color:var(--ink);max-width:56ch}
+  .status-note b{font-weight:700}
+
+  /* lab tag */
+  .labtag{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line-strong);border-radius:999px;padding:3px 10px;font-size:var(--fs-micro);letter-spacing:.12em;text-transform:uppercase;color:var(--ink-faint);font-weight:700;vertical-align:middle}
+
+  /* reflection */
+  .refl{grid-column:1/-1;margin-top:var(--s6);border-top:2px solid var(--ink)}
+  .refl .r{display:grid;grid-template-columns:minmax(150px,2fr) 9fr;gap:16px 40px;padding:28px 0;border-bottom:1px solid var(--line);align-items:baseline}
+  @media (max-width:640px){.refl .r{grid-template-columns:1fr;gap:10px}}
+  .refl .r .k{font-size:var(--fs-micro);letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:var(--ink);display:inline-flex;align-items:center;gap:9px}
+  .refl .r .t{font-size:clamp(1.1rem,2vw,1.45rem);font-weight:500;letter-spacing:-.01em;line-height:1.3;color:var(--ink);max-width:60ch}
+  .refl .r .t b{font-weight:700;color:var(--ink-2)}
+
+  /* closing montage head */
+  .show-head{grid-column:1/-1;display:flex;align-items:center;gap:16px;font-size:var(--fs-label);letter-spacing:.14em;text-transform:uppercase;color:var(--ink-dim);font-weight:700;margin-bottom:var(--s7)}
+  .show-head .rule{flex:1;height:1px;background:var(--line-strong)}
+
+  /* ---- colophon ---- */
+  .colophon{background:var(--paper-2);border-top:1px solid var(--line)}
+  .colophon .wrap{padding-block:clamp(52px,7vw,88px)}
+  .colophon .cred{grid-column:1 / span 7}
+  .colophon .note{grid-column:9 / span 4;align-self:start}
+  @media (max-width:920px){.colophon .cred,.colophon .note{grid-column:1/-1}.colophon .note{margin-top:var(--s7)}}
+  .colophon .brand{font-family:var(--wide);font-weight:900;font-size:clamp(1.8rem,5vw,3rem);letter-spacing:-.02em;margin-bottom:var(--s5);display:inline-flex;align-items:center;gap:12px}
+  .colophon .cred p{color:var(--ink-dim);font-size:var(--fs-sm);line-height:1.6;max-width:60ch}
+  .colophon .cred p b{color:var(--ink)}
+  .colophon .cred .fine{font-size:var(--fs-micro);letter-spacing:.02em;color:var(--ink-faint);margin-top:var(--s5)}
+  .colophon .note dl{margin:0;border-top:2px solid var(--ink)}
+  .colophon .note div{display:grid;grid-template-columns:auto 1fr;gap:10px 18px;padding:11px 0;border-bottom:1px solid var(--line)}
+  .colophon .note dt{font-size:var(--fs-micro);letter-spacing:.12em;text-transform:uppercase;color:var(--ink-faint);font-weight:700}
+  .colophon .note dd{margin:0;font-size:var(--fs-sm);color:var(--ink);font-weight:500;text-align:right}
+  .colophon .note dd .u{display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--accent);vertical-align:baseline;margin-left:6px}
+  .backlink{grid-column:1/-1;display:inline-flex;align-items:center;gap:.5rem;margin-top:var(--s7);font-size:var(--fs-sm);color:var(--ink-dim);text-decoration:none;font-weight:700}
+  .backlink:hover{color:var(--ink)}
+
+  /* calm reveal - CSS transition only, no keyframes; reduced-motion safe */
+  .rise{opacity:0;transform:translateY(14px);transition:opacity .6s var(--ease-out-quint),transform .6s var(--ease-out-quint)}
+  .rise.in{opacity:1;transform:none}
+  @media (prefers-reduced-motion:reduce){.rise{opacity:1;transform:none;transition:none}}
+  /* very narrow phones: drop the secondary eyebrow tag so the marker never crowds */
+  @media (max-width:430px){.eyebrow .tag{display:none}}
+
+  /* ============================================================
+     [PAGE-CUSTOM] THE ONE PERMITTED MOTION — the LiveDot pulse.
+     A thin accent RING that expands and fades on a slow ease-out loop. It is a
+     border stroke, never a box-shadow bloom, so the accent still never lives in
+     light (sin 2 safe). It fires only on a dot that is literally labelled Live.
+     ============================================================ */
+  .dot.pulse{position:relative}
+  .dot.pulse::after{content:"";position:absolute;inset:-1px;border-radius:50%;border:1.5px solid var(--accent);opacity:.55;transform:scale(1);animation:lumen-pulse 3s var(--ease-out) infinite}
+  @keyframes lumen-pulse{0%{transform:scale(.9);opacity:.6}70%{transform:scale(2.8);opacity:0}100%{transform:scale(2.8);opacity:0}}
+  @media (prefers-reduced-motion:reduce){.dot.pulse::after{animation:none;inset:-3px;opacity:.35}}
+
+  /* kill heading runts/orphans (doctrine): balance display headings, pretty-wrap prose */
+  .cover-h1,.title,.short-lead,.pull q,.refl .r .t,.col .kt,.stack .r b,.ladder .txt b,figcaption b{text-wrap:balance}
+  .lead,.cover-lead,.body,p,figcaption,.spec-cap,.status-note,.emit-note{text-wrap:pretty}
+
+  /* ============================================================
+     [PAGE-CUSTOM] CODE-DRAWN SPECIMENS — the page IS a Lumen surface.
+     Each design-system artifact (color, type, contract, the two guards, the
+     primitives) is rendered live from the real token values, not screenshotted.
+     Raw hex appears ONLY inside the swatches, because a color specimen's whole
+     job is to display the literal ramp values — the one legitimate place for it.
+     ============================================================ */
+  .spec{position:relative;width:100%;background:var(--ph);border:1px solid var(--line-strong);border-radius:16px;box-shadow:var(--shadow-photo);overflow:hidden}
+  .spec-pad{padding:clamp(24px,4vw,52px)}
+  .spec-label{display:flex;align-items:center;gap:12px;font-size:var(--fs-micro);letter-spacing:.16em;text-transform:uppercase;color:var(--ink-faint);font-weight:700;margin:0 0 22px}
+  .spec-label .k2{color:var(--ink-dim)}
+  .spec-label .rule{flex:1;height:1px;background:var(--line)}
+
+  /* ---- color specimen: the real ramps ---- */
+  .ramps{display:flex;flex-direction:column;gap:clamp(22px,3vw,34px)}
+  .ramp .rl{display:flex;align-items:baseline;justify-content:space-between;gap:14px;margin-bottom:11px}
+  .ramp .rl b{font-family:var(--wide);font-weight:700;font-size:var(--fs-sm);letter-spacing:.01em;color:var(--ink)}
+  .ramp .rl span{font-size:var(--fs-micro);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-faint);font-weight:600}
+  .ramp .bar{display:flex;height:clamp(46px,6vw,72px);border-radius:10px;overflow:hidden;border:1px solid var(--line)}
+  .ramp .bar i{flex:1;position:relative}
+  .ramp.accent .bar i.on{flex:1.5;border:2px solid var(--paper);outline:1.5px solid var(--accent);outline-offset:-2px}
+  .ramp.accent .bar i.on::after{content:"#00FA8A";position:absolute;left:0;right:0;bottom:7px;text-align:center;font-size:var(--fs-micro);font-weight:700;color:var(--on-accent);font-feature-settings:"tnum" 1}
+  /* the accent stop's hex label clips on narrow phones; drop it below 520px (the row header still names the accent) */
+  @media (max-width:520px){.ramp.accent .bar i.on::after{display:none}}
+  .status-row{display:flex;flex-wrap:wrap;gap:clamp(16px,3vw,34px);margin-top:6px}
+  .status-row .s{display:inline-flex;align-items:center;gap:9px;font-size:var(--fs-sm);color:var(--ink-dim);font-weight:500}
+  .status-row .s .sw{width:11px;height:11px;border-radius:50%;flex:0 0 auto}
+  .status-row .s b{color:var(--ink);font-weight:700}
+  .spec-cap{margin-top:22px;font-size:var(--fs-sm);line-height:1.5;color:var(--ink-faint);max-width:70ch}
+  .spec-cap b{color:var(--ink-dim);font-weight:700}
+  .spec-cap .mono-accent{color:var(--accent)}
+
+  /* ---- type specimen ---- */
+  .typespec{display:grid;grid-template-columns:minmax(0,0.9fr) minmax(0,1.1fr);gap:clamp(28px,5vw,64px);align-items:center}
+  @media (max-width:720px){.typespec{grid-template-columns:1fr;gap:var(--s6)}}
+  .aa{font-family:var(--wide);font-weight:500;font-size:clamp(9rem,26vw,18rem);line-height:.8;letter-spacing:-.04em;color:var(--ink-2);display:flex;align-items:baseline;gap:.04em}
+  .aa .a2{font-weight:900}
+  .tside .tscale{border-top:1px solid var(--line)}
+  .tside .tscale .r{display:flex;align-items:baseline;justify-content:space-between;gap:18px;padding:11px 0;border-bottom:1px solid var(--line)}
+  .tside .tscale .r .sample{font-family:var(--wide);color:var(--ink);letter-spacing:-.02em;line-height:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .tside .tscale .r .px{font-size:var(--fs-micro);letter-spacing:.06em;color:var(--ink-faint);font-weight:700;font-feature-settings:"tnum" 1;flex:0 0 auto}
+  .weights{display:flex;flex-wrap:wrap;gap:8px 22px;margin-top:22px}
+  .weights span{font-family:var(--wide);font-size:1.28rem;color:var(--ink-dim);letter-spacing:-.01em;line-height:1.1}
+  .weights span small{display:block;font-family:var(--sans);font-size:var(--fs-micro);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-faint);font-weight:600;margin-top:2px}
+  .figs{margin-top:26px;border-top:1px solid var(--line);padding-top:18px}
+  .figs .fh{font-size:var(--fs-micro);letter-spacing:.14em;text-transform:uppercase;color:var(--accent);font-weight:700;margin-bottom:12px}
+  .figs .fcol{display:flex;flex-direction:column;gap:5px;font-family:var(--wide);font-weight:500;font-size:clamp(1.15rem,2.4vw,1.5rem);color:var(--ink);font-feature-settings:"tnum" 1,"lnum" 1;font-variant-numeric:tabular-nums lining-nums;text-align:right;max-width:14ch}
+  .figs .fline{margin-top:14px;font-family:var(--wide);font-weight:500;font-size:var(--fs-body);color:var(--ink-dim);font-feature-settings:"tnum" 1;letter-spacing:.01em}
+  .figs .fline .mono-accent{font-weight:700}
+
+  /* ---- three greens (the fragmentation "before" — the deliberate 3-green exception) ---- */
+  .greens{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(16px,3vw,28px)}
+  @media (max-width:720px){.greens{grid-template-columns:1fr;gap:14px}.gcard .cta{max-width:340px;margin-inline:auto}}
+  .gcard{border:1px solid var(--line);border-radius:14px;background:var(--surface);padding:22px}
+  .gcard .gt{font-size:var(--fs-micro);letter-spacing:.14em;text-transform:uppercase;color:var(--ink-faint);font-weight:700;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between}
+  .gcard .gt .hex{font-feature-settings:"tnum" 1;letter-spacing:.02em;color:var(--ink-dim)}
+  .gcard .cta{display:block;text-align:center;white-space:nowrap;border-radius:10px;padding:14px 16px;font-family:var(--wide);font-weight:700;font-size:.95rem;letter-spacing:-.01em;color:#05100B}
+  .gcard .gnote{margin-top:14px;font-size:var(--fs-micro);color:var(--ink-faint);text-align:center;letter-spacing:.02em}
+
+  /* ---- synthesis layers ---- */
+  .layers{display:flex;flex-direction:column;align-items:stretch;gap:0;max-width:620px;margin-inline:auto}
+  .layer{border:1px solid var(--line-strong);border-radius:14px;background:var(--surface);padding:20px 24px;position:relative;z-index:2}
+  .layer.l1{background:linear-gradient(180deg,var(--surface-2),var(--surface));margin-bottom:-10px}
+  .layer.l2{margin-bottom:-10px}
+  .layer .lk{font-size:var(--fs-micro);letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:var(--accent);margin-bottom:12px}
+  .layer .lb{font-family:var(--wide);font-weight:700;font-size:1.05rem;color:var(--ink-2);letter-spacing:-.01em;margin-bottom:6px}
+  .layer .ld{font-size:var(--fs-sm);color:var(--ink-dim);line-height:1.45}
+  .layer .demo-scale{display:flex;align-items:baseline;gap:12px;margin-top:12px;color:var(--ink-dim)}
+  .layer .demo-scale span{font-family:var(--wide);letter-spacing:-.02em;color:var(--ink)}
+  .layer .demo-swatches{display:flex;gap:8px;margin-top:12px;align-items:center}
+  .layer .demo-swatches i{width:26px;height:26px;border-radius:7px;border:1px solid var(--line)}
+  .connector{width:1px;height:34px;background:var(--line-strong);margin:0 auto;position:relative;z-index:1}
+  .connector::after{content:"";position:absolute;left:50%;bottom:0;transform:translate(-50%,50%) rotate(45deg);width:7px;height:7px;border-right:1.5px solid var(--ink-faint);border-bottom:1.5px solid var(--ink-faint)}
+  .resolved{border:1px solid var(--accent);border-radius:14px;background:var(--surface-2);padding:20px 24px;position:relative;z-index:2}
+  .resolved .rk{font-size:var(--fs-micro);letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:var(--ink-faint);margin-bottom:14px;display:flex;align-items:center;gap:9px}
+  .resolved .rrow{display:flex;align-items:center;justify-content:space-between;gap:14px}
+  .resolved .rstat{font-family:var(--wide);font-weight:900;font-size:1.7rem;color:var(--ink-2);letter-spacing:-.02em;font-feature-settings:"tnum" 1}
+  .resolved .rstat small{font-family:var(--sans);font-size:var(--fs-micro);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-faint);font-weight:600;display:block;margin-bottom:3px}
+  .resolved .rbtn{background:var(--accent);color:var(--on-accent);font-family:var(--wide);font-weight:700;font-size:.85rem;border-radius:9px;padding:9px 15px}
+
+  /* ---- two-file contract ---- */
+  .contract-cols{display:grid;grid-template-columns:1fr 1fr;gap:clamp(16px,3vw,26px)}
+  @media (max-width:680px){.contract-cols{grid-template-columns:1fr}}
+  .fpanel{border:1px solid var(--line-strong);border-radius:12px;background:var(--paper);overflow:hidden}
+  .fpanel .fp-top{display:flex;align-items:center;gap:9px;padding:12px 16px;border-bottom:1px solid var(--line);background:var(--surface)}
+  .fpanel .fp-top .fdot{width:9px;height:9px;border-radius:2px;flex:0 0 auto}
+  .fpanel .fp-top .fname{font-family:ui-monospace,'SF Mono',Menlo,monospace;font-size:.82rem;color:var(--ink);font-weight:500;letter-spacing:-.01em}
+  .fpanel .fp-body{padding:16px;font-family:ui-monospace,'SF Mono',Menlo,monospace;font-size:.78rem;line-height:1.65;color:var(--ink-dim)}
+  .fpanel .fp-body .cm{color:var(--ink-faint)}
+  .fpanel .fp-body .kw{color:var(--ink)}
+  .fpanel .fp-body .gr{color:var(--accent)}
+  .fpanel .fp-body .h{color:var(--ink-2);font-weight:700}
+  .fpanel .fp-body .line{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .contract-flow{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:12px;margin-top:22px}
+  .contract-flow .chip{border:1px solid var(--line-strong);border-radius:999px;padding:8px 15px;font-family:ui-monospace,'SF Mono',Menlo,monospace;font-size:.78rem;color:var(--ink);background:var(--surface)}
+  .contract-flow .arrow{color:var(--ink-faint);font-size:.9rem}
+  .contract-flow .src{border-color:var(--accent);color:var(--accent);font-weight:600}
+
+  /* ---- the two guards (contrast + green-shadow), self-demonstrating ---- */
+  .guard{display:grid;grid-template-columns:1fr 1fr;gap:clamp(20px,4vw,42px);align-items:end}
+  @media (max-width:520px){.guard{grid-template-columns:1fr;gap:26px}}
+  .gcol{display:flex;flex-direction:column;align-items:center;gap:16px}
+  .gcol .gtag{font-size:var(--fs-micro);letter-spacing:.14em;text-transform:uppercase;font-weight:700;display:inline-flex;align-items:center;gap:8px}
+  .gcol .gtag.fail{color:var(--err)}
+  .gcol .gtag.pass{color:var(--accent)}
+  .gcol .gtag.retired{color:var(--ink-faint)}
+  .gcol .gtag.current{color:var(--accent)}
+  .gcol .gtag .ratio{font-feature-settings:"tnum" 1;letter-spacing:.02em}
+  .demobtn{width:min(100%,300px);text-align:center;border-radius:12px;padding:17px 20px;background:var(--accent);font-family:var(--wide);font-weight:700;font-size:1.05rem;letter-spacing:-.01em}
+  .demobtn.ink-good{color:#05100B}
+  .demobtn.ink-pass{color:#040404}         /* near-black, measures 14.7:1 on the accent — matches the pass label */
+  .demobtn.ink-fail{color:#AAAAAA}         /* illustrative mid-neutral, measures ~1.66:1 on the accent — the sourced fail ratio, drawn true */
+  .demobtn.flat{box-shadow:var(--shadow-photo)}
+  .demobtn.glow{box-shadow:0 0 34px 4px rgba(0,250,138,.5),0 8px 22px rgba(0,250,138,.32)} /* the RETIRED example, the one place a green glow is drawn, clearly tagged */
+  .gcol .gsub{font-size:var(--fs-micro);color:var(--ink-faint);letter-spacing:.02em;text-align:center}
+
+  /* ---- primitives board: Stat, LiveDot, RateTicker ---- */
+  .prims{display:grid;grid-template-columns:1.4fr 1fr;gap:clamp(16px,3vw,24px)}
+  @media (max-width:640px){.prims{grid-template-columns:1fr}}
+  .pcard{border:1px solid var(--line-strong);border-radius:14px;background:var(--surface);padding:22px 24px;display:flex;flex-direction:column;justify-content:center}
+  .pcard .pk{font-size:var(--fs-micro);letter-spacing:.14em;text-transform:uppercase;color:var(--ink-faint);font-weight:700;margin-bottom:6px}
+  .pstat .snum{font-family:var(--wide);font-weight:900;font-size:clamp(2.6rem,6vw,3.8rem);line-height:.9;letter-spacing:-.03em;color:var(--ink-2);font-feature-settings:"tnum" 1,"lnum" 1;font-variant-numeric:tabular-nums lining-nums}
+  .pstat .srow{display:flex;align-items:center;gap:14px;margin-top:14px}
+  .pstat .delta{display:inline-flex;align-items:center;gap:5px;font-size:var(--fs-sm);font-weight:700;color:var(--accent);font-feature-settings:"tnum" 1}
+  .pstat .spark{flex:1;height:34px;color:var(--accent);opacity:.9}
+  .plive{align-items:center;text-align:center;gap:0}
+  .plive .bigdot{width:16px;height:16px;border-radius:50%;background:var(--accent);margin:6px auto 22px}
+  .plive .llabel{font-family:var(--wide);font-weight:700;font-size:1.05rem;letter-spacing:.02em;color:var(--ink);text-transform:uppercase}
+  .plive .lsub{font-size:var(--fs-micro);color:var(--ink-faint);margin-top:6px;letter-spacing:.02em}
+  .pticker{grid-column:1/-1;border:1px solid var(--line-strong);border-radius:14px;background:var(--surface);overflow:hidden}
+  .pticker .tk{font-size:var(--fs-micro);letter-spacing:.14em;text-transform:uppercase;color:var(--ink-faint);font-weight:700;padding:16px 24px 0}
+  .tickrow{display:flex;flex-wrap:wrap;gap:8px 26px;padding:14px 24px 22px}
+  .tickrow .li{display:inline-flex;align-items:center;gap:8px;font-family:var(--wide);font-weight:500;font-size:var(--fs-sm);color:var(--ink);letter-spacing:-.005em;white-space:nowrap}
+  .tickrow .li .rate{font-feature-settings:"tnum" 1,"lnum" 1;color:var(--ink-2);font-weight:700}
+  .tickrow .li .d{font-size:.72rem}
+  .tickrow .li .up{color:var(--accent)}
+  .tickrow .li .dn{color:var(--ink-faint)}
+
+  /* ---- hero collage (cover): the system across three surfaces, offset, not a grid ---- */
+  .collage{grid-column:1/-1;margin-top:var(--s8);display:flex;flex-direction:column;gap:clamp(14px,2vw,20px)}
+  .collage .frame{border:1px solid var(--line-strong);border-radius:14px;overflow:hidden;background:var(--ph);box-shadow:var(--shadow-photo);position:relative}
+  .collage .frame img{width:100%;height:auto;display:block;opacity:0;transition:opacity .6s var(--ease-out-quint)}
+  .collage .frame img.loaded{opacity:1}
+  @media (prefers-reduced-motion:reduce){.collage .frame img{transition:none}}
+  .collage .band{aspect-ratio:1700/468}
+  .collage .duo{display:grid;grid-template-columns:1.62fr 1fr;gap:clamp(14px,2vw,20px);align-items:stretch}
+  .collage .duo .frame{height:100%}
+  .collage .duo .frame img{height:100%;object-fit:cover;object-position:top}
+  .collage .duo .phone{box-shadow:var(--shadow-float)}
+  @media (max-width:620px){.collage .duo{grid-template-columns:1fr}}
+
+  /* ---- contact sheet: eight surfaces, one language ---- */
+  .sheet{grid-column:1/-1;display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(12px,1.8vw,20px)}
+  @media (max-width:900px){.sheet{grid-template-columns:repeat(2,1fr)}}
+  .sheet figure{margin:0}
+  .sheet .st{border:1px solid var(--line-strong);border-radius:12px;overflow:hidden;background:var(--ph);box-shadow:var(--shadow-photo);aspect-ratio:1120/700;position:relative}
+  .sheet .st img{width:100%;height:100%;object-fit:cover;object-position:top;display:block;opacity:0;transition:opacity .55s var(--ease-out-quint)}
+  .sheet .st img.loaded{opacity:1}
+  @media (prefers-reduced-motion:reduce){.sheet .st img{transition:none}}
+  .sheet figcaption{margin-top:10px;font-size:var(--fs-micro);letter-spacing:.12em;text-transform:uppercase;color:var(--ink-faint);font-weight:700;display:flex;align-items:center;gap:8px}
+  .sheet figcaption .idx{color:var(--ink);font-feature-settings:"tnum" 1}
+
+  /* real-render plate: image fills its framed box, no placeholder text needed */
+  .plate .ph.real{display:block}
+  .plate .ph.real img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:top}
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     [SHARED-VERBATIM] SITE NAV — the real homepage component (identical markup to neelmyno.in)
+     ============================================================ -->
+<div class="nav">
+  <div class="page-padding">
+    <div class="container">
+      <div class="nav-inner">
+        <a href="/" aria-current="page" class="nav-logo w-inline-block w--current" aria-label="Neel Tengariya — home">
+          <div><img width="60" src="/images/home/navbar/logo_full_black_copyright.svg" alt="Neel logo"></div>
+        </a>
+        <div class="nav-menu">
+          <a href="/#home" class="nav-link">Home</a>
+          <a href="/#work" class="nav-link">Work</a>
+          <a href="/#experience" class="nav-link">Experience</a>
+          <a href="/" class="nav-link">About</a>
+          <a href="/resume/neel_tengariya_resume.pdf" class="cta cta--nav w-inline-block" download>
+            <div>Download Resume</div>
+            <div class="cta-chevron w-embed"><svg width="7" height="10" xmlns="http://www.w3.org/2000/svg"><path d="M1.566.434 6.131 5 1.566 9.566.434 8.434 3.869 5 .434 1.566z" fill="currentColor" /></svg></div>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     [PAGE-CUSTOM] MASTHEAD (running head)
+     ============================================================ -->
+<header class="masthead">
+  <div class="wrap row">
+    <div class="brand"><span class="dot" aria-hidden="true"></span><span>Lumen</span></div>
+    <div class="ident">Warp Design System &middot; Case study &middot; 2026</div>
+  </div>
+</header>
+
+<main>
+
+  <!-- ============ COVER ============ -->
+  <section id="cover" aria-label="Cover">
+    <div class="wrap grid12">
+      <div class="cover-copy">
+        <p class="kicker cover-kicker rise"><span class="dot pulse" aria-hidden="true"></span> Warp &middot; Design system &middot; Live</p>
+        <h1 class="cover-h1 rise">Lumen<span class="stop">.</span></h1>
+        <p class="cover-lead rise">I built Warp's design system on my own, and directed the AI that wrote most of the code. What's mine is the problem, the visual language, and every judgment call. <b>The AI did the typing.</b></p>
+      </div>
+
+      <dl class="meta rise">
+        <div><dt>Role</dt><dd>Sole architect &middot; product design engineer at Warp</dd></div>
+        <div><dt>Team</dt><dd>One designer, working with the founders, directing the AI agents that did the build</dd></div>
+        <div><dt>Context</dt><dd>Warp, a freight company that went AI-native and ran lean</dd></div>
+        <div><dt>Stack</dt><dd>Figma &middot; DTCG JSON &middot; Style Dictionary &middot; shadcn registry &middot; Next.js &middot; Tailwind v4 &middot; Playwright</dd></div>
+        <div><dt>Live</dt><dd><a href="https://warp-lumen-design-guidelines.vercel.app/library" rel="noopener">warp-lumen-design-guidelines.vercel.app</a></dd></div>
+      </dl>
+
+      <figure class="plate full cover-hero rise">
+        <div class="collage">
+          <div class="frame band"><img src="assets/hero-foundations.webp" alt="The Lumen Foundations reference: a Foundations, Tuned. card on the Obsidian canvas with the neutral, green, amber, and red color chips, a green LIVE marker, and a large Satoshi Aa labelled 300 to 900, OpenType." width="1700" height="468" loading="eager" decoding="async"></div>
+          <div class="duo">
+            <div class="frame"><img src="assets/hero-saas.webp" alt="The Lumen operator dashboard: an Acme Logistics workspace with a four-tile KPI row reading shipments today 1,284, on time 98.2 percent, average cost per pallet 42.10 dollars, active lanes 1,547, each with a green sparkline, above a shipments table with lane codes and dot-and-label status." width="1700" height="669" loading="eager" decoding="async"></div>
+            <div class="frame phone"><img src="assets/hero-mobile.webp" alt="The Lumen iOS app: a Shipments screen with on time 98.2 percent and live 1,284 stat tiles and a list of freight lanes with status labels, in the same visual language as the dashboard." width="810" height="1495" loading="eager" decoding="async"></div>
+          </div>
+        </div>
+        <figcaption><b>One system, three densities.</b> The Foundations reference, the operator dashboard, and the iOS app. One mood, one mark, one face, from marketing breath to operator dense.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- ============ THE SHORT VERSION + SCALE ============ -->
+  <section aria-labelledby="short-h">
+    <div class="wrap grid12">
+      <div class="eyebrow rise"><span class="pnum"><span class="dot" aria-hidden="true"></span>00</span> <span class="lbl">The short version</span> <span class="rule"></span><span class="tag">Thirty seconds</span></div>
+      <p class="short-lead rise" id="short-h">Warp ships fast, with a small team, across a lot of product and marketing surfaces. Each one had drifted into its own look. When I audited our transactional emails, I found <b>three design systems running at once, with three different shades of brand green.</b> Lumen makes them one, and it is built to be read by the AI agents writing most of the code, not only by people.</p>
+
+      <div class="scale rise">
+        <div class="unit"><div class="n">900<span class="pl">+</span></div><div class="u">Design tokens</div></div>
+        <div class="unit"><div class="n">98</div><div class="u">Component contracts</div></div>
+        <div class="unit"><div class="n">9</div><div class="u">Platform emit targets</div></div>
+        <div class="unit"><div class="n">35</div><div class="u">Decision records</div></div>
+        <div class="unit"><div class="n">16</div><div class="u">Audit rounds</div></div>
+      </div>
+      <p class="scale-note rise"><span class="dot" aria-hidden="true"></span> Built solo, with the AI doing the typing. These are the size of the system, not a claim about its impact.</p>
+    </div>
+  </section>
+
+  <!-- ============ 01 THE PROBLEM ============ -->
+  <section aria-labelledby="prob-h">
+    <div class="wrap grid12">
+      <div class="eyebrow rise"><span class="pnum"><span class="dot" aria-hidden="true"></span>01</span> <span class="lbl">The problem</span> <span class="rule"></span><span class="tag">Why Lumen exists</span></div>
+      <h2 class="title s-head rise" id="prob-h">Three ways the same brand kept coming apart.</h2>
+      <div class="lead-col rise"><p class="lead">Warp had a brand: a loud green and a dark, dense operator feel. What it did not have was the layer that turns a brand into a system, the part that makes every screen agree with the next one.</p></div>
+
+      <div class="stack rise">
+        <div class="r"><span class="no">01</span><div><b>Primitives forked silently.</b><div class="d">Every team rebuilt the same pieces, because nothing canonical existed to copy. Each PR that duplicated an old pattern locked in someone's one-off, and the greens and the card styles quietly forked apart.</div></div></div>
+        <div class="r"><span class="no">02</span><div><b>Tokens changed, the prose did not.</b><div class="d">When we retired the green glow on the shadow tokens, the token check passed. Every doc still taught the old rule, so agents read the docs and built the retired glow right back into the code. A check on the tokens cannot see a sentence.</div></div></div>
+        <div class="r"><span class="no">03</span><div><b>Being legible to a machine was an afterthought.</b><div class="d">Cursor, Claude, Copilot, and Codex touched our UI every day. None of them had a contract they could read, so they wrote what their training suggested, a generic SaaS look, not Warp. The system had to be legible to a machine first, then friendly to a person.</div></div></div>
+      </div>
+
+      <figure class="plate full rise" style="margin-top:var(--s9)">
+        <div class="spec">
+          <div class="spec-pad">
+            <p class="spec-label"><span class="dot" aria-hidden="true" style="background:var(--err)"></span> The audit &middot; transactional email <span class="rule"></span> <span class="k2">Three CTAs, three greens</span></p>
+            <div class="greens" role="img" aria-label="Three transactional-email call-to-action buttons side by side, each a different shade of brand green: System A Spring Green hex 00FA8A, System B Warp's accent lime hex 4ADE80, System C Warp's success green hex 22C55E. Each button reads Track shipment.">
+              <div class="gcard">
+                <div class="gt"><span>System A</span><span class="hex">#00FA8A</span></div>
+                <span class="cta" style="background:#00FA8A">Track shipment &rarr;</span>
+                <div class="gnote">Order confirmation</div>
+              </div>
+              <div class="gcard">
+                <div class="gt"><span>System B</span><span class="hex">#4ADE80</span></div>
+                <span class="cta" style="background:#4ADE80">Track shipment &rarr;</span>
+                <div class="gnote">Shipment update</div>
+              </div>
+              <div class="gcard">
+                <div class="gt"><span>System C</span><span class="hex">#22C55E</span></div>
+                <span class="cta" style="background:#22C55E">Track shipment &rarr;</span>
+                <div class="gnote">Delivery receipt</div>
+              </div>
+            </div>
+            <p class="spec-cap">One brand, three greens, in the same channel. <span class="mono-accent">#4ADE80</span> was Warp's accent lime and <span class="mono-accent">#22C55E</span> its success green; <span class="mono-accent">#00FA8A</span> is the Spring Green they were unified into. A diagram of the real finding, drawn from Warp's own brand values, not a screenshot.</p>
+          </div>
+        </div>
+        <figcaption><span class="plate-tag">The fragmentation</span><b>Three greens, three systems, one surface.</b> Nobody did anything wrong. Each was a fossil of a moment when someone had to ship and could not find a convention to copy.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- ============ 02 THE SYNTHESIS ============ -->
+  <section aria-labelledby="synth-h">
+    <div class="wrap grid12">
+      <div class="eyebrow rise"><span class="pnum"><span class="dot" aria-hidden="true"></span>02</span> <span class="lbl">The synthesis</span> <span class="rule"></span><span class="tag">Apple and Warp, stacked</span></div>
+      <h2 class="title s-head rise" id="synth-h">I stopped choosing between clean and dense.</h2>
+      <div class="lead-col rise"><p class="lead">The brief asked for Apple: clean, minimal, Ive and Rams. Warp's real character is a freight Bloomberg terminal, dark and dense and full of live numbers. Those are not opposites. They live at different layers, so I stopped choosing and started stacking them.</p></div>
+
+      <div class="cols2 rise">
+        <div class="col">
+          <div class="k"><span class="dot" aria-hidden="true"></span> Apple discipline</div>
+          <div class="kt">How the system behaves.</div>
+          <p>A 1.25 modular type scale, tight tracking on display. A 4-point base on an 8-point soft grid. Hairlines carry separation, and shadows are reserved for UI that genuinely floats. Motion decelerates and stays under 200 milliseconds.</p>
+        </div>
+        <div class="col">
+          <div class="k"><span class="dot" aria-hidden="true"></span> Warp substance</div>
+          <div class="kt">What the system is made of.</div>
+          <p>An Obsidian <span class="mono-accent">#0D0D0D</span> canvas, neutral where red equals green equals blue. Spring Green <span class="mono-accent">#00FA8A</span>, one role only. Satoshi for every job, its tabular figures carrying the numbers, no second font.</p>
+        </div>
+      </div>
+
+      <figure class="plate full rise" style="margin-top:var(--s9)">
+        <div class="spec">
+          <div class="spec-pad">
+            <div class="layers" role="img" aria-label="A layered diagram. Top layer, Apple discipline, shows a modular type scale and grid, describing how the system behaves. Middle layer, Warp substance, shows the Obsidian canvas swatches and one green accent, describing what the system is made of. An arrow resolves both into one Lumen operator surface showing a live shipment stat and a green action button.">
+              <div class="layer l1">
+                <div class="lk">Discipline &middot; how it behaves</div>
+                <div class="lb">Apple, Ive, Rams</div>
+                <div class="ld">A 1.25 modular scale, tight tracking, a 4-point base on an 8-point grid, motion under 200ms.</div>
+                <div class="demo-scale"><span style="font-size:1.8rem">Aa</span><span style="font-size:1.3rem">Aa</span><span style="font-size:1rem">Aa</span><span style="font-size:.8rem;color:var(--ink-faint)">Aa</span></div>
+              </div>
+              <div class="layer l2">
+                <div class="lk">Substance &middot; what it is made of</div>
+                <div class="lb">Warp material</div>
+                <div class="ld">The Obsidian canvas, one Spring Green accent, Satoshi for every job, live numbers.</div>
+                <div class="demo-swatches"><i style="background:#0D0D0D"></i><i style="background:#1B1B1B"></i><i style="background:#3B3B3B"></i><i style="background:#00FA8A;border-color:transparent"></i></div>
+              </div>
+              <div class="connector" aria-hidden="true"></div>
+              <div class="resolved">
+                <div class="rk"><span class="dot" aria-hidden="true"></span> One Lumen surface</div>
+                <div class="rrow">
+                  <div class="rstat"><small>Shipments today</small>1,284</div>
+                  <span class="rbtn">New shipment</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <figcaption><span class="plate-tag">The resolution</span><b>Discipline on top, substance underneath.</b> Apple is the behaviour, Warp is the material, and Lumen is the place they meet.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- ============ 03 FOUNDATIONS ============ -->
+  <section aria-labelledby="found-h">
+    <div class="wrap grid12">
+      <div class="eyebrow rise"><span class="pnum"><span class="dot" aria-hidden="true"></span>03</span> <span class="lbl">Foundations</span> <span class="rule"></span><span class="tag">One mood, one mark, one face</span></div>
+      <h2 class="title s-head rise" id="found-h">A palette kept small on purpose.</h2>
+      <div class="lead-col rise"><p class="lead">Three families of color, one typeface, one grid. A single accent only reads as loud when nothing around it competes, so I gave it nothing to compete with.</p></div>
+
+      <figure class="plate full rise">
+        <div class="spec">
+          <div class="spec-pad">
+            <p class="spec-label">Color <span class="rule"></span> <span class="k2">Drawn from the real token ramps</span></p>
+            <div class="ramps">
+              <div class="ramp">
+                <div class="rl"><b>Obsidian &middot; the canvas ramp</b><span>Paper &rarr; void &middot; R = G = B</span></div>
+                <div class="bar" aria-hidden="true"><i style="background:#F4F4F4"></i><i style="background:#E6E6E6"></i><i style="background:#C8C8C8"></i><i style="background:#9A9A9A"></i><i style="background:#6B6B6B"></i><i style="background:#404040"></i><i style="background:#1F1F1F"></i><i style="background:#151515"></i><i style="background:#0D0D0D"></i><i style="background:#080808"></i><i style="background:#050505"></i></div>
+              </div>
+              <div class="ramp">
+                <div class="rl"><b>Neutral &middot; paper + cool grays</b><span>Hierarchy, never loud</span></div>
+                <div class="bar" aria-hidden="true"><i style="background:#FAFAFA"></i><i style="background:#F1F1F1"></i><i style="background:#E6E6E6"></i><i style="background:#D2D2D2"></i><i style="background:#A8A8A8"></i><i style="background:#757575"></i><i style="background:#525252"></i><i style="background:#383838"></i><i style="background:#242424"></i><i style="background:#141414"></i></div>
+              </div>
+              <div class="ramp accent">
+                <div class="rl"><b>Accent &middot; Spring Green</b><span>The only loud color</span></div>
+                <div class="bar" aria-hidden="true"><i style="background:#E2FFF1"></i><i style="background:#B7FFD9"></i><i style="background:#80FFC0"></i><i style="background:#4DFFA8"></i><i style="background:#1AFF93"></i><i class="on" style="background:#00FA8A"></i><i style="background:#00D675"></i><i style="background:#00B062"></i><i style="background:#008A4D"></i><i style="background:#003820"></i></div>
+              </div>
+              <div class="ramp">
+                <div class="rl"><b>Status &middot; dot + label, never hue alone</b></div>
+                <div class="status-row">
+                  <span class="s"><span class="sw" style="background:#00FA8A"></span> <b>Live / success</b></span>
+                  <span class="s"><span class="sw" style="background:#F5B118"></span> <b>At risk</b></span>
+                  <span class="s"><span class="sw" style="background:#E5484D"></span> <b>Late / error</b></span>
+                </div>
+              </div>
+            </div>
+            <p class="spec-cap">The dark stops are a true neutral, <b>red equals green equals blue</b>, so nothing tints the canvas green. The accent was retuned from the old Warp lime to <span class="mono-accent">#00FA8A</span>; the discipline, one hue in one role, is the part that was mine.</p>
+          </div>
+        </div>
+        <figcaption><span class="plate-tag">Color</span><b>Obsidian, neutral, accent.</b> The canvas is a true neutral near-black with no green tilt. Cool grays do the hierarchy, and the accent shows up in fills, borders, and text, never in light.</figcaption>
+      </figure>
+
+      <div class="cols2 rise" style="margin-top:var(--s9)">
+        <div class="col">
+          <div class="k"><span class="dot" aria-hidden="true"></span> The accent</div>
+          <div class="kt">One role, and nowhere else.</div>
+          <p>Spring Green was already Warp's brand color, used hundreds of times in the code before me. My part was the discipline. It means <b>action, live, or success</b>, and it appears nowhere else on the surface.</p>
+        </div>
+        <div class="col">
+          <div class="k"><span class="dot" aria-hidden="true"></span> The face</div>
+          <div class="kt">Satoshi, every job.</div>
+          <p>One variable family carries interface, display, body, and numerals, at weights 300 to 900. The monospaced feel on numbers comes from OpenType features on that same face, so there is no second font. That one call cut four families to one.</p>
+        </div>
+      </div>
+
+      <figure class="plate full rise" style="margin-top:var(--s9)">
+        <div class="spec">
+          <div class="spec-pad">
+            <p class="spec-label">Type &middot; Satoshi <span class="rule"></span> <span class="k2">Set live, in the face it describes</span></p>
+            <div class="typespec">
+              <div class="aa" aria-hidden="true"><span>A</span><span class="a2">a</span></div>
+              <div class="tside">
+                <div class="tscale">
+                  <div class="r"><span class="sample" style="font-size:clamp(1.7rem,4vw,2.6rem);font-weight:900">Systematized</span><span class="px">Display &middot; 64</span></div>
+                  <div class="r"><span class="sample" style="font-size:clamp(1.35rem,3vw,1.9rem);font-weight:700">Operator console</span><span class="px">Title &middot; 40</span></div>
+                  <div class="r"><span class="sample" style="font-size:clamp(1.1rem,2.2vw,1.35rem);font-weight:500">Every screen agrees</span><span class="px">Heading &middot; 26</span></div>
+                  <div class="r"><span class="sample" style="font-size:1.02rem;font-weight:400;color:var(--ink-dim)">One face carries every job</span><span class="px">Body &middot; 17</span></div>
+                </div>
+                <div class="weights" aria-label="Weights from Light 300 to Black 900">
+                  <span style="font-weight:300">Satoshi<small>Light 300</small></span>
+                  <span style="font-weight:400">Satoshi<small>Regular 400</small></span>
+                  <span style="font-weight:500">Satoshi<small>Medium 500</small></span>
+                  <span style="font-weight:700">Satoshi<small>Bold 700</small></span>
+                  <span style="font-weight:900">Satoshi<small>Black 900</small></span>
+                </div>
+                <div class="figs">
+                  <div class="fh">Tabular figures &middot; digits stack</div>
+                  <div class="fcol"><span>$1,343.50</span><span>$42.10</span><span>$1,547.00</span></div>
+                  <div class="fline">LAX <span class="mono-accent">&rarr;</span> SFO &middot; ETA 12:00:06 &middot; WRP-9824</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <figcaption><span class="plate-tag">Type</span><b>Satoshi, 300 to 900.</b> The numbers ride on OpenType tabular figures, so a column of freight rates stacks digit over digit with no second font loaded.</figcaption>
+      </figure>
+
+      <!-- nine emit targets, typographic matrix -->
+      <div class="emit rise">
+        <div class="emit-head">
+          <span class="t">One source, nine emit targets.</span>
+          <span class="c">Style Dictionary</span>
+        </div>
+        <div class="emit-grid">
+          <div class="e"><span class="en">01</span><span class="et">Web, React</span></div>
+          <div class="e"><span class="en">02</span><span class="et">iOS, SwiftUI</span></div>
+          <div class="e"><span class="en">03</span><span class="et">Android, Compose</span></div>
+          <div class="e"><span class="en">04</span><span class="et">React Native</span></div>
+          <div class="e"><span class="en">05</span><span class="et">macOS desktop</span></div>
+          <div class="e"><span class="en">06</span><span class="et">Windows desktop</span></div>
+          <div class="e"><span class="en">07</span><span class="et">Shopify Liquid</span></div>
+          <div class="e"><span class="en">08</span><span class="et">BigCommerce</span></div>
+          <div class="e"><span class="en">09</span><span class="et">WooCommerce</span></div>
+        </div>
+        <p class="emit-note rise"><b>Honest about coverage.</b> The tokens and the consumption guides reach all nine targets. The native component examples are a partial proof of concept so far, not nine finished apps.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 04 TEMPLATES ============ -->
+  <section aria-labelledby="tmpl-h">
+    <div class="wrap grid12">
+      <div class="eyebrow rise"><span class="pnum"><span class="dot" aria-hidden="true"></span>04</span> <span class="lbl">Reference templates</span> <span class="rule"></span><span class="tag">Same language, different density</span></div>
+      <h2 class="title s-head rise" id="tmpl-h">Eight surfaces that answer one question.</h2>
+      <div class="lead-col rise"><p class="lead">Each template is the canonical answer to "is this how a Lumen surface looks?", from marketing breath all the way to operator dense.</p></div>
+
+      <div class="stack rise">
+        <div class="r"><span class="no">01</span><div><b>Marketing and Landing</b><div class="d">A type-led hero, a screenshot standing in as proof, and a live rate ticker. Apple-disciplined chrome over Warp-substantive content.</div></div></div>
+        <div class="r"><span class="no">02</span><div><b>SaaS Dashboard</b><div class="d">The operator-portal pattern. Sidebar nav, a KPI grid with sparklines, a sortable table, and a live activity rail. Dense and scannable.</div></div></div>
+        <div class="r"><span class="no">03</span><div><b>Web Tool</b><div class="d">A single-purpose utility: preset rail, focused canvas, control panel, output panel. The pattern for any calculator or one-shot job.</div></div></div>
+        <div class="r"><span class="no">04</span><div><b>Commerce</b><div class="d">Storefront patterns for Shopify, BigCommerce, and Woo. A product page with variant pickers and a drawer cart, on the same Lumen type discipline.</div></div></div>
+        <div class="r"><span class="no">05</span><div><b>Mobile</b><div class="d">iOS and Android side by side. Same visual language, platform-native chrome: Apple HIG on iOS, Material 3 on Android. Same tokens, different mappings.</div></div></div>
+        <div class="r"><span class="no">06</span><div><b>Native Desktop</b><div class="d">macOS and Windows window chrome, with vibrancy and Mica titlebars. Where the future SwiftUI and WinUI adapters land.</div></div></div>
+        <div class="r"><span class="no">07</span><div><b>Foundations</b><div class="d">The system's first principles: color ramps, type scale, spacing, elevation, motion. The route everyone reads first.</div></div></div>
+        <div class="r"><span class="no">08</span><div><b>Library</b><div class="d">Every primitive in at least one default state, and every variant. The "is this how a Lumen X is supposed to look?" reference.</div></div></div>
+      </div>
+
+      <figure class="plate full rise" style="margin-top:var(--s9)">
+        <div class="ph real" style="aspect-ratio:2400/1625">
+          <img src="assets/template-saas.webp" alt="The real Lumen SaaS Dashboard render: a left sidebar for Acme Logistics, a KPI row reading shipments today 1,284, on time 98.2 percent, average cost per pallet 42.10 dollars and active lanes 1,547, each with a green sparkline, and a shipments table with WRP lane codes and dot-and-label status for on time, pickup, at risk, late, and delivered." width="2400" height="1625" loading="lazy" decoding="async">
+        </div>
+        <figcaption><span class="plate-tag">Template &middot; SaaS</span><b>The operator portal.</b> Right-aligned tabular numbers, hairline rows, and status shown as a dot and a label. The register the whole system was built to serve.</figcaption>
+      </figure>
+
+      <div class="pair">
+        <figure class="plate rise">
+          <div class="ph real" style="aspect-ratio:2400/1625">
+            <img src="assets/template-commerce.webp" alt="The real Lumen Commerce render: a Foundry storefront product page with a gallery on the left and, on the right, the title Field Jacket Mk II, a price of 248 dollars marked down from 320 with a 22 percent off tag, olive-drab color and size pickers, and a bright green Add to cart button showing 248 dollars." width="2400" height="1625" loading="lazy" decoding="async">
+          </div>
+          <figcaption><span class="plate-tag">Template &middot; Commerce</span><b>The same discipline, on a storefront.</b> A product page held to the Lumen type scale, with the accent doing the one job it always does: the buy action.</figcaption>
+        </figure>
+
+        <figure class="plate rise">
+          <div class="ph real" style="aspect-ratio:2000/1417">
+            <img src="assets/template-mobile.webp" alt="The real Lumen Mobile render: an iOS iPhone and an Android phone side by side, both showing the Shipments list. iOS has a large title, on time 98.2 percent and live 1,284 stat tiles, and a bottom tab bar; Android has a top app bar, a green New shipment button, and a bottom navigation bar. Both share the Lumen visual language." width="2000" height="1417" loading="lazy" decoding="async">
+          </div>
+          <figcaption><span class="plate-tag">Template &middot; Mobile</span><b>iOS and Android, one language.</b> Apple HIG on the left, Material 3 on the right, same tokens mapped to each platform's own chrome.</figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 05 LLM-FIRST ============ -->
+  <section aria-labelledby="llm-h">
+    <div class="wrap grid12">
+      <div class="eyebrow rise"><span class="pnum"><span class="dot" aria-hidden="true"></span>05</span> <span class="lbl">LLM-first</span> <span class="rule"></span><span class="tag">The schema is the source</span></div>
+      <h2 class="title s-head rise" id="llm-h">Documentation an agent can follow tightly.</h2>
+      <div class="lead-col rise"><p class="lead">Most design systems are documentation that engineers translate into code. Lumen flips it. The schema is the source, and every AI tool gets a contract it can read in its own format.</p></div>
+
+      <div class="cols2 rise">
+        <div class="col">
+          <div class="k"><span class="dot" aria-hidden="true"></span> Two files per component</div>
+          <div class="kt">Human beside machine.</div>
+          <p>A <b>component.md</b> with anatomy, usage, motion, and accessibility that a designer reads directly. A <b>component.json</b> the shadcn registry installs from. They are kept in lockstep, so the prose and the schema never drift apart.</p>
+        </div>
+        <div class="col">
+          <div class="k"><span class="dot" aria-hidden="true"></span> One layered contract</div>
+          <div class="kt">Every agent, its own format.</div>
+          <p>An <b>llms.txt</b> for discovery, an <b>AGENTS.md</b> for the universal rules, then tool-specific files for Claude, Cursor, and Warp. All of them mirror one source, and the rules are enforced by lint.</p>
+        </div>
+      </div>
+
+      <figure class="plate full rise" style="margin-top:var(--s9)">
+        <div class="spec">
+          <div class="spec-pad">
+            <p class="spec-label">The component contract <span class="rule"></span> <span class="k2">Two files, kept in lockstep by CI</span></p>
+            <div class="contract-cols">
+              <div class="fpanel">
+                <div class="fp-top"><span class="fdot" style="background:var(--ink-dim)"></span><span class="fname">button/component.md</span></div>
+                <div class="fp-body">
+                  <div class="line cm">--- frontmatter ---</div>
+                  <div class="line"><span class="kw">name:</span> Button</div>
+                  <div class="line"><span class="kw">status:</span> <span class="gr">stable</span></div>
+                  <div class="line">&nbsp;</div>
+                  <div class="line h">## Anatomy</div>
+                  <div class="line">Label, optional icon, one action.</div>
+                  <div class="line h">## Usage</div>
+                  <div class="line">One primary action per view.</div>
+                  <div class="line h">## Motion &middot; A11y</div>
+                  <div class="line">Decelerate &lt; 150ms, native focus.</div>
+                </div>
+              </div>
+              <div class="fpanel">
+                <div class="fp-top"><span class="fdot" style="background:var(--accent)"></span><span class="fname">button/component.json</span></div>
+                <div class="fp-body">
+                  <div class="line">{</div>
+                  <div class="line">&nbsp;&nbsp;<span class="kw">"name"</span>: <span class="gr">"Button"</span>,</div>
+                  <div class="line">&nbsp;&nbsp;<span class="kw">"version"</span>: <span class="gr">"0.12.2"</span>, <span class="kw">"status"</span>: <span class="gr">"stable"</span>,</div>
+                  <div class="line">&nbsp;&nbsp;<span class="kw">"props"</span>: {</div>
+                  <div class="line">&nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">"intent"</span>: { <span class="kw">"type"</span>: <span class="gr">"enum"</span>, <span class="kw">"values"</span>: [<span class="gr">"primary"</span>, <span class="gr">"ghost"</span>, &hellip;] },</div>
+                  <div class="line">&nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">"size"</span>: { <span class="kw">"type"</span>: <span class="gr">"enum"</span>, <span class="kw">"values"</span>: [<span class="gr">"xs"</span>&hellip;<span class="gr">"xl"</span>] }</div>
+                  <div class="line">&nbsp;&nbsp;},</div>
+                  <div class="line">&nbsp;&nbsp;<span class="kw">"tokens"</span>: { <span class="kw">"consumed"</span>: [<span class="gr">"color.action.primary.bg.rest"</span>, &hellip;] },</div>
+                  <div class="line">&nbsp;&nbsp;<span class="kw">"a11y"</span>: { <span class="kw">"role"</span>: <span class="gr">"button"</span> }</div>
+                  <div class="line">}</div>
+                </div>
+              </div>
+            </div>
+            <div class="contract-flow">
+              <span class="chip">llms.txt</span><span class="arrow">&middot;</span>
+              <span class="chip">AGENTS.md</span><span class="arrow">&middot;</span>
+              <span class="chip">claude &middot; cursor &middot; warp</span>
+              <span class="arrow">&rarr;</span>
+              <span class="chip src">one source, lint-enforced</span>
+            </div>
+            <p class="spec-cap">The <b>.md</b> is what a designer reads; the <b>.json</b> is what the shadcn registry installs from. Every AI tool gets the same rules in the format it reads natively, and a lint fails the build when the prose and the schema drift apart. Both panels are abbreviated from the real <b>button/component.json</b> and <b>.md</b>, in their own field shape.</p>
+          </div>
+        </div>
+        <figcaption><span class="plate-tag">The contract</span><b>Readable by a machine first.</b> On a team where the agent usually holds the keyboard, the spec an agent can follow is the spec that actually ships.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- ============ 06 THE AUDIT ============ -->
+  <section aria-labelledby="audit-h">
+    <div class="wrap grid12">
+      <div class="eyebrow rise"><span class="pnum"><span class="dot" aria-hidden="true"></span>06</span> <span class="lbl">R1 to R16</span> <span class="rule"></span><span class="tag">Vigilance, retired</span></div>
+      <h2 class="title s-head rise" id="audit-h">Bugs hide from the same kind of looking.</h2>
+      <div class="lead-col rise"><p class="lead">Most systems drift because they lean on people remembering the rules. I replaced that with checks the build runs on its own. Each round added a new kind of measurement, and a new kind of measurement is what kept surfacing a new class of bug.</p></div>
+
+      <div class="ladder rise">
+        <div class="row"><div class="p">R1&ndash;R3</div><div class="txt"><b>Static, interaction, contract</b><span>Sticky-header bleed, product-page pickers failing the first click, hardcoded calendar offsets. Per-route audits.</span></div></div>
+        <div class="row"><div class="p">R4</div><div class="txt"><b>Meta-contract integrity</b><span>Version chips drifting across llms.txt, the using guide, and the readme. A release step rewrites them in lockstep.</span></div></div>
+        <div class="row"><div class="p">R5&ndash;R6</div><div class="txt"><b>Mobile metrics and single-source docs</b><span>Audits at 320 and 375, catching layout inflation, then a catalog that disagreed with itself on how many components existed.</span></div></div>
+        <div class="row hot"><div class="p">R11</div><div class="txt"><b>Green retired from every shadow</b><span>Brand identity is a green fill, never a green light. A lint walks the token JSON and fails the build on any accent in a shadow.</span></div></div>
+        <div class="row hot"><div class="p">R14</div><div class="txt"><b>Docs-to-tokens drift</b><span>The token check could not read prose. A second lint walks every doc and fails the build on any prescriptive use of a retired token, off a list, so the next retirement is one line, not two hundred find-and-replaces.</span></div></div>
+        <div class="row hot"><div class="p">R16</div><div class="txt"><b>A contrast bug becomes a guard</b><span>My own operator tool, built on Lumen, shipped text at 1.66:1 on green across 11 or more sites, because a developer reached for a token name that did not exist and it fell through quietly. I added the token, a defensive component, a build-failing check, and a doc. On its first run the new check caught the same bug hiding in Lumen's own example code.</span></div></div>
+      </div>
+
+      <figure class="plate full rise" style="margin-top:var(--s8)">
+        <div class="spec">
+          <div class="spec-pad">
+            <p class="spec-label">Guard &middot; contrast <span class="rule"></span> <span class="k2">ADR 0035 &middot; the bug that wrote its own lint</span></p>
+            <div class="guard" aria-label="A before and after. Before: a green button with pale, near-unreadable text, measured at 1.66 to 1, failing WCAG. After: the same green button with near-black text, measured at 14.7 to 1, passing AAA.">
+              <div class="gcol">
+                <span class="demobtn ink-fail flat" aria-hidden="true">Get rates &rarr;</span>
+                <span class="gtag fail"><span class="dot" aria-hidden="true" style="background:var(--err)"></span> <span class="ratio">1.66:1</span> &middot; Fail</span>
+              </div>
+              <div class="gcol">
+                <span class="demobtn ink-pass flat" aria-hidden="true">Get rates &rarr;</span>
+                <span class="gtag pass"><span class="dot" aria-hidden="true"></span> <span class="ratio">14.7:1</span> &middot; Pass AAA</span>
+              </div>
+            </div>
+            <p class="spec-cap">My own operator tool shipped <b>1.66:1</b> text on green across eleven or more sites, because a developer reached for a token name that did not exist and it fell through quietly. I added the token, a defensive component, a build-failing check, and a doc. <b>On its first run the check caught the same bug hiding in Lumen's own example code.</b></p>
+          </div>
+        </div>
+        <figcaption><span class="plate-tag">Guard &middot; Contrast</span><b>1.66:1 to 14.7:1.</b> Fixed at the system level across every affected site, then wired into a check so it cannot come back.</figcaption>
+      </figure>
+
+      <figure class="plate full rise" style="margin-top:var(--s8)">
+        <div class="spec">
+          <div class="spec-pad">
+            <p class="spec-label">Guard &middot; elevation <span class="rule"></span> <span class="k2">ADR 0030 &middot; I overruled my own system</span></p>
+            <div class="guard" aria-label="A before and after. Retired: a green button sitting in a green glow. Current: the same button flat, with a plain neutral shadow. The accent moved out of the light and into the fill.">
+              <div class="gcol">
+                <span class="demobtn ink-good glow" aria-hidden="true">New shipment</span>
+                <span class="gtag retired"><span class="dot" aria-hidden="true" style="background:var(--ink-faint)"></span> Retired</span>
+                <span class="gsub">a green glow, drawn to show the wrong</span>
+              </div>
+              <div class="gcol">
+                <span class="demobtn ink-good flat" aria-hidden="true">New shipment</span>
+                <span class="gtag current"><span class="dot" aria-hidden="true"></span> Current</span>
+                <span class="gsub">flat surface, neutral shadow</span>
+              </div>
+            </div>
+            <p class="spec-cap">I had built an internally consistent rule that allowed green in a button's halo, then reviewed it against the live product and decided colored light reads cheaper than a clean surface. So I overruled my own system, broadened the lint to fail the build on <b>any</b> green shadow, and shipped the code, the docs, and the amended rule in one commit. <b>The whole page you are reading obeys it.</b></p>
+          </div>
+        </div>
+        <figcaption><span class="plate-tag">Guard &middot; Elevation</span><b>The accent left the light.</b> Colored glow reads cheaper than a clean surface, so I retired green from every shadow and made the check fail the build on any that return.</figcaption>
+      </figure>
+
+      <blockquote class="pull rise">
+        <q>A rule you have to remember is a rule that decays.</q>
+        <div class="attr"><span class="dot" aria-hidden="true"></span> One check on the tokens, one on the prose, because neither can see the other.</div>
+      </blockquote>
+    </div>
+  </section>
+
+  <!-- ============ 07 THREE PRIMITIVES ============ -->
+  <section aria-labelledby="prim-h">
+    <div class="wrap grid12">
+      <div class="eyebrow rise"><span class="pnum"><span class="dot" aria-hidden="true"></span>07</span> <span class="lbl">Three primitives</span> <span class="rule"></span><span class="tag">Where the feeling lives</span></div>
+      <h2 class="title s-head rise" id="prim-h">A number, a live dot, a rate ticker.</h2>
+      <div class="lead-col rise"><p class="lead">An operator sees three small pieces of Lumen far more than any button. That is where the operator-console feeling comes from, so they got most of the polish.</p></div>
+
+      <div class="stack rise">
+        <div class="r"><span class="no">01</span><div><b>Numbers as hero</b><div class="d">Big bold tabular figures with a small tracked unit, right-aligned in tables so the digits stack. The most-read element on any operator surface.</div></div></div>
+        <div class="r"><span class="no">02</span><div><b>One signature pulse</b><div class="d">An 8-pixel filled green dot with a 2-pixel ring, pulsing on a slow ease-out loop. It is the only ambient motion in the system, it runs only when something is genuinely live, and it honors reduced motion.</div></div></div>
+        <div class="r"><span class="no">03</span><div><b>The marquee that earns its keep</b><div class="d">A horizontal stream of freight-lane rates in tabular figures, on a slow continuous loop. It says operator console louder than any hero image could.</div></div></div>
+      </div>
+
+      <figure class="plate full rise" style="margin-top:var(--s9)">
+        <div class="spec">
+          <div class="spec-pad">
+            <p class="spec-label">The three signatures <span class="rule"></span> <span class="k2">Where the operator mood lives</span></p>
+            <div class="prims">
+              <div class="pcard pstat">
+                <div class="pk">Shipments today</div>
+                <div class="snum">1,284</div>
+                <div class="srow">
+                  <span class="delta">&#9650; +12.4% wow</span>
+                  <svg class="spark" viewBox="0 0 120 34" fill="none" preserveAspectRatio="none" aria-hidden="true"><polyline points="0,28 18,24 34,26 52,17 70,20 88,11 104,13 120,4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </div>
+              </div>
+              <div class="pcard plive">
+                <span class="dot pulse" aria-hidden="true" style="width:16px;height:16px;margin:6px auto 22px"></span>
+                <div class="llabel">Live</div>
+                <div class="lsub">the only ambient motion, a 3s pulse</div>
+              </div>
+              <div class="pticker">
+                <div class="tk">Rate ticker &middot; freight lanes</div>
+                <div class="tickrow" aria-label="A ticker of freight-lane rates in tabular figures: LAX to SFO 262 dollars down, ORD to ATL 485 dollars up, DFW to PHX 390 dollars, SEA to DEN 612 dollars down, MIA to JFK 724 dollars up, BOS to CLT 540 dollars.">
+                  <span class="li">LAX&rarr;SFO <span class="rate">$262</span><span class="d dn">&#9660;</span></span>
+                  <span class="li">ORD&rarr;ATL <span class="rate">$485</span><span class="d up">&#9650;</span></span>
+                  <span class="li">DFW&rarr;PHX <span class="rate">$390</span></span>
+                  <span class="li">SEA&rarr;DEN <span class="rate">$612</span><span class="d dn">&#9660;</span></span>
+                  <span class="li">MIA&rarr;JFK <span class="rate">$724</span><span class="d up">&#9650;</span></span>
+                  <span class="li">BOS&rarr;CLT <span class="rate">$540</span></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <figcaption><span class="plate-tag">The primitives</span><b>Stat, LiveDot, RateTicker.</b> The pieces an operator reads a hundred times a shift, so care shows up here as speed and legibility, not decoration.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- ============ 08 HONESTY ============ -->
+  <section aria-labelledby="proof-h">
+    <div class="wrap grid12">
+      <div class="eyebrow rise"><span class="pnum"><span class="dot" aria-hidden="true"></span>08</span> <span class="lbl">Honesty</span> <span class="rule"></span><span class="tag">What it is, and what it isn't</span></div>
+      <h2 class="title s-head rise" id="proof-h">Coherence and defects prevented, not a dollar figure.</h2>
+      <div class="lead-col rise"><p class="lead">Lumen is live, and it runs real work. Our operator tool is built on it, and the team's AI agents read from it directly. What it does not have is an adoption chart or a revenue line, and I am not going to draw one.</p></div>
+
+      <div class="ledger rise">
+        <div class="can">
+          <div class="lh"><span class="dot" aria-hidden="true"></span> What I can prove</div>
+          <ul>
+            <li><span class="m" aria-hidden="true"></span><span>The size of the system, all built solo with the AI doing the typing: <b>900+ design tokens, 98 component contracts, 9 emit targets, and 35 written decision records.</b></span></li>
+            <li><span class="m" aria-hidden="true"></span><span>A <b>16-round audit</b> where I changed the measurement each round instead of re-walking the same screens. It kept finding a new class of bug.</span></li>
+            <li><span class="m" aria-hidden="true"></span><span>On the reference build <span class="labtag"><span class="dot" aria-hidden="true"></span> Lab</span>: page load down about <b>31 percent</b>, layout shift at zero, and zero unnamed controls across <b>714 interactive elements</b>. Lab numbers, and I label them that way.</span></li>
+            <li><span class="m" aria-hidden="true"></span><span>The contrast bug my own tool shipped, fixed at the system level from <b>1.66:1 to 14.7:1</b> across every affected site.</span></li>
+          </ul>
+        </div>
+        <div class="wont">
+          <div class="lh"><span class="dot" aria-hidden="true" style="background:var(--ink-faint)"></span> What I will not claim</div>
+          <ul>
+            <li>Adoption numbers. Real adoption is our tool running on it and the agents reading from it, not a count across all of Warp.</li>
+            <li>Revenue or conversion. This is internal platform work. It buys coherence and prevents defects, and I do not get to invent a dollar figure for that.</li>
+          </ul>
+        </div>
+      </div>
+
+      <p class="status-note rise">The honest value here is coherence that holds on a shrinking team, and defects caught before they ship. <b>That is what a design system is for, and it is the part worth judging.</b></p>
+    </div>
+  </section>
+
+  <!-- ============ 09 REFLECTION ============ -->
+  <section aria-labelledby="refl-h">
+    <div class="wrap grid12">
+      <div class="eyebrow rise"><span class="pnum"><span class="dot" aria-hidden="true"></span>09</span> <span class="lbl">Reflection</span> <span class="rule"></span><span class="tag">What building it taught me</span></div>
+      <h2 class="title s-head rise" id="refl-h">Vigilance is the wrong currency for consistency.</h2>
+
+      <div class="refl rise">
+        <div class="r">
+          <div class="k"><span class="dot" aria-hidden="true"></span> The lesson</div>
+          <div class="t">On a team that keeps shrinking, and writes more of its code with AI every month, nobody has the attention to police a convention. <b>So you encode the rules you care about, or you watch them decay.</b></div>
+        </div>
+        <div class="r">
+          <div class="k"><span class="dot" aria-hidden="true"></span> The invisible work</div>
+          <div class="t">Every decision I cared about had to become three things at once: a token, a written record, and a check the build runs on its own. <b>The whole thing had to be readable by an AI agent first,</b> because on this team the agent is usually the one holding the keyboard.</div>
+        </div>
+        <div class="r">
+          <div class="k"><span class="dot" aria-hidden="true"></span> The bar</div>
+          <div class="t">I would rather call Lumen rigorous and honest than finished and perfect. <b>The scar tissue, the bugs it found in itself and then made impossible, is the part I am most proud of.</b></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CLOSING MONTAGE ============ -->
+  <section aria-label="The system, end to end">
+    <div class="wrap grid12">
+      <div class="show-head rise"><span>The system, end to end</span><span class="rule"></span><span>Eight surfaces, one language</span></div>
+      <div class="sheet rise">
+        <figure><div class="st"><img src="assets/tile-foundations.webp" alt="Lumen Foundations reference surface" width="1120" height="700" loading="lazy" decoding="async"></div><figcaption><span class="idx">01</span> Foundations</figcaption></figure>
+        <figure><div class="st"><img src="assets/tile-landing.webp" alt="Lumen Marketing and Landing surface" width="1120" height="700" loading="lazy" decoding="async"></div><figcaption><span class="idx">02</span> Landing</figcaption></figure>
+        <figure><div class="st"><img src="assets/tile-saas.webp" alt="Lumen SaaS Dashboard surface" width="1120" height="700" loading="lazy" decoding="async"></div><figcaption><span class="idx">03</span> SaaS</figcaption></figure>
+        <figure><div class="st"><img src="assets/tile-tool.webp" alt="Lumen Web Tool surface" width="1120" height="700" loading="lazy" decoding="async"></div><figcaption><span class="idx">04</span> Tool</figcaption></figure>
+        <figure><div class="st"><img src="assets/tile-commerce.webp" alt="Lumen Commerce storefront surface" width="1120" height="700" loading="lazy" decoding="async"></div><figcaption><span class="idx">05</span> Commerce</figcaption></figure>
+        <figure><div class="st"><img src="assets/tile-mobile.webp" alt="Lumen Mobile surface, iOS and Android" width="1120" height="700" loading="lazy" decoding="async"></div><figcaption><span class="idx">06</span> Mobile</figcaption></figure>
+        <figure><div class="st"><img src="assets/tile-desktop.webp" alt="Lumen Native Desktop surface, macOS and Windows" width="1120" height="700" loading="lazy" decoding="async"></div><figcaption><span class="idx">07</span> Desktop</figcaption></figure>
+        <figure><div class="st"><img src="assets/tile-library.webp" alt="Lumen component Library surface" width="1120" height="700" loading="lazy" decoding="async"></div><figcaption><span class="idx">08</span> Library</figcaption></figure>
+      </div>
+      <figure class="plate full rise" style="margin-top:var(--s6)">
+        <figcaption><b>Eight surfaces, one system.</b> Foundations, Landing, SaaS, Tool, Commerce, Mobile, Desktop, and Library, all speaking the same language at very different densities.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+</main>
+
+<!-- ============================================================
+     [PAGE-CUSTOM] COLOPHON / FOOTER
+     ============================================================ -->
+<footer class="colophon">
+  <div class="wrap grid12">
+    <div class="cred rise">
+      <div class="brand"><span class="dot" aria-hidden="true"></span> Lumen</div>
+      <p><b>Warp's LLM-first design system.</b> Sole architect: the token architecture, the governance, the visual language, and the QA bar. I worked directly with the founders and directed the AI agents that wrote most of the code. Built at Warp, an AI-native freight company.</p>
+      <p class="fine">Set in Satoshi on an Obsidian canvas, in the system's own language, because a case study about a design system should look like the design system. One Spring Green accent, and neutral shadows everywhere, because this is the system that retired green from the light.</p>
+      <a class="backlink" href="/">&larr; Back to portfolio</a>
+    </div>
+    <div class="note rise">
+      <dl>
+        <div><dt>Type</dt><dd>Satoshi</dd></div>
+        <div><dt>Canvas</dt><dd>Obsidian #0D0D0D</dd></div>
+        <div><dt>Accent</dt><dd>One Spring Green <span class="u" aria-hidden="true"></span></dd></div>
+        <div><dt>Source</dt><dd>DTCG tokens, Style Dictionary</dd></div>
+        <div><dt>Case study</dt><dd>Neel Tengariya, 2026</dd></div>
+      </dl>
+    </div>
+  </div>
+</footer>
+
+<!-- [SHARED-VERBATIM basis] calm reveal only, plus specimen-image fade-in. No app UI is drawn in code, no keyframes. -->
+<script>
+  (function(){
+    var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    // calm scroll-reveal
+    var els = document.querySelectorAll('.rise');
+    if(!('IntersectionObserver' in window) || reduce){
+      els.forEach(function(e){e.classList.add('in')});
+    } else {
+      var io = new IntersectionObserver(function(entries){
+        entries.forEach(function(en){ if(en.isIntersecting){ en.target.classList.add('in'); io.unobserve(en.target);} });
+      }, {rootMargin:'0px 0px -8% 0px', threshold:0.06});
+      els.forEach(function(e){io.observe(e)});
+    }
+    // reveal each real render once its asset actually loads (specimen plates are drawn in CSS and need no fade)
+    document.querySelectorAll('.ph img, .collage .frame img, .sheet .st img').forEach(function(img){
+      var show = function(){ img.classList.add('loaded'); };
+      if(img.complete && img.naturalWidth > 0){ show(); }
+      img.addEventListener('load', show);
+    });
+  })();
+</script>
+</body>
+</html>
