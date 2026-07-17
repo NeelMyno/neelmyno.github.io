@@ -134,6 +134,12 @@
   /* text-wrap:pretty pulls the last word up so body copy never ends on a one-word runt
      (Chromium honors it; a graceful no-op elsewhere). Headings use balance (see .title). */
   p,li,.stat .c .l,.mini .lab{text-wrap:pretty}
+  /* ...and these three ARE headings by every measure that matters (display face, 700-800,
+     18px+), but were the only ones never given balance — so each ended on a one-word runt:
+     "helped." / "from." / "saved." / "reasoning." (.breaks .b .t), "seconds." (.feat h3),
+     and "side." (a figcaption lead-in, at 390). Balance only redistributes words inside the
+     SAME line count, so this costs zero height and zero reflow. */
+  .breaks .b .t,.feat .txt h3,figcaption b{text-wrap:balance}
   .body{color:var(--ink-dim);max-width:58ch}
   .body b,.lead b{color:var(--ink);font-weight:700}
   .dim{color:var(--ink-dim)}.faint{color:var(--ink-faint)}
@@ -173,6 +179,12 @@
   .nav .cta-chevron svg{display:block}
   /* the nav is fixed, like the homepage — offset the page so the masthead clears it (nav is 53px tall) */
   body{padding-top:53px}
+  /* The inherited site nav is 53px at >=768px but 54.55px below it: at <=767px
+     .nav-logo flips to position:static, so the 41.55px logo drives the flow height
+     instead of the 40px nav links. body{padding-top:53px} is hard-coded, so content
+     sat 1.55px under the nav on mobile. Measured on all three case studies. */
+  @media (max-width:767px){ body{ padding-top:55px } }
+
   @media screen and (max-width:767px){
     .nav .page-padding{padding-right:20px;padding-left:20px}
     .nav-inner{justify-content:space-between}
@@ -196,7 +208,14 @@
   @media (max-width:920px){.cover-copy{grid-column:1/-1}.cover-side{grid-column:1/-1;margin-top:var(--s6)}}
   .cover-kicker{margin-bottom:var(--s5)}
   .cover-h1{font-family:var(--wide);font-weight:800;font-size:var(--fs-display);line-height:1.0;letter-spacing:-.032em;color:var(--ink-2);margin:0 0 var(--s5);text-wrap:balance}
-  .cover-h1 .l2{color:var(--ink)}
+  /* .l2 is a BLOCK, and that is load-bearing, not cosmetic: Chromium silently abandons
+     text-wrap:balance on any block containing a forced <br>, so the h1 above declared
+     balance and never got it — "work." sat alone on line 3 (37% at 1440, 29% at 390).
+     As its own block, .l2 balances independently ("that shows" / "its work.") and the
+     line break no longer needs the <br>, which is why the markup drops it (for a real
+     space, so the h1 reads "A thinking tool that..." and not "toolthat" to anything that
+     takes the text without the CSS). Identical height and innerText at every width. */
+  .cover-h1 .l2{color:var(--ink);display:block}
   .cover-lead{font-size:var(--fs-lead);line-height:1.38;font-weight:500;color:var(--ink);max-width:36ch;margin:0 0 var(--s3)}
   .cover-lead b{font-weight:700}
   .cover-sub{font-size:var(--fs-sm);color:var(--ink-faint);font-weight:600;letter-spacing:.02em;margin:0 0 var(--s6)}
@@ -513,7 +532,7 @@
   <div class="wrap grid12">
     <div class="cover-copy">
       <p class="kicker cover-kicker rise">Explainable-AI note workspace &middot; MS-HCDE capstone &middot; React and Supabase</p>
-      <h1 class="cover-h1 rise d1">A thinking tool<br><span class="l2">that shows its work.</span></h1>
+      <h1 class="cover-h1 rise d1">A thinking tool <span class="l2">that shows its work.</span></h1>
       <p class="cover-lead rise d2">People don&rsquo;t lose ideas when they write them down. They lose them <b>on the way back.</b></p>
       <p class="cover-sub rise d2">The one thing I kept seeing across six interviews.</p>
       <dl class="meta rise d3">
