@@ -78,7 +78,7 @@
     --ink-3:oklch(0.645 0.008 236);   /* small labels ~AA */
     --ink-4:oklch(0.545 0.009 236);   /* faint / struck */
     /* the ONE accent - spring green, the product's mark. live / status / current only */
-    --accent:oklch(0.864 0.22 153);      /* #00FA8A, the real Warp TMS mark */
+    --accent:oklch(0.864 0.22 153);      /* paints ~#03FA8A, the real Warp TMS mark */
     --accent-ink:oklch(0.235 0.03 160);  /* near-black ink ON the bright green (measured-contrast) */
     --accent-quiet:oklch(0.76 0.13 155); /* accent as small text on dark, if ever needed */
     /* status - dot + label + contrast floor, never hue alone (sin 5) */
@@ -87,7 +87,7 @@
     /* neutral elevation only - NO accent in any shadow/glow (sin 2) */
     --shadow-photo:0 2px 22px rgba(0,0,0,.42), 0 1px 4px rgba(0,0,0,.32);
     --shadow-float:0 28px 66px rgba(0,0,0,.55), 0 8px 20px rgba(0,0,0,.42);
-    /* type - the product's own faces. General Sans across the scale; JetBrains Mono for numerals/ids */
+    /* type - Manrope across the case-study scale; the product's own face is General Sans (shown in the craft file). JetBrains Mono for numerals/ids */
     --sans:'Manrope','Segoe UI',system-ui,-apple-system,sans-serif;
     --mono:ui-monospace,'SF Mono','JetBrains Mono',Menlo,Consolas,monospace;
 
@@ -1179,7 +1179,7 @@
     <figure class="shot rise">
       <div class="ph" style="--ar:2880/1900">
         <img src="assets/shipments-table.webp" alt="The shipments working-set table: a dense table of loads with columns for id, lane, carrier, mode, status, pickup and delivery dates, and cost. Status is carried by a small dot and a word, most rows neutral with a couple flagged as exceptions, and the numeric columns are right-aligned in tabular figures." width="2880" height="1900" loading="lazy">
-        <span class="ph-res num">2880 &times; 1800</span>
+        <span class="ph-res num">2880 &times; 1900</span>
         <span class="ph-lab">Shipments &middot; the working set</span>
       </div>
       <figcaption><b>The working set.</b> The filter and sort held in the URL so any view is shareable, and status carried by a dot and a word. Only real exceptions take color, so the color still means something.</figcaption>
@@ -1214,8 +1214,8 @@
     <figure class="shot rise">
       <div class="ph" style="--ar:2880/1990">
         <img src="assets/ai-mapping.webp" alt="The AI import mapping screen: a messy uploaded spreadsheet's columns each mapped onto a real field through an editable dropdown, a What we read preview of the actual parsed rows below, and everything still editable before the import commits." width="2880" height="1990" loading="lazy">
-        <span class="ph-res num">2880 &times; 2000</span>
-        <span class="ph-lab">Import &middot; the mapping brain, with provenance</span>
+        <span class="ph-res num">2880 &times; 1990</span>
+        <span class="ph-lab">Import &middot; the mapping brain</span>
       </div>
       <figcaption><b>The mapping brain.</b> It proposes how your columns map, parses your rows into a preview, and lays all of it out to edit before anything imports. You see what it proposed and can change any of it, and a deterministic parse is never dressed up as intelligence.</figcaption>
     </figure>

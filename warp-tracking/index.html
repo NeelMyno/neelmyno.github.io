@@ -184,6 +184,13 @@
     .nav-menu{display:none}
     .nav .cta.cta--nav{position:static;margin-right:0;font-size:15px}
   }
+  /* [PAGE-CUSTOM] page-matched nav: dark-theme the reused white site header for this obsidian page (mirrors TMS; Neel's page-matched-nav call) */
+  .nav{background-color:rgba(12,13,15,.72)}
+  .nav-inner{border-bottom:1px solid rgba(255,255,255,.09)}
+  .nav-link{color:var(--ink-dim)}
+  .nav-link:hover{color:var(--ink)}
+  .nav .cta{color:var(--ink)}
+  .nav-logo img{filter:invert(1)}  /* black wordmark reads white on the dark band */
 
   /* ---- masthead: a print-style running head under the fixed nav ---- */
   .masthead{border-bottom:1px solid var(--line)}
@@ -454,7 +461,7 @@
     <h2 class="title s-head rise" id="before-h">The page told the user less than it knew.</h2>
     <div class="prose rise">
       <p class="body">The old page did not lack data. It looked like a hacker terminal, matrix green and monospace on a map, so a person opening it from a Walmart delivery email wondered if their package was even real.</p>
-      <p class="body">And underneath the look, it was dishonest. The backend knew nineteen distinct shipment states. The headline showed four. So a truck near pickup and a truck near your door both read the same two words, and it could say <b>In Transit</b> on a returned order.</p>
+      <p class="body">And underneath the look, it was dishonest. The backend knew nineteen distinct shipment states. The headline showed four. So a truck near pickup and a truck near your door both read the same two words, and a cancelled order could still greet you as <b>delivered</b> and ask you to rate it.</p>
     </div>
     <p class="retired rise"><span class="k">Retired</span>matrix-green #00ff41 &middot; status cyan #00ffff &middot; saturated yellow #ffff00 &middot; the green-glow shadows &middot; monospace-everywhere</p>
 
@@ -485,7 +492,7 @@
         <div class="no">01</div>
         <div>
           <p class="b">Say the true thing.</p>
-          <p class="t">The headline is computed from the real shipment state, so it can never say &ldquo;In Transit&rdquo; on a returned order. When a state has nothing honest to show, the page hides the field rather than faking it. <b>An empty ETA hides its card. An empty history hides its section.</b> No comforting placeholder.</p>
+          <p class="t">The headline is computed from the real shipment state, so it can never greet a cancelled order as delivered. When a state has nothing honest to show, the page hides the field rather than faking it. <b>An empty ETA hides its card. An empty history hides its section.</b> No comforting placeholder.</p>
         </div>
       </div>
       <div class="r">
@@ -509,7 +516,7 @@
         <img src="assets/tracking-say-true.webp" alt="The redesigned detail view for a shipment in transit: a floating header over a live route map, and a card that leads with the computed status 'On the way to Hialeah, FL', a pickup and arrival time, an origin-to-driver-to-destination journey strip with a live pulse on the driver, one arrival-alerts action, and the activity timeline open below." width="2560" height="1600" loading="lazy">
         <span class="ph-meta"><span class="ph-tag">Image</span><span class="ph-res">2560 &times; 1600</span><span class="ph-label">Redesigned detail view &middot; in transit</span></span>
       </div>
-      <figcaption><span class="fn-tag">Fig. 01 &middot; Say the true thing</span><b>A status computed from the shipment, not from a leaky label.</b> The card leads with the answer a person came for, reads like a sentence someone would say, and the live pulse only fires while the truck is genuinely moving.</figcaption>
+      <figcaption><span class="fn-tag">Fig. 01 &middot; Say the true thing</span><b>A status computed from the shipment, not from a leaky label.</b> The card leads with the answer a person came for, reads like a sentence someone would say, and the live pulse only fires while the truck is moving.</figcaption>
     </figure>
 
     <figure class="shot wide montage rise">
@@ -583,8 +590,8 @@
 
     <figure class="shot wide montage rise">
       <div class="ph" style="aspect-ratio:2880/1620">
-        <img src="assets/tracking-shipped-twice.webp" alt="The two build artifacts side by side rendering the same shipment identically: on the left the vanilla HTML prototype, on the right the Angular drop-in running through its data adapter. The status headline, journey strip, and activity are pixel-for-pixel the same because both reuse the one reviewed render core." width="2880" height="1620" loading="lazy">
-        <span class="ph-meta"><span class="ph-tag">Image</span><span class="ph-res">2880 &times; 1620</span><span class="ph-label">Vanilla prototype and Angular drop-in, identical output</span></span>
+        <img src="assets/tracking-shipped-twice.webp" alt="Two build artifacts side by side rendering the same design from one reviewed render core: on the left the vanilla HTML prototype showing shipment P-57127-2619, on the right the Angular drop-in showing P-44767-2619. The layout, type, and motion are identical, and both cards read the same coherent shipment state; only the shipment data behind each differs, so the built UI cannot drift from what was reviewed." width="2880" height="1620" loading="lazy">
+        <span class="ph-meta"><span class="ph-tag">Image</span><span class="ph-res">2880 &times; 1620</span><span class="ph-label">Vanilla and Angular builds &middot; one render core, two shipments</span></span>
       </div>
       <figcaption><span class="fn-tag">Fig. 04 &middot; No drift</span><b>Two artifacts, one render core.</b> The vanilla prototype and the Angular drop-in render the same design because the drop-in reuses the reviewed core byte-for-byte and adapts only the data behind it, so a single engineer can integrate it with a guarantee that the UI matches what was reviewed.</figcaption>
     </figure>

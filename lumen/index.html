@@ -181,6 +181,13 @@
     .nav-menu{display:none}
     .nav .cta.cta--nav{position:static;margin-right:0;font-size:15px}
   }
+  /* [PAGE-CUSTOM] page-matched nav: dark-theme the reused white site header for this obsidian page (mirrors TMS; Neel's page-matched-nav call) */
+  .nav{background-color:rgba(13,13,13,.72)}
+  .nav-inner{border-bottom:1px solid rgba(255,255,255,.09)}
+  .nav-link{color:var(--ink-dim)}
+  .nav-link:hover{color:var(--ink)}
+  .nav .cta{color:var(--ink)}
+  .nav-logo img{filter:invert(1)}  /* black wordmark reads white on the dark band */
 
   /* ============================================================
      [PAGE-CUSTOM] the Lumen live-dot mark - a filled green dot, no glow (the LiveDot motif, static)
@@ -903,7 +910,7 @@
       <figure class="plate full rise" style="margin-top:var(--s9)">
         <div class="spec">
           <div class="spec-pad">
-            <p class="spec-label">The component contract <span class="rule"></span> <span class="k2">Two files, kept in lockstep by CI</span></p>
+            <p class="spec-label">The component contract <span class="rule"></span> <span class="k2">Two files, kept in lockstep by lint</span></p>
             <div class="contract-cols">
               <div class="fpanel">
                 <div class="fp-top"><span class="fdot" style="background:var(--ink-dim)"></span><span class="fname">button/component.md</span></div>
