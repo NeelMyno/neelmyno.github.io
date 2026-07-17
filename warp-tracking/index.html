@@ -1,0 +1,701 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Tracking Page · an honest-states engine for Warp freight tracking</title>
+<meta name="description" content="Redesigning the public shipment-tracking page a stranger judges Warp by: nineteen honest states from one data model, a twelve-rule engine that computes the true status, and not a single fake percentage.">
+
+<!-- site integration: favicon + apple-touch-icon (parity with neelmyno.in) -->
+<link href="/images/web/favicon_32x32.png" rel="shortcut icon" type="image/x-icon">
+<link href="/images/web/webclip_256x256.png" rel="apple-touch-icon">
+
+<!-- social preview (OG + Twitter) -->
+<meta property="og:type" content="article">
+<meta property="og:title" content="Tracking Page · an honest-states engine">
+<meta property="og:description" content="The public page a stranger opens to see where their freight is. I rebuilt it so the status a person reads can never contradict the shipment.">
+<meta property="og:image" content="https://neelmyno.in/warp-tracking/assets/tracking-og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:image:alt" content="Tracking Page case study: nineteen honest states, twelve status rules, zero fake percentages, shown with real Warp shipment-status chips.">
+<meta property="og:url" content="https://neelmyno.in/warp-tracking/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Tracking Page · an honest-states engine">
+<meta name="twitter:description" content="Nineteen honest states from one data model. A twelve-rule engine that computes the true status. Not a single fake percentage.">
+<meta name="twitter:image" content="https://neelmyno.in/warp-tracking/assets/tracking-og.jpg">
+<meta name="twitter:image:alt" content="Tracking Page case study: nineteen honest states, twelve status rules, zero fake percentages.">
+
+<!-- Google Analytics · the same property as neelmyno.in, so page visits are tracked -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-0G48YWW7ZE"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag() { dataLayer.push(arguments); }
+  gtag('js', new Date());
+  gtag('config', 'G-0G48YWW7ZE');
+</script>
+
+<!-- page body typeface: Satoshi, the real Warp/Lumen product face (Fontshare). The site HEADER
+     self-hosts Inter Display via @font-face below and does NOT use this, so swapping it is safe. -->
+<link rel="preconnect" href="https://api.fontshare.com" crossorigin>
+<link rel="preconnect" href="https://cdn.fontshare.com" crossorigin>
+<link href="https://api.fontshare.com/v2/css?f=satoshi@400,500,700,900&display=swap" rel="stylesheet">
+
+<style>
+  /* ============================================================
+     WARP TRACKING · case study
+     Brand-lock, derived from the product it documents (the Lumen
+     design system): an obsidian canvas, ONE spring-green accent with
+     exactly one job, Satoshi with tabular figures, hairlines and
+     tonal steps instead of glow. The page practises the restraint the
+     case study argues for. Shadows are neutral everywhere; the accent
+     never lives in an elevation (the terminal it replaced abused a
+     green glow, so this page refuses one).
+     Structure + the site header are shared with /pataa/ (one portfolio).
+     ============================================================ */
+  :root{
+    /* dark ramp · a cool near-black, never pure #000; each surface steps up in tone */
+    --paper:#0C0D0F;        /* canvas */
+    --paper-2:#121316;      /* colophon band / recessed */
+    --paper-3:#17181C;      /* raised band */
+    --surface:#131417;      /* card / figure ground */
+    --surface-2:#1A1C20;    /* hover / higher raise */
+    --ink:#EDEEF0;          /* primary text        16.8:1 */
+    --ink-2:#F8F9FA;        /* brightest display   18.4:1 */
+    --ink-dim:#A6ABB2;      /* secondary            8.4:1 */
+    --ink-faint:#868C95;    /* small labels         5.7:1 */
+    --line:#24262B;         /* hairline on dark */
+    --line-strong:#31343A;  /* stronger hairline */
+    /* the one accent: Lumen Spring Green. Role = the honest live signal / the one action / focus. */
+    --amber:#00FA8A;        /* [accent] shell token name kept; VALUE is spring green */
+    --amber-ink:#00FA8A;    /* accent-as-link on dark, 13.9:1 */
+    --pill:#00FA8A;         /* ::selection fill */
+    --on-amber:#04140C;     /* near-black-green ink on the bright accent, 13.5:1 (sin 1) */
+    --accent:var(--amber);  /* semantic alias my own components read */
+    --danger:#FF7A6B;       /* the one honest exception red, 7.6:1 (referenced, not chrome) */
+    /* neutral elevation only · no accent in any shadow (sin 2) */
+    --shadow-photo:0 2px 20px rgba(0,0,0,.45), 0 1px 3px rgba(0,0,0,.55);
+    --shadow-float:0 26px 64px rgba(0,0,0,.60), 0 5px 16px rgba(0,0,0,.50);
+    --sans:'Satoshi',system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;
+    --wide:'Satoshi',system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;
+    --mono:ui-monospace,'SF Mono',SFMono-Regular,Menlo,Consolas,'Liberation Mono',monospace;
+
+    --fs-mega:clamp(3.2rem,9.5vw,6.6rem);
+    --fs-display:clamp(2.2rem,6.2vw,4.6rem);
+    --fs-h1:clamp(1.85rem,3.9vw,3rem);
+    --fs-h2:clamp(1.35rem,2.4vw,1.9rem);
+    --fs-lead:clamp(1.12rem,1.6vw,1.42rem);
+    --fs-body:clamp(1rem,1.02vw,1.075rem);
+    --fs-sm:0.9375rem;
+    --fs-label:0.72rem;
+    --fs-micro:0.6875rem;
+
+    /* one modular spacing scale, 4px base */
+    --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:32px;
+    --s7:48px; --s8:64px; --s9:96px; --s10:128px; --s11:160px;
+
+    --maxw:1160px;
+    --pad:clamp(20px,5vw,60px);
+    --ease-out:cubic-bezier(0.22,1,0.36,1);
+    --ease-out-quint:cubic-bezier(0.23,1,0.32,1);
+    --ease-soft:cubic-bezier(0.32,0.72,0,1);
+  }
+
+  /* ---- base reset (colors follow the tokens above) ---- */
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+  body{
+    margin:0;background:var(--paper);color:var(--ink);
+    font-family:var(--sans);font-size:var(--fs-body);line-height:1.6;
+    font-feature-settings:"kern" 1,"liga" 1;
+    -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
+    overflow-x:hidden;
+  }
+  img{display:block;max-width:100%;height:auto}
+  ::selection{background:var(--pill);color:var(--on-amber)}
+  a{color:var(--amber-ink);text-underline-offset:.16em;text-decoration-thickness:.06em}
+  :focus-visible{outline:2.5px solid var(--amber-ink);outline-offset:3px;border-radius:3px}
+  .tnum,.num,.meta dd,.fig,.counts .n{font-feature-settings:"tnum" 1,"lnum" 1}
+
+  /* ---- rails: ONE left edge for the whole document ---- */
+  .wrap{max-width:var(--maxw);margin-inline:auto;padding-inline:var(--pad)}
+  .grid12{display:grid;grid-template-columns:repeat(12,1fr);gap:clamp(20px,3vw,40px)}
+  .measure{max-width:58ch}
+  section{padding-block:clamp(56px,9vw,120px);position:relative}
+  section + section{border-top:1px solid var(--line)}
+
+  /* ---- type ---- */
+  h1,h2,h3{margin:0;font-weight:900}
+  .kicker{font-family:var(--sans);font-size:var(--fs-label);font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-dim);margin:0}
+  .caret{color:var(--accent);font-family:var(--wide);font-weight:900;font-style:normal}
+  .eyebrow{grid-column:1/-1;display:flex;align-items:center;gap:16px;font-size:var(--fs-label);letter-spacing:.14em;text-transform:uppercase;color:var(--ink-dim);font-weight:700;margin:0 0 var(--s7)}
+  .eyebrow .num{font-family:var(--wide);font-weight:800;letter-spacing:.02em;color:var(--ink);font-feature-settings:"tnum" 1;display:inline-flex;align-items:baseline;gap:1px}
+  .eyebrow .num .caret{font-size:1.02em}
+  .eyebrow .lbl{color:var(--ink);font-weight:800;letter-spacing:.12em}
+  .eyebrow .rule{flex:1;height:1px;background:var(--line-strong)}
+  .eyebrow .tag{color:var(--ink-faint);font-weight:600}
+  .title{font-family:var(--wide);font-weight:900;font-size:var(--fs-h1);line-height:1.04;letter-spacing:-.028em;color:var(--ink-2);max-width:20ch}
+  /* balance display headings so the last line never drops a single-word runt */
+  .cover-h1,.title,.refuse q,.pull q,.closer,.rules .b,.ladder .txt b,.counts .lab{text-wrap:balance}
+  .lead{font-size:var(--fs-lead);line-height:1.42;font-weight:500;color:var(--ink);letter-spacing:-.005em;max-width:34ch}
+  p{margin:0 0 1.05em;max-width:62ch}
+  .body{color:var(--ink-dim);max-width:58ch}
+  .body b,.lead b{color:var(--ink);font-weight:700}
+  .dim{color:var(--ink-dim)}.faint{color:var(--ink-faint)}
+  /* accent highlight on ONE key phrase: near-black ink on the bright accent reads 13.5:1 (sin 1 safe) */
+  .hl{background:var(--pill);color:var(--on-amber);padding:.02em .22em;border-radius:4px;box-decoration-break:clone;-webkit-box-decoration-break:clone;font-weight:800}
+  .s-head{grid-column:1/-1;max-width:24ch;margin-bottom:var(--s6)}
+  .lead-col{grid-column:1 / span 8;margin-bottom:var(--s6)}
+  @media (max-width:920px){.lead-col{grid-column:1/-1}}
+  .prose{grid-column:1 / span 7}
+  @media (max-width:920px){.prose{grid-column:1/-1}}
+
+  /* ============================================================
+     SITE NAV · the REAL homepage component, verbatim from
+     css/index_mini.css (same markup, Inter Display, 1200px container,
+     fixed+blur bar, .cta--nav, nav-link hover). Scoped under .nav.
+     Do not rebuild; this is copied exactly.
+     ============================================================ */
+  @font-face{font-family:"Inter Display";src:url("https://assets.website-files.com/6279077bf697b924fac6e205/636dfe8261df29a8a191ebc6_Inter-Display.woff2") format("woff2");font-weight:400;font-style:normal;font-display:swap}
+  @font-face{font-family:"Inter Display";src:url("https://assets.website-files.com/6279077bf697b924fac6e205/636dfe98b0633015995d2554_Inter-DisplayBold.woff2") format("woff2");font-weight:700;font-style:normal;font-display:swap}
+  @font-face{font-family:"Inter Display";src:url("https://assets.website-files.com/6279077bf697b924fac6e205/636dfea34a3e3c1b85745887_Inter-DisplayLight.woff2") format("woff2");font-weight:300;font-style:normal;font-display:swap}
+  .nav{position:fixed;top:0;right:0;bottom:auto;left:0;z-index:100;background-color:hsla(0,0%,100%,.7);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);transition:background-color .2s,color .2s;font-family:"Inter Display",sans-serif;font-size:16px;line-height:1.5}
+  .nav.dark{color:#ecedee}
+  .nav .page-padding{padding-right:40px;padding-left:40px}
+  .nav .container{width:100%;max-width:1200px;margin-right:auto;margin-left:auto}
+  .nav-inner{position:relative;display:flex;padding-top:6px;padding-bottom:6px;justify-content:center;align-items:center;border-bottom:1px solid rgba(2,23,53,.1);transition:border-color .2s}
+  .nav-logo{position:absolute;top:auto;right:auto;bottom:auto;left:0;z-index:102;display:flex;align-items:center;margin-left:-16px;padding:6px 16px;font-size:17px;text-decoration:none;color:inherit}
+  .nav-logo img{width:60px;height:auto;display:block}
+  .nav-menu{display:flex;align-items:center}
+  .nav-link{position:relative;z-index:102;display:inline-block;padding:8px 14px;color:#687076;text-decoration:none}
+  .nav-link:hover{color:#151718}
+  .nav .cta{display:flex;align-items:center;font-weight:500;padding:8px 20px;color:#006adc;font-size:20px;text-decoration:none}
+  .nav .cta.cta--nav{position:absolute;right:0;z-index:102;margin-right:-20px;font-size:16px}
+  .nav .cta-chevron{display:flex;align-items:center;margin-left:6px}
+  .nav .cta-chevron svg{display:block}
+  /* the nav is fixed, like the homepage · offset the page so the masthead clears it (nav is 53px tall) */
+  body{padding-top:53px}
+  @media screen and (max-width:767px){
+    .nav .page-padding{padding-right:20px;padding-left:20px}
+    .nav-inner{justify-content:space-between}
+    .nav-logo{position:static;margin-left:0;padding-left:0}
+    .nav-menu{display:none}
+    .nav .cta.cta--nav{position:static;margin-right:0;font-size:15px}
+  }
+
+  /* ---- masthead: a print-style running head under the fixed nav ---- */
+  .masthead{border-bottom:1px solid var(--line)}
+  .masthead .row{display:flex;align-items:center;justify-content:space-between;gap:20px;padding-block:16px}
+  .brand{font-family:var(--wide);font-weight:800;letter-spacing:.04em;font-size:1.02rem;text-transform:uppercase;display:inline-flex;align-items:center;gap:9px;color:var(--ink)}
+  .brand .caret{font-size:1.05em}
+  .masthead .ident{font-size:var(--fs-micro);letter-spacing:.13em;text-transform:uppercase;color:var(--ink-faint);font-weight:600;text-align:right}
+  @media (max-width:560px){.masthead .ident{display:none}}
+
+  /* ============ COVER ============ */
+  #cover{padding-block:clamp(40px,6vw,84px) clamp(52px,8vw,104px)}
+  .cover-copy{grid-column:1 / span 7;align-self:center}
+  .cover-figs{grid-column:9 / span 4;align-self:center}
+  @media (max-width:920px){.cover-copy{grid-column:1/-1}.cover-figs{grid-column:1/-1;margin-top:var(--s8);justify-self:start}}
+  .cover-kicker{margin-bottom:var(--s7)}
+  .cover-h1{font-family:var(--wide);font-weight:900;font-size:var(--fs-display);line-height:.98;letter-spacing:-.038em;color:var(--ink-2);margin:0 0 var(--s5)}
+  .cover-lead{font-size:var(--fs-lead);line-height:1.42;font-weight:500;color:var(--ink);max-width:42ch;margin:0 0 var(--s5)}
+  .cover-sub{font-size:var(--fs-body);line-height:1.6;color:var(--ink-dim);max-width:52ch;margin:0 0 var(--s6)}
+  .cover-sub b{color:var(--ink);font-weight:700}
+  /* meta table, hung on a strong ink rule */
+  .meta{border-top:2px solid var(--ink);margin:0;max-width:40rem}
+  .meta div{display:grid;grid-template-columns:7.5rem 1fr;gap:10px 18px;padding:12px 0;border-bottom:1px solid var(--line)}
+  .meta dt{font-size:var(--fs-micro);letter-spacing:.13em;text-transform:uppercase;color:var(--ink-faint);font-weight:700;padding-top:3px}
+  .meta dd{margin:0;font-size:var(--fs-sm);font-weight:600;color:var(--ink);line-height:1.45}
+  .meta dd .s{display:block;font-size:var(--fs-micro);font-weight:600;color:var(--ink-faint);letter-spacing:.03em;text-transform:uppercase;margin-top:3px}
+  /* the cover screen, a phone (the surface a stranger opens from a delivery email) */
+  .cover-figs figure{margin:0;width:min(300px,76vw)}
+  .cover-figs .ph{width:100%}
+  .cover-figs figcaption{width:100%;margin-top:14px;font-size:var(--fs-micro);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-faint);font-weight:700}
+
+  /* ============ placeholder image system (NO UI is drawn in code · every visual is an <img>) ============ */
+  figure.shot{width:min(320px,76vw);max-width:100%;margin:var(--s7) 0 0}
+  figure.shot.wide{width:100%}
+  figure.shot.center{margin-inline:auto}
+  .ph{position:relative;border:1px solid var(--line-strong);border-radius:16px;background:var(--surface);overflow:hidden;display:grid;place-items:center;
+      transition:transform .18s var(--ease-out-quint),border-color .18s var(--ease-out-quint),box-shadow .18s var(--ease-out-quint);box-shadow:var(--shadow-photo)}
+  .ph img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;border-radius:inherit;z-index:2}
+  .ph-meta{position:relative;z-index:0;display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;padding:24px;pointer-events:none}
+  /* once the real image has loaded, the placeholder scaffolding is redundant */
+  .ph.is-loaded .ph-meta{display:none}
+  .ph-res{font-family:var(--mono);font-size:var(--fs-sm);letter-spacing:.06em;color:var(--ink-dim);font-feature-settings:"tnum" 1}
+  .ph-label{font-size:var(--fs-micro);letter-spacing:.14em;text-transform:uppercase;color:var(--ink-faint);font-weight:700;max-width:36ch;line-height:1.5}
+  .ph-tag{font-size:var(--fs-micro);letter-spacing:.22em;text-transform:uppercase;color:var(--ink-faint);font-weight:800;opacity:.7}
+  figure.shot:hover .ph{transform:translateY(-2px);border-color:var(--line-strong);box-shadow:var(--shadow-float)}
+  @media (prefers-reduced-motion:reduce){figure.shot:hover .ph{transform:none}}
+  figure.shot figcaption{width:100%;margin-top:14px;font-size:var(--fs-sm);line-height:1.55;color:var(--ink-dim)}
+  figure.shot figcaption b{color:var(--ink);font-weight:700;display:block;font-family:var(--wide);font-size:1rem;margin-bottom:2px;letter-spacing:-.01em}
+  .fn-tag{display:inline-block;font-family:var(--wide);font-weight:800;font-size:var(--fs-micro);letter-spacing:.06em;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+  /* full-width figure band */
+  .montage{grid-column:1/-1;width:100%;margin:var(--s7) 0 0}
+
+  /* ============ COUNTS band (^01) · tabular, hairline rows; the honest zeros ============ */
+  .counts-lead{grid-column:1/-1;border-left:3px solid var(--accent);padding-left:20px;margin:0 0 var(--s8);max-width:60ch}
+  .counts-lead p{font-size:var(--fs-lead);line-height:1.42;font-weight:500;color:var(--ink);margin:0}
+  .counts{grid-column:1/-1;border-top:2px solid var(--ink)}
+  .counts .ci{display:grid;grid-template-columns:minmax(150px,4fr) 8fr;gap:14px 40px;align-items:baseline;padding:22px 0;border-bottom:1px solid var(--line)}
+  @media (max-width:640px){.counts .ci{grid-template-columns:1fr;gap:6px}}
+  .counts .n{font-family:var(--wide);font-weight:900;font-size:clamp(2.4rem,6.4vw,4.6rem);line-height:.88;letter-spacing:-.03em;color:var(--ink-2);position:relative;display:inline-block;justify-self:start}
+  .counts .n .u{font-size:.32em;font-weight:800;letter-spacing:0;color:var(--ink-faint);margin-left:.15em;vertical-align:baseline;text-transform:none}
+  .counts .ci.hot .n::after{content:"";position:absolute;left:0;right:.15em;bottom:-9px;height:6px;background:var(--accent)}
+  .counts .lab{font-size:var(--fs-sm);color:var(--ink-dim);line-height:1.5;max-width:46ch}
+  .counts .lab b{color:var(--ink);font-weight:700}
+  .rolehonest{grid-column:1 / span 9;margin-top:var(--s7);padding-left:20px;border-left:3px solid var(--line-strong)}
+  .rolehonest p{margin:0;color:var(--ink-dim);font-size:var(--fs-sm);max-width:64ch}
+  .rolehonest b{color:var(--ink)}
+  @media (max-width:920px){.rolehonest{grid-column:1/-1}}
+
+  /* ============ THE BEFORE (^02) ============ */
+  .retired{grid-column:1/-1;margin-top:var(--s6);font-family:var(--mono);font-size:var(--fs-micro);letter-spacing:.02em;color:var(--ink-faint);text-decoration:line-through;text-decoration-color:var(--line-strong);text-decoration-thickness:1px;max-width:70ch}
+  .retired .k{font-family:var(--sans);font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-faint);text-decoration:none;margin-right:10px}
+  .refuse{grid-column:1/-1;margin-top:var(--s8);border-top:2px solid var(--ink);border-bottom:2px solid var(--ink);padding:var(--s6) 0}
+  .refuse q{quotes:none;display:block;font-family:var(--wide);font-weight:800;font-size:clamp(1.4rem,3.2vw,2.3rem);line-height:1.14;letter-spacing:-.02em;color:var(--ink-2);max-width:28ch}
+  .refuse .sub{margin-top:var(--s5);font-size:var(--fs-body);line-height:1.6;color:var(--ink-dim);max-width:56ch}
+  .refuse .sub b{color:var(--ink);font-weight:700}
+
+  /* ============ THE RULES (^03) ============ */
+  .rules{grid-column:1/-1;margin-top:var(--s6);border-top:2px solid var(--ink)}
+  .rules .r{display:grid;grid-template-columns:2.4rem 1fr;gap:0 20px;padding:26px 0;border-bottom:1px solid var(--line);align-items:start}
+  @media (max-width:560px){.rules .r{grid-template-columns:1fr;gap:10px}}
+  .rules .no{font-family:var(--wide);font-weight:900;color:var(--accent);font-feature-settings:"tnum" 1;font-size:1.1rem;line-height:1.4}
+  .rules .b{font-family:var(--wide);font-weight:800;font-size:clamp(1.15rem,2.1vw,1.5rem);letter-spacing:-.015em;line-height:1.16;color:var(--ink-2);margin:0 0 8px}
+  .rules .t{color:var(--ink-dim);font-size:var(--fs-sm);line-height:1.55;max-width:62ch;margin:0}
+  .rules .t b{color:var(--ink);font-weight:700}
+
+  /* ============ THE LADDER (^04 · three tries) ============ */
+  .ladder{grid-column:1/-1;margin-top:var(--s6);border-top:2px solid var(--ink)}
+  .ladder .row{display:grid;grid-template-columns:minmax(84px,1.2fr) 10fr;gap:16px 32px;align-items:baseline;padding:24px 0;border-bottom:1px solid var(--line)}
+  @media (max-width:560px){.ladder .row{grid-template-columns:1fr;gap:8px}}
+  .ladder .p{font-family:var(--wide);font-weight:900;font-size:clamp(1.4rem,3vw,2.1rem);line-height:.9;letter-spacing:-.01em;color:var(--ink-faint)}
+  .ladder .row.landed .p{color:var(--accent)}
+  .ladder .txt b{font-family:var(--wide);font-size:clamp(1.05rem,1.9vw,1.35rem);font-weight:800;letter-spacing:-.01em;display:block;margin-bottom:6px;color:var(--ink-2)}
+  .ladder .txt span{color:var(--ink-dim);font-size:var(--fs-sm);line-height:1.55;display:block;max-width:60ch}
+  .ladder .txt span code{font-family:var(--mono);font-size:.92em;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:5px;padding:1px 6px}
+
+  /* ============ pull quote ============ */
+  .pull{grid-column:1/-1;margin-top:var(--s8);border-top:2px solid var(--ink);border-bottom:2px solid var(--ink);padding:var(--s6) 0}
+  .pull q{quotes:none;display:block;font-family:var(--wide);font-weight:800;font-size:clamp(1.35rem,3.2vw,2.35rem);line-height:1.12;letter-spacing:-.018em;color:var(--ink-2);max-width:26ch}
+  .pull q::before{content:"\201C"}.pull q::after{content:"\201D"}
+  .pull.small q{font-size:clamp(1.2rem,2.6vw,1.8rem)}
+  .pull .attr{margin-top:var(--s4);font-size:var(--fs-label);letter-spacing:.1em;text-transform:uppercase;color:var(--ink-dim);font-weight:700;display:flex;gap:8px;align-items:baseline}
+
+  /* ============ THE LEDGER (^06 · prove vs won't-claim) ============ */
+  .ledger{grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr;gap:clamp(24px,4vw,56px);margin-top:var(--s7)}
+  @media (max-width:760px){.ledger{grid-template-columns:1fr;gap:var(--s7)}}
+  .ledger .col{padding-top:var(--s4);border-top:2px solid var(--ink)}
+  .ledger .col.no{border-top-color:var(--line-strong)}
+  .ledger .col .k{font-size:var(--fs-micro);letter-spacing:.14em;text-transform:uppercase;font-weight:800;margin-bottom:var(--s5);display:flex;align-items:center;gap:9px}
+  .ledger .col.yes .k{color:var(--ink)}
+  .ledger .col.no .k{color:var(--ink-faint)}
+  .ledger .col .k .d{width:9px;height:9px;flex:0 0 auto}
+  .ledger .col.yes .k .d{background:var(--accent)}
+  .ledger .col.no .k .d{background:var(--line-strong)}
+  .ledger ul{list-style:none;margin:0;padding:0}
+  .ledger li{padding:14px 0;border-bottom:1px solid var(--line);font-size:var(--fs-sm);line-height:1.5}
+  .ledger .yes li{color:var(--ink)}
+  .ledger .no li{color:var(--ink-faint)}
+  .ledger li b{font-weight:700;color:inherit}
+  .statusnote{grid-column:1/-1;margin-top:var(--s8);font-size:var(--fs-lead);font-weight:500;line-height:1.42;color:var(--ink);max-width:56ch}
+  .statusnote b{font-weight:800}
+
+  /* ============ REFLECTION (^07) ============ */
+  .refl{grid-column:1/-1;margin-top:var(--s6);border-top:2px solid var(--ink)}
+  .refl .r{display:grid;grid-template-columns:minmax(140px,2fr) 9fr;gap:16px 40px;padding:26px 0;border-bottom:1px solid var(--line);align-items:baseline}
+  @media (max-width:640px){.refl .r{grid-template-columns:1fr;gap:8px}}
+  .refl .r .k{font-size:var(--fs-micro);letter-spacing:.14em;text-transform:uppercase;font-weight:800;color:var(--ink);display:inline-flex;align-items:center;gap:8px}
+  .refl .r .k .d{width:9px;height:9px;background:var(--accent);flex:0 0 auto}
+  .refl .r .t{font-size:clamp(1.05rem,1.9vw,1.4rem);font-weight:600;letter-spacing:-.01em;line-height:1.32;color:var(--ink)}
+  .refl .r .t b{font-weight:800;color:var(--ink-2)}
+  .closer{grid-column:1/-1;margin-top:var(--s8);font-family:var(--wide);font-size:clamp(1.3rem,2.9vw,2.1rem);font-weight:800;line-height:1.18;letter-spacing:-.018em;color:var(--ink-2);max-width:30ch}
+
+  /* ---- colophon ---- */
+  .colophon{background:var(--paper-2);border-top:1px solid var(--line)}
+  .colophon .wrap{padding-block:clamp(52px,7vw,88px)}
+  .colophon .cred{grid-column:1 / span 7}
+  .colophon .note{grid-column:9 / span 4;align-self:start}
+  @media (max-width:920px){.colophon .cred,.colophon .note{grid-column:1/-1}.colophon .note{margin-top:var(--s7)}}
+  .colophon .brand{font-family:var(--wide);font-weight:900;font-size:clamp(1.7rem,4.6vw,2.7rem);letter-spacing:-.01em;margin-bottom:var(--s5);display:inline-flex;align-items:center;gap:10px;color:var(--ink-2)}
+  .colophon .cred p{color:var(--ink-dim);font-size:var(--fs-sm);line-height:1.62;max-width:60ch}
+  .colophon .cred p b{color:var(--ink)}
+  .colophon .cred .fine{font-size:var(--fs-micro);letter-spacing:.02em;color:var(--ink-faint);margin-top:var(--s5)}
+  .colophon .note dl{margin:0;border-top:2px solid var(--ink)}
+  .colophon .note div{display:grid;grid-template-columns:auto 1fr;gap:10px 18px;padding:11px 0;border-bottom:1px solid var(--line)}
+  .colophon .note dt{font-size:var(--fs-micro);letter-spacing:.12em;text-transform:uppercase;color:var(--ink-faint);font-weight:700}
+  .colophon .note dd{margin:0;font-size:var(--fs-sm);color:var(--ink);font-weight:600;text-align:right}
+  .colophon .note dd .u{display:inline-block;width:10px;height:10px;background:var(--accent);vertical-align:baseline;margin-left:6px}
+  .backlink{grid-column:1/-1;display:inline-flex;align-items:center;gap:.5rem;margin-top:var(--s7);font-size:var(--fs-sm);color:var(--ink-dim);text-decoration:none;font-weight:700;transition:color .15s var(--ease-out)}
+  .backlink:hover{color:var(--ink)}
+  .backlink:active{transform:translateY(1px)}
+  @media (prefers-reduced-motion:reduce){.backlink:active{transform:none}}
+
+  /* ---- calm reveal · CSS transition only, no keyframes; reduced-motion safe ---- */
+  .rise{opacity:0;transform:translateY(14px);transition:opacity .6s var(--ease-out),transform .6s var(--ease-out)}
+  .rise.in{opacity:1;transform:none}
+  /* the one signature moment: the cover rises a touch further and slower than the rest */
+  #cover .rise{transform:translateY(20px);transition:opacity .8s var(--ease-out-quint),transform .8s var(--ease-out-quint)}
+  #cover .rise.in{transform:none}
+  @media (prefers-reduced-motion:reduce){.rise,#cover .rise{opacity:1;transform:none;transition:none}}
+  @media (max-width:430px){.eyebrow .tag{display:none}}
+
+  /* ---- mobile: wide desktop figures are dense; let each scroll inside its own
+         container (never the page body) so the states grid and the two-panel
+         comparisons stay legible at a larger scale. The caption stays anchored. ---- */
+  @media (max-width:640px){
+    figure.shot.wide.montage .ph{
+      aspect-ratio:auto;height:auto;display:block;overflow-x:auto;overflow-y:hidden;
+      -webkit-overflow-scrolling:touch;scrollbar-width:thin;scrollbar-color:var(--line-strong) transparent}
+    figure.shot.wide.montage .ph img{
+      position:relative;inset:auto;width:auto;height:auto;min-width:660px;object-fit:unset;border-radius:0}
+    figure.shot.wide.montage .ph::-webkit-scrollbar{height:6px}
+    figure.shot.wide.montage .ph::-webkit-scrollbar-thumb{background:var(--line-strong);border-radius:3px}
+    /* the states grid is the densest; give it a touch more room to read */
+    #rules figure.shot.wide.montage:last-of-type .ph img{min-width:820px}
+    figure.shot.wide.montage:hover .ph{transform:none;box-shadow:var(--shadow-photo)}
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ SITE NAV · the real homepage component (identical markup to neelmyno.in) ============ -->
+<div class="nav">
+  <div class="page-padding">
+    <div class="container">
+      <div class="nav-inner">
+        <a href="/" aria-current="page" class="nav-logo w-inline-block w--current" aria-label="Neel Tengariya, home">
+          <div><img width="60" src="/images/home/navbar/logo_full_black_copyright.svg" alt="Neel logo"></div>
+        </a>
+        <div class="nav-menu">
+          <a href="/#home" class="nav-link">Home</a>
+          <a href="/#work" class="nav-link">Work</a>
+          <a href="/#experience" class="nav-link">Experience</a>
+          <a href="/" class="nav-link">About</a>
+          <a href="/resume/neel_tengariya_resume.pdf" class="cta cta--nav w-inline-block" download>
+            <div>Download Resume</div>
+            <div class="cta-chevron w-embed"><svg width="7" height="10" xmlns="http://www.w3.org/2000/svg"><path d="M1.566.434 6.131 5 1.566 9.566.434 8.434 3.869 5 .434 1.566z" fill="currentColor" /></svg></div>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ MASTHEAD (running head, not sticky) ============ -->
+<header class="masthead">
+  <div class="wrap row">
+    <div class="brand"><span class="caret" aria-hidden="true">^</span><span>WARP&nbsp;TRACKING</span></div>
+    <div class="ident">Warp &middot; Public shipment tracking &middot; Case study</div>
+  </div>
+</header>
+
+<main>
+
+<!-- ============ COVER ============ -->
+<section id="cover" aria-label="Cover">
+  <div class="wrap grid12">
+    <div class="cover-copy">
+      <p class="kicker cover-kicker rise"><span class="caret" aria-hidden="true">^</span> Warp &middot; Public shipment tracking &middot; Redesign</p>
+      <h1 class="cover-h1 rise">Tracking Page.</h1>
+      <p class="cover-lead rise">The public page a stranger opens to see where their freight is. It is often the only piece of Warp they ever touch, and the old one lied to them in small ways they could feel.</p>
+      <p class="cover-sub rise">I rebuilt it as an <b>honest-states engine</b>. The AI wrote most of the code under my direction. The problem, the states, the honesty rules, and the judgment are mine.</p>
+      <dl class="meta rise">
+        <div><dt>Role</dt><dd>Product design engineer<span class="s">Warp &middot; solo deliverable</span></dd></div>
+        <div><dt>Work</dt><dd>Research, before-state reverse-engineering, IA, visual and motion design, a 12-rule status engine</dd></div>
+        <div><dt>Team</dt><dd>One designer. Rahul owns the production app. Troy, our CRO, set the frame.</dd></div>
+        <div><dt>Scope</dt><dd>Front-end only, zero backend change. Lumen design system. A vanilla prototype and an Angular drop-in.</dd></div>
+        <div><dt>Status</dt><dd>Redesign package, handed off. Standalone version rolled back. No traffic to attribute.</dd></div>
+      </dl>
+    </div>
+    <div class="cover-figs rise">
+      <figure>
+        <div class="ph" style="aspect-ratio:1170/2532">
+          <img src="assets/tracking-cover-mobile.webp" alt="The redesigned Warp tracking page on a phone: a dark card that leads with the status 'On the way to Hialeah, FL', the estimated arrival time, a pickup-to-driver-to-dropoff journey strip, and the recent activity below, over a route map." width="1170" height="2532" loading="eager">
+          <span class="ph-meta"><span class="ph-tag">Image</span><span class="ph-res">1170 &times; 2532</span><span class="ph-label">Redesigned tracking view on a phone</span></span>
+        </div>
+        <figcaption>The surface a consignee opens from a delivery email</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ^01 COUNTS ============ -->
+<section id="counts" aria-labelledby="counts-h">
+  <div class="wrap grid12">
+    <div class="eyebrow rise"><span class="num"><span class="caret" aria-hidden="true">^</span>01</span> <span class="lbl">Counts</span> <span class="rule"></span><span class="tag">Precision up front</span></div>
+    <h2 class="title s-head rise" id="counts-h">Counts, not outcomes.</h2>
+    <div class="counts-lead rise">
+      <p>I want to be precise up front, because on this project the honest version is the strong one. There is no adoption chart here and no conversion line. What is real is the scope, the craft, and a status the page cannot fake. Everything below is counted, and I can point to the source.</p>
+    </div>
+
+    <div class="counts rise" role="group" aria-label="What is real, counted">
+      <div class="ci hot"><div class="n">19</div><div class="lab"><b>shipment states</b> designed from one data model, including every failure and terminal state. The backend knew nineteen; the old headline showed four.</div></div>
+      <div class="ci"><div class="n">12</div><div class="lab">priority <b>rules</b> that compute the true status locally, so the headline can never contradict the shipment. Verified in the shipped code.</div></div>
+      <div class="ci hot"><div class="n">0</div><div class="lab"><b>percentages</b> on the page. No fake progress bar, no invented ETA confidence, no soft number to make the wait feel shorter.</div></div>
+      <div class="ci"><div class="n">0</div><div class="lab"><b>backend changes</b>, proven by a live network audit of a real shipment. Everything the redesign shows was already on the wire.</div></div>
+      <div class="ci"><div class="n">88&#8202;<span class="u">to</span>&#8202;56<span class="u">px</span></div><div class="lab">header chrome, trimmed. When fixed chrome competes with content, I shrank the chrome, not the content.</div></div>
+      <div class="ci"><div class="n">9.72<span class="u">:1</span></div><div class="lab">error-text contrast on the alerts field, <b>AAA</b>. Accessibility is part of care being total, not a thing bolted on at the end.</div></div>
+    </div>
+
+    <div class="rolehonest rise">
+      <p>Solo design deliverable. <b>Rahul</b> owns the production Angular app I was modernizing. <b>Troy</b>, our CRO, set the frame: front end only, keep the map, make it something a customer would trust.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ^02 THE BEFORE ============ -->
+<section id="before" aria-labelledby="before-h">
+  <div class="wrap grid12">
+    <div class="eyebrow rise"><span class="num"><span class="caret" aria-hidden="true">^</span>02</span> <span class="lbl">The before</span> <span class="rule"></span><span class="tag">What it hid</span></div>
+    <h2 class="title s-head rise" id="before-h">The page told the user less than it knew.</h2>
+    <div class="prose rise">
+      <p class="body">The old page did not lack data. It looked like a hacker terminal, matrix green and monospace on a map, so a person opening it from a Walmart delivery email wondered if their package was even real.</p>
+      <p class="body">And underneath the look, it was dishonest. The backend knew nineteen distinct shipment states. The headline showed four. So a truck near pickup and a truck near your door both read the same two words, and it could say <b>In Transit</b> on a returned order.</p>
+    </div>
+    <p class="retired rise"><span class="k">Retired</span>matrix-green #00ff41 &middot; status cyan #00ffff &middot; saturated yellow #ffff00 &middot; the green-glow shadows &middot; monospace-everywhere</p>
+
+    <figure class="shot wide montage rise">
+      <div class="ph" style="aspect-ratio:2880/1620">
+        <img src="assets/tracking-before-after.webp" alt="Two desktop tracking panels side by side, each showing a cancelled order. Left, the real captured original for a Walmart shipment: a matrix-green monospace layout greeting the order with 'Your order has been delivered! How was your experience?' above a five-star rating widget, while the stops below read Canceled and PickupFailed. Right, the redesign rendering the same cancelled state on a stand-in order: a calm dark card with a coral status dot that reads 'Order cancelled, reach out to support for next steps', a real Call support line, and no rating request." width="2880" height="1620" loading="lazy">
+        <span class="ph-meta"><span class="ph-tag">Image</span><span class="ph-res">2880 &times; 1620</span><span class="ph-label">A cancelled order &middot; the real capture and the redesign</span></span>
+      </div>
+      <figcaption><b>A cancelled order, before and after.</b> Left is a real captured Walmart order, exactly as the old page rendered it: greeted by &ldquo;your order has been delivered, rate your experience&rdquo; while the stop right below it reads Canceled. Right is the redesign rendering that same cancelled state on a stand-in order, so no real customer&rsquo;s shipment is on display. The cancellation was in the data the whole time. The old headline was the only part that lied about it.</figcaption>
+    </figure>
+
+    <blockquote class="refuse rise">
+      <q>There is not a single percentage on this page.</q>
+      <p class="sub">No fake progress bar, no invented ETA confidence, no &ldquo;87% of the way there.&rdquo; When the arrival time is unknown, the page says so, and it hides the field instead of printing a comforting number that is not real. <b>On a tracking page a made-up number is the easiest lie to tell, so it is the one I refused to build.</b></p>
+    </blockquote>
+  </div>
+</section>
+
+<!-- ============ ^03 THE RULES ============ -->
+<section id="rules" aria-labelledby="rules-h">
+  <div class="wrap grid12">
+    <div class="eyebrow rise"><span class="num"><span class="caret" aria-hidden="true">^</span>03</span> <span class="lbl">The rules</span> <span class="rule"></span><span class="tag">Three caught lies</span></div>
+    <h2 class="title s-head rise" id="rules-h">Three rules, each from a caught lie.</h2>
+    <div class="lead-col rise"><p class="lead">I did not start with principles. Each of these came from catching the design tell a small lie, and I wrote it down so I would not repeat it. That is most of what senior looks like here. I still make the mistakes. Each one leaves a rule behind.</p></div>
+
+    <div class="rules rise">
+      <div class="r">
+        <div class="no">01</div>
+        <div>
+          <p class="b">Say the true thing.</p>
+          <p class="t">The headline is computed from the real shipment state, so it can never say &ldquo;In Transit&rdquo; on a returned order. When a state has nothing honest to show, the page hides the field rather than faking it. <b>An empty ETA hides its card. An empty history hides its section.</b> No comforting placeholder.</p>
+        </div>
+      </div>
+      <div class="r">
+        <div class="no">02</div>
+        <div>
+          <p class="b">Chrome must equal function.</p>
+          <p class="t">Every control that looked interactive had to actually do the thing it promised. I killed the decoys by <b>building the function the chrome implied, not by deleting the chrome</b>. The dead &ldquo;More options&rdquo; button became a real copy-link button. The &ldquo;Contact support&rdquo; button that opened an unrelated pop-up became an actual phone link.</p>
+        </div>
+      </div>
+      <div class="r">
+        <div class="no">03</div>
+        <div>
+          <p class="b">Care is total, motion is earned.</p>
+          <p class="t">Every state got the same attention, including the ugly ones. Pickup-failed and disposed auto-expand their full history, because that is exactly when a person needs the whole story. The motion is driven by the shipment&rsquo;s state: <b>one flag drives the live pulse on the status dot, the driver, the newest event, and the map pin</b>, so they can never disagree about whether the shipment is moving.</p>
+        </div>
+      </div>
+    </div>
+
+    <figure class="shot wide montage rise">
+      <div class="ph" style="aspect-ratio:2560/1600">
+        <img src="assets/tracking-say-true.webp" alt="The redesigned detail view for a shipment in transit: a floating header over a live route map, and a card that leads with the computed status 'On the way to Hialeah, FL', a pickup and arrival time, an origin-to-driver-to-destination journey strip with a live pulse on the driver, one arrival-alerts action, and the activity timeline open below." width="2560" height="1600" loading="lazy">
+        <span class="ph-meta"><span class="ph-tag">Image</span><span class="ph-res">2560 &times; 1600</span><span class="ph-label">Redesigned detail view &middot; in transit</span></span>
+      </div>
+      <figcaption><span class="fn-tag">Fig. 01 &middot; Say the true thing</span><b>A status computed from the shipment, not from a leaky label.</b> The card leads with the answer a person came for, reads like a sentence someone would say, and the live pulse only fires while the truck is genuinely moving.</figcaption>
+    </figure>
+
+    <figure class="shot wide montage rise">
+      <div class="ph" style="aspect-ratio:2560/1600">
+        <img src="assets/tracking-states-grid.webp" alt="A grid of nineteen small redesigned tracking cards, one per shipment state: pending, booked, dispatched, arrived at pickup, pickup successful, pickup failed, in route to dropoff, arrived at dropoff, delivered, complete, return initiated, in route to return, returned, cancelled, in route to warehouse, arrived at warehouse, departed from warehouse, disposed, and the home search view. Each card carries a status dot, a label, and a plain-language headline." width="2560" height="1600" loading="lazy">
+        <span class="ph-meta"><span class="ph-tag">Image</span><span class="ph-res">2560 &times; 1600</span><span class="ph-label">All nineteen states from one data model</span></span>
+      </div>
+      <figcaption><span class="fn-tag">Fig. 02 &middot; Care is total</span><b>Every one of the nineteen states, including the ones nobody wants.</b> Pickup failed, cancelled, returned, disposed. Each got a status dot, a label, a sentence, and its own action, so a failed order reads as clearly as a delivered one.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ============ ^04 THE ALERTS CONTROL ============ -->
+<section id="alerts" aria-labelledby="alerts-h">
+  <div class="wrap grid12">
+    <div class="eyebrow rise"><span class="num"><span class="caret" aria-hidden="true">^</span>04</span> <span class="lbl">The alerts control</span> <span class="rule"></span><span class="tag">Three tries</span></div>
+    <h2 class="title s-head rise" id="alerts-h">The alerts control, in three tries.</h2>
+    <div class="lead-col rise"><p class="lead">The best story I have from this project is a small control I got wrong more than once in a single session. The lasting fix was not a widget. It was the habit the misses forced me into.</p></div>
+
+    <div class="ladder rise">
+      <div class="row"><div class="p">01</div><div class="txt"><b>A toggle that opened a modal.</b><span>I built the alerts affordance as a toggle. It did not toggle anything. It opened a setup pop-up, so the control lied about what a click would do.</span></div></div>
+      <div class="row"><div class="p">02</div><div class="txt"><b>A &ldquo;real&rdquo; toggle that flipped on.</b><span>So I made it flip on for real. But there was no recipient behind it, no email, no number. It was claiming a state that did not exist yet. On with nothing to send to is still a lie.</span></div></div>
+      <div class="row landed"><div class="p">03</div><div class="txt"><b>A two-state setup, no toggle at all.</b><span><code>Off, set up alerts</code> when nothing is configured. <code>On, email to admin@cascadegoods.com, customize or disable</code> once it is. The state becomes real at the moment you save, and never a click before.</span></div></div>
+    </div>
+
+    <figure class="shot wide montage rise">
+      <div class="ph" style="aspect-ratio:2400/1350">
+        <img src="assets/tracking-alerts-two-states.webp" alt="The arrival-alerts row shown in its two honest states, side by side. Left, unconfigured: the label 'Off' next to a 'Set up alerts' link. Right, configured: 'Arrival alerts on', the line 'Email to admin@cascadegoods.com', and 'Customize' and 'Disable' controls." width="2400" height="1350" loading="lazy">
+        <span class="ph-meta"><span class="ph-tag">Image</span><span class="ph-res">2400 &times; 1350</span><span class="ph-label">The alerts row &middot; unconfigured and configured</span></span>
+      </div>
+      <figcaption><span class="fn-tag">Fig. 03 &middot; State before chrome</span><b>Two honest states instead of a toggle that claims one.</b> The row can only show &ldquo;on&rdquo; once a real recipient is saved, so the chrome can never represent a state the system is not actually in.</figcaption>
+    </figure>
+
+    <blockquote class="pull rise">
+      <q>Predict what the user does with a control, then criticize your own decision, before someone else has to.</q>
+      <div class="attr"><span class="caret" aria-hidden="true">^</span> The fix that stuck was a way of working. Before I ship a control now I run its three clicks in my head: the first click, the undo, and the cold-land.</div>
+    </blockquote>
+  </div>
+</section>
+
+<!-- ============ ^05 SHIPPED TWICE ============ -->
+<section id="shipped" aria-labelledby="shipped-h">
+  <div class="wrap grid12">
+    <div class="eyebrow rise"><span class="num"><span class="caret" aria-hidden="true">^</span>05</span> <span class="lbl">Shipped twice</span> <span class="rule"></span><span class="tag">No drift</span></div>
+    <h2 class="title s-head rise" id="shipped-h">Shipped twice, guaranteed identical.</h2>
+    <div class="lead-col rise"><p class="lead">A redesign is worth nothing if it drifts on the way into production. So I froze the backend, proved it, and shipped the design in a way that makes the built UI provably match the reviewed one.</p></div>
+
+    <div class="rules rise">
+      <div class="r">
+        <div class="no">01</div>
+        <div>
+          <p class="b">Zero backend change.</p>
+          <p class="t">I opened a real shipment in the browser and audited every network call. Everything the redesign shows was already on the wire, so the whole thing is a front-end job. <b>That audit is what made the port cheap.</b></p>
+        </div>
+      </div>
+      <div class="r">
+        <div class="no">02</div>
+        <div>
+          <p class="b">Reskin the data, not the UI.</p>
+          <p class="t">For the Angular drop-in I refused to re-author the design in templates, because every re-typed pixel is a chance to drift. <b>I reused the reviewed render and motion core byte-for-byte and adapted only the data layer.</b></p>
+        </div>
+      </div>
+      <div class="r">
+        <div class="no">03</div>
+        <div>
+          <p class="b">A four-agent audit.</p>
+          <p class="t">I put the drop-in through an adversarial ship-readiness pass that type-checked it under the real TypeScript compiler and <b>caught a strict-compile blocker before a developer ever would</b>. Then it was handed off.</p>
+        </div>
+      </div>
+    </div>
+
+    <figure class="shot wide montage rise">
+      <div class="ph" style="aspect-ratio:2880/1620">
+        <img src="assets/tracking-shipped-twice.webp" alt="The two build artifacts side by side rendering the same shipment identically: on the left the vanilla HTML prototype, on the right the Angular drop-in running through its data adapter. The status headline, journey strip, and activity are pixel-for-pixel the same because both reuse the one reviewed render core." width="2880" height="1620" loading="lazy">
+        <span class="ph-meta"><span class="ph-tag">Image</span><span class="ph-res">2880 &times; 1620</span><span class="ph-label">Vanilla prototype and Angular drop-in, identical output</span></span>
+      </div>
+      <figcaption><span class="fn-tag">Fig. 04 &middot; No drift</span><b>Two artifacts, one render core.</b> The vanilla prototype and the Angular drop-in render the same design because the drop-in reuses the reviewed core byte-for-byte and adapts only the data behind it, so a single engineer can integrate it with a guarantee that the UI matches what was reviewed.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ============ ^06 HONEST SCOPE ============ -->
+<section id="honest" aria-labelledby="honest-h">
+  <div class="wrap grid12">
+    <div class="eyebrow rise"><span class="num"><span class="caret" aria-hidden="true">^</span>06</span> <span class="lbl">Honest scope</span> <span class="rule"></span><span class="tag">What I can prove</span></div>
+    <h2 class="title s-head rise" id="honest-h">Honest about what it is, and isn&rsquo;t.</h2>
+    <div class="lead-col rise"><p class="lead">This is a ship-ready, backend-audited, adversarially-reviewed redesign package. I deliberately rolled back a standalone deployable version, because a standalone app was not what the team needed. It is not a launch I can attach traffic to, and I would not draw a chart pretending otherwise.</p></div>
+
+    <div class="ledger rise">
+      <div class="col yes">
+        <div class="k"><span class="d" aria-hidden="true"></span> What I can prove</div>
+        <ul>
+          <li><b>Nineteen shipment states</b> designed from one data model, including every failure and terminal state, not just the happy path.</li>
+          <li><b>A twelve-rule engine</b> that computes the true status locally, so the headline cannot contradict the shipment. Verified in the shipped code.</li>
+          <li><b>Zero backend change</b>, proven by a live network audit. Header chrome trimmed from 88px to 56px. Error text at 9.72:1 contrast.</li>
+          <li>An independent review <b>of the validation pass</b> came back &ldquo;ship-ready, no blockers.&rdquo; The Angular port reuses the reviewed code byte-for-byte.</li>
+        </ul>
+      </div>
+      <div class="col no">
+        <div class="k"><span class="d" aria-hidden="true"></span> What I will not claim</div>
+        <ul>
+          <li><b>Adoption or traffic.</b> The standalone version was rolled back and production integration was handed to the team. I cannot attribute usage to it, so I do not.</li>
+          <li><b>Conversion or support deflection.</b> The promo shipped with analytics hooks specified, never instrumented. No number exists, and this page of all pages has no place for a fake one.</li>
+        </ul>
+      </div>
+    </div>
+
+    <p class="statusnote rise"><b>The honest value is the craft and the judgment</b>, which live fully in the work whether or not anyone used it yet: a status a person can trust, every state told truthfully, and a package a single engineer can integrate with a guarantee that the UI matches the design.</p>
+  </div>
+</section>
+
+<!-- ============ ^07 REFLECTION ============ -->
+<section id="reflection" aria-labelledby="reflection-h">
+  <div class="wrap grid12">
+    <div class="eyebrow rise"><span class="num"><span class="caret" aria-hidden="true">^</span>07</span> <span class="lbl">Reflection</span> <span class="rule"></span><span class="tag">The smallest surface</span></div>
+    <h2 class="title s-head rise" id="reflection-h">The smallest surface is the honest test.</h2>
+    <div class="lead-col rise"><p class="lead">A tracking page has no room to hide behind features. There is one job and one card, and about thirty seconds of someone&rsquo;s attention. Every choice is either true or it is a small lie a person feels before they can name it.</p></div>
+
+    <div class="refl rise">
+      <div class="r">
+        <div class="k"><span class="d" aria-hidden="true"></span> The best thing</div>
+        <div class="t">The reskin was the easy part. What mattered was <b>learning to predict what a user does with a control before I ship it</b>, and criticizing my own decision before a stranger had to.</div>
+      </div>
+      <div class="r">
+        <div class="k"><span class="d" aria-hidden="true"></span> What lasted</div>
+        <div class="t">On this project I turned each miss into a <b>rule</b> instead of a patch, and those rules outlasted the page. I reuse them on every project since.</div>
+      </div>
+      <div class="r">
+        <div class="k"><span class="d" aria-hidden="true"></span> The refusal</div>
+        <div class="t">A tracking page is the one place a made-up number would have been the easiest thing in the world to print, and <b>the most damaging to build</b>.</div>
+      </div>
+    </div>
+
+    <p class="closer rise">The AI wrote most of the code. What I brought was the refusal to let it print a comforting number that was not real, on a surface where that would have been the easiest thing in the world to do.</p>
+  </div>
+</section>
+
+</main>
+
+<!-- ============ COLOPHON ============ -->
+<footer class="colophon">
+  <div class="wrap grid12">
+    <div class="cred rise">
+      <div class="brand"><span class="caret" aria-hidden="true">^</span>WARP&nbsp;TRACKING</div>
+      <p><b>Warp Tracking redesign.</b> Product design engineer at Warp, an AI-native freight company that runs lean and ships daily. Solo design deliverable: the research, the before-state reverse-engineering, the information architecture, the visual and motion design, and a twelve-rule engine that computes the true status. Rahul owns the production Angular app I was modernizing. Troy, our CRO, set the frame. The AI wrote most of the code under my direction.</p>
+      <p class="fine">Type is Satoshi with tabular figures, set on a twelve-column grid. The canvas is Lumen obsidian and the one accent is a single spring green that does exactly one job. Shadows are neutral, the way the redesign retired the terminal&rsquo;s green glow.</p>
+      <a class="backlink" href="/">&larr; Back to portfolio</a>
+    </div>
+    <div class="note rise">
+      <dl>
+        <div><dt>Type</dt><dd>Satoshi</dd></div>
+        <div><dt>System</dt><dd>Lumen tokens</dd></div>
+        <div><dt>Canvas</dt><dd>Obsidian</dd></div>
+        <div><dt>Accent</dt><dd>One spring green <span class="u" aria-hidden="true"></span></dd></div>
+        <div><dt>Status</dt><dd>Handed off</dd></div>
+        <div><dt>Case study</dt><dd>Neel Tengariya, 2026</dd></div>
+      </dl>
+    </div>
+  </div>
+</footer>
+
+<!-- calm reveal only + graceful placeholder handling · no app UI is drawn in code, no keyframes -->
+<script>
+  (function(){
+    // 1) missing-image placeholders: hide a broken <img> so the sized box shows its target resolution.
+    //    When the real .webp is added later, it loads and covers the placeholder text automatically.
+    var imgs = document.querySelectorAll('.ph img');
+    imgs.forEach(function(img){
+      var box = img.closest('.ph');
+      function ok(){ if(box) box.classList.add('is-loaded'); }
+      function bad(){ img.style.display = 'none'; if(box) box.classList.remove('is-loaded'); }
+      img.addEventListener('load', function(){ if(img.naturalWidth>0) ok(); });
+      img.addEventListener('error', bad);
+      if (img.complete) { (img.naturalWidth>0 ? ok() : bad()); }
+    });
+
+    // 2) calm scroll-reveal, one-time per element (unobserve after it fires).
+    var els = document.querySelectorAll('.rise');
+    if(!('IntersectionObserver' in window) || matchMedia('(prefers-reduced-motion: reduce)').matches){
+      els.forEach(function(e){ e.classList.add('in'); }); return;
+    }
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(en){ if(en.isIntersecting){ en.target.classList.add('in'); io.unobserve(en.target); } });
+    }, {rootMargin:'0px 0px -8% 0px', threshold:0.06});
+    els.forEach(function(e){ io.observe(e); });
+  })();
+</script>
+</body>
+</html>
