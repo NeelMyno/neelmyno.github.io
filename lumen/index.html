@@ -366,6 +366,10 @@
   .colophon .note dt{font-size:var(--fs-micro);letter-spacing:.12em;text-transform:uppercase;color:var(--ink-faint);font-weight:700}
   .colophon .note dd{margin:0;font-size:var(--fs-sm);color:var(--ink);font-weight:500;text-align:right}
   .colophon .note dd .u{display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--accent);vertical-align:baseline;margin-left:6px}
+  /* [WARP CREDIT] the real Warp wordmark as a quiet "Designed at" brand credit. Rendered in calm ink (NOT the accent) so this page, whose whole thesis is retiring extra greens, does not itself ship a second green; the mark's shape carries the recognition. One use per page, content not nav. */
+  .warp-credit{display:flex;align-items:center;gap:10px;margin:var(--s5) 0 0}
+  .warp-credit-lbl{font-size:var(--fs-micro);letter-spacing:.12em;text-transform:uppercase;color:var(--ink-faint);font-weight:600;line-height:1}
+  .warp-mark{height:18px;width:auto;display:block;color:var(--ink-dim);flex:0 0 auto}
   .backlink{grid-column:1/-1;display:inline-flex;align-items:center;gap:.5rem;margin-top:var(--s7);font-size:var(--fs-sm);color:var(--ink-dim);text-decoration:none;font-weight:700}
   .backlink:hover{color:var(--ink)}
 
@@ -386,6 +390,46 @@
   .dot.pulse::after{content:"";position:absolute;inset:-1px;border-radius:50%;border:1.5px solid var(--accent);opacity:.55;transform:scale(1);animation:lumen-pulse 3s var(--ease-out) infinite}
   @keyframes lumen-pulse{0%{transform:scale(.9);opacity:.6}70%{transform:scale(2.8);opacity:0}100%{transform:scale(2.8);opacity:0}}
   @media (prefers-reduced-motion:reduce){.dot.pulse::after{animation:none;inset:-3px;opacity:.35}}
+
+  /* [P5 · additive motion] the Stat primitive draws its sparkline once as the primitives
+     plate reveals, and the number + delta settle in under it, so the data trend reads as
+     it builds. Rides the existing figure.plate.rise -> .in trigger; NO new JS. This is a
+     one-shot on-scroll reveal, NOT ambient motion, so the plate's "the only ambient
+     motion, a 3s pulse" claim stays true. Resting / no-JS / reduced-motion = the finished
+     specimen (sparkline fully drawn, number shown), unchanged; no layout shift. */
+  .pstat .spark polyline{stroke-dasharray:1;stroke-dashoffset:0}          /* base: fully drawn (polyline carries pathLength="1") */
+  .plate.in .pstat .spark polyline{animation:sparkDraw 1s var(--ease-out-quint) .15s both}
+  .plate.in .pstat .snum{animation:statRise .6s var(--ease-out-quint) both}
+  .plate.in .pstat .delta{animation:statRise .6s var(--ease-out-quint) .18s both}
+  @keyframes sparkDraw{from{stroke-dashoffset:1}to{stroke-dashoffset:0}}
+  @keyframes statRise{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  @media (prefers-reduced-motion:reduce){
+    .plate.in .pstat .spark polyline,.plate.in .pstat .snum,.plate.in .pstat .delta{animation:none}
+    .pstat .spark polyline{stroke-dashoffset:0}
+  }
+
+  /* [P5 · additive motion] the color ramps wipe in left-to-right (the ramp drawing itself); the
+     status dots and the audit-ladder rungs reveal in sequence. Ride the existing .rise -> .in
+     trigger (the ramps' figure.plate, and the .ladder itself); NO new JS. Hex values live only in
+     the swatches, exactly as before, unchanged. Resting / no-JS / reduced-motion = the finished
+     static specimen; clip-path/opacity/transform only, so no layout shift. */
+  .plate.in .ramp .bar{animation:rampWipe .7s var(--ease-out-quint) both}
+  .plate.in .ramp:nth-child(2) .bar{animation-delay:.08s}
+  .plate.in .ramp:nth-child(3) .bar{animation-delay:.16s}
+  .plate.in .ramp:nth-child(4) .status-row .s{animation:ladRow .5s var(--ease-out-quint) both}
+  .plate.in .ramp:nth-child(4) .status-row .s:nth-child(2){animation-delay:.09s}
+  .plate.in .ramp:nth-child(4) .status-row .s:nth-child(3){animation-delay:.18s}
+  .ladder.in .row{animation:ladRow .5s var(--ease-out-quint) both}
+  .ladder.in .row:nth-child(2){animation-delay:.07s}
+  .ladder.in .row:nth-child(3){animation-delay:.14s}
+  .ladder.in .row:nth-child(4){animation-delay:.21s}
+  .ladder.in .row:nth-child(5){animation-delay:.28s}
+  .ladder.in .row:nth-child(6){animation-delay:.35s}
+  @keyframes rampWipe{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 0 0 0)}}
+  @keyframes ladRow{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  @media (prefers-reduced-motion:reduce){
+    .plate.in .ramp .bar,.plate.in .status-row .s,.ladder.in .row{animation:none}
+  }
 
   /* kill heading runts/orphans (doctrine): balance display headings, pretty-wrap prose */
   .cover-h1,.title,.short-lead,.pull q,.refl .r .t,.col .kt,.stack .r b,.ladder .txt b,figcaption b{text-wrap:balance}
@@ -437,7 +481,7 @@
   .weights span small{display:block;font-family:var(--sans);font-size:var(--fs-micro);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-faint);font-weight:600;margin-top:2px}
   .figs{margin-top:26px;border-top:1px solid var(--line);padding-top:18px}
   .figs .fh{font-size:var(--fs-micro);letter-spacing:.14em;text-transform:uppercase;color:var(--accent);font-weight:700;margin-bottom:12px}
-  .figs .fcol{display:flex;flex-direction:column;gap:5px;font-family:var(--wide);font-weight:500;font-size:clamp(1.15rem,2.4vw,1.5rem);color:var(--ink);font-feature-settings:"tnum" 1,"lnum" 1;font-variant-numeric:tabular-nums lining-nums;text-align:right;max-width:14ch}
+  .figs .fcol{display:flex;flex-direction:column;gap:5px;font-family:var(--wide);font-weight:500;font-size:clamp(1.15rem,2.4vw,1.5rem);color:var(--ink);font-feature-settings:"tnum" 1,"lnum" 1;font-variant-numeric:tabular-nums lining-nums;text-align:right;width:max-content}  /* hug content so the number column sits under the header on one shared left axis; digits stay right-aligned to stack */
   .figs .fline{margin-top:14px;font-family:var(--wide);font-weight:500;font-size:var(--fs-body);color:var(--ink-dim);font-feature-settings:"tnum" 1;letter-spacing:.01em}
   .figs .fline .mono-accent{font-weight:700}
 
@@ -451,10 +495,10 @@
   .gcard .gnote{margin-top:14px;font-size:var(--fs-micro);color:var(--ink-faint);text-align:center;letter-spacing:.02em}
 
   /* ---- synthesis layers ---- */
-  .layers{display:flex;flex-direction:column;align-items:stretch;gap:0;max-width:620px;margin-inline:auto}
+  .layers{display:flex;flex-direction:column;align-items:stretch;gap:var(--s3);max-width:620px;margin-inline:auto}
   .layer{border:1px solid var(--line-strong);border-radius:14px;background:var(--surface);padding:20px 24px;position:relative;z-index:2}
-  .layer.l1{background:linear-gradient(180deg,var(--surface-2),var(--surface));margin-bottom:-10px}
-  .layer.l2{margin-bottom:-10px}
+  /* Discipline (l1) and Substance (l2) are two stacked layers; a clean --s3 gap from .layers separates them instead of a colliding -10px overlap (vertical order + tonal step carry the "stacked" read) */
+  .layer.l1{background:linear-gradient(180deg,var(--surface-2),var(--surface))}
   .layer .lk{font-size:var(--fs-micro);letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:var(--accent);margin-bottom:12px}
   .layer .lb{font-family:var(--wide);font-weight:700;font-size:1.05rem;color:var(--ink-2);letter-spacing:-.01em;margin-bottom:6px}
   .layer .ld{font-size:var(--fs-sm);color:var(--ink-dim);line-height:1.45}
@@ -536,6 +580,8 @@
   .collage .frame img.loaded{opacity:1}
   @media (prefers-reduced-motion:reduce){.collage .frame img{transition:none}}
   .collage .band{aspect-ratio:1700/468}
+  /* the hero foundations webp carries its own baked rounded frame; drop the wrapper's second border + load-placeholder bg so there's a single clean edge (radius + neutral shadow kept) */
+  .collage .frame.band{border:0;background:none}
   .collage .duo{display:grid;grid-template-columns:1.62fr 1fr;gap:clamp(14px,2vw,20px);align-items:stretch}
   .collage .duo .frame{height:100%}
   .collage .duo .frame img{height:100%;object-fit:cover;object-position:top}
@@ -556,6 +602,45 @@
   /* real-render plate: image fills its framed box, no placeholder text needed */
   .plate .ph.real{display:block}
   .plate .ph.real img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:top}
+
+  /* ============================================================
+     [PAGE-CUSTOM] THE TWO TABS — an accessible tablist that swaps the body.
+     Tab 1 (the design system) is the default; Tab 2 (built to be read by AI)
+     is the code + LLM-first side. The accent marks the CURRENT selection, one
+     of its permitted roles, so no new color enters. Cover, the short version,
+     and the colophon live outside the tabs and are shared by both.
+     ============================================================ */
+  .tabsbar{border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:var(--paper)}
+  .tabsbar .wrap{padding-block:0}
+  .tablist{display:grid;grid-template-columns:1fr 1fr}
+  .tab{appearance:none;-webkit-appearance:none;background:none;border:0;border-bottom:2px solid transparent;margin-bottom:-1px;cursor:pointer;text-align:left;font-family:var(--sans);color:var(--ink-faint);display:flex;flex-direction:column;gap:5px;padding:clamp(18px,2.4vw,26px) clamp(14px,2vw,26px) clamp(16px,2.2vw,24px);min-height:44px;transition:color .2s var(--ease-out),border-color .2s var(--ease-out)}
+  .tab + .tab{border-left:1px solid var(--line)}
+  .tab .tab-t{font-family:var(--wide);font-weight:700;font-size:clamp(1.05rem,2.4vw,1.45rem);letter-spacing:-.018em;line-height:1.08;color:inherit}
+  .tab .tab-s{font-size:var(--fs-micro);letter-spacing:.02em;font-weight:500;line-height:1.35;color:var(--ink-faint)}
+  .tab:hover{color:var(--ink-dim)}
+  .tab:hover .tab-s{color:var(--ink-dim)}
+  .tab[aria-selected="true"]{color:var(--ink-2);border-bottom-color:var(--accent)}
+  .tab[aria-selected="true"] .tab-s{color:var(--ink-dim)}
+  .tab:focus-visible{outline:2.5px solid var(--amber-ink);outline-offset:-3px;border-radius:3px}
+  @media (max-width:460px){
+    .tab{padding-left:12px;padding-right:12px}
+    .tab .tab-s{display:none}  /* keep the switch compact on small phones; the titles carry it */
+  }
+  .tabpanel[hidden]{display:none}
+  .tabpanel:focus{outline:none}
+
+  /* ---- token three-layer breakdown (Tab 2 · tokens as code) ---- */
+  .tok-layers{display:flex;flex-direction:column;gap:clamp(14px,2vw,20px)}
+  .tok-layers .tl{display:grid;grid-template-columns:minmax(0,1fr) minmax(90px,2fr) auto;gap:clamp(14px,3vw,32px);align-items:center}
+  @media (max-width:640px){.tok-layers .tl{grid-template-columns:1fr auto;gap:6px 16px}.tok-layers .tl-bar{grid-column:1/-1;order:3}}
+  .tok-layers .tl-h b{font-family:var(--wide);font-weight:700;font-size:var(--fs-sm);color:var(--ink-2);letter-spacing:-.01em;display:block}
+  .tok-layers .tl-h span{font-size:var(--fs-micro);color:var(--ink-faint);line-height:1.4;display:block;margin-top:2px}
+  .tok-layers .tl-bar{height:12px;border-radius:6px;background:var(--paper);border:1px solid var(--line);overflow:hidden}
+  .tok-layers .tl-bar i{display:block;height:100%;background:var(--surface-2);border-right:2px solid var(--accent)}
+  .tok-layers .tl-n{font-family:var(--wide);font-weight:900;font-size:clamp(1.5rem,3.4vw,2.1rem);color:var(--ink-2);font-feature-settings:"tnum" 1,"lnum" 1;font-variant-numeric:tabular-nums lining-nums;text-align:right;min-width:3.4ch}
+  .tok-layers .tl.total{border-top:1px solid var(--line-strong);padding-top:clamp(12px,2vw,18px);margin-top:2px}
+  .tok-layers .tl.total .tl-bar{background:none;border:0}
+  .mono{font-family:ui-monospace,'SF Mono',Menlo,monospace;font-size:.9em;color:var(--ink);letter-spacing:-.01em}
 </style>
 </head>
 <body>
@@ -601,7 +686,7 @@
   <section id="cover" aria-label="Cover">
     <div class="wrap grid12">
       <div class="cover-copy">
-        <p class="kicker cover-kicker rise"><span class="dot pulse" aria-hidden="true"></span> Warp &middot; Design system &middot; Live</p>
+        <p class="kicker cover-kicker rise"><span class="dot" aria-hidden="true"></span> Warp &middot; Design system &middot; 2026</p>
         <h1 class="cover-h1 rise">Lumen<span class="stop">.</span></h1>
         <p class="cover-lead rise">I built Warp's design system on my own, and directed the AI that wrote most of the code. What's mine is the problem, the visual language, and every judgment call. <b>The AI did the typing.</b></p>
       </div>
@@ -611,7 +696,6 @@
         <div><dt>Team</dt><dd>One designer, working with the founders, directing the AI agents that did the build</dd></div>
         <div><dt>Context</dt><dd>Warp, a freight company that went AI-native and ran lean</dd></div>
         <div><dt>Stack</dt><dd>Figma &middot; DTCG JSON &middot; Style Dictionary &middot; shadcn registry &middot; Next.js &middot; Tailwind v4 &middot; Playwright</dd></div>
-        <div><dt>Live</dt><dd><a href="https://warp-lumen-design-guidelines.vercel.app/library" rel="noopener">warp-lumen-design-guidelines.vercel.app</a></dd></div>
       </dl>
 
       <figure class="plate full cover-hero rise">
@@ -634,9 +718,9 @@
       <p class="short-lead rise" id="short-h">Warp ships fast, with a small team, across a lot of product and marketing surfaces. Each one had drifted into its own look. When I audited our transactional emails, I found <b>three design systems running at once, with three different shades of brand green.</b> Lumen makes them one, and it is built to be read by the AI agents writing most of the code, not only by people.</p>
 
       <div class="scale rise">
-        <div class="unit"><div class="n">900<span class="pl">+</span></div><div class="u">Design tokens</div></div>
+        <div class="unit"><div class="n">1,070</div><div class="u">Design tokens</div></div>
         <div class="unit"><div class="n">98</div><div class="u">Component contracts</div></div>
-        <div class="unit"><div class="n">9</div><div class="u">Platform emit targets</div></div>
+        <div class="unit"><div class="n">10</div><div class="u">Compile targets</div></div>
         <div class="unit"><div class="n">35</div><div class="u">Decision records</div></div>
         <div class="unit"><div class="n">16</div><div class="u">Audit rounds</div></div>
       </div>
@@ -644,7 +728,26 @@
     </div>
   </section>
 
-  <!-- ============ 01 THE PROBLEM ============ -->
+  
+  <!-- ============ TABS ============ -->
+  <div class="tabsbar">
+    <div class="wrap">
+      <div class="tablist" role="tablist" aria-label="Two ways to read this case study">
+        <button class="tab" role="tab" id="tab-system" aria-controls="panel-system" aria-selected="true" tabindex="0">
+          <span class="tab-t">The design system</span>
+          <span class="tab-s">The problem, the foundations, the eight surfaces</span>
+        </button>
+        <button class="tab" role="tab" id="tab-ai" aria-controls="panel-ai" aria-selected="false" tabindex="-1">
+          <span class="tab-t">Built to be read by AI</span>
+          <span class="tab-s">The LLM-first system, and how it was built</span>
+        </button>
+      </div>
+    </div>
+  </div>
+  <noscript><style>#panel-ai[hidden]{display:block}</style></noscript>
+
+  <div class="tabpanel" role="tabpanel" id="panel-system" aria-labelledby="tab-system">
+<!-- ============ TAB 1 · 01 THE PROBLEM ============ -->
   <section aria-labelledby="prob-h">
     <div class="wrap grid12">
       <div class="eyebrow rise"><span class="pnum"><span class="dot" aria-hidden="true"></span>01</span> <span class="lbl">The problem</span> <span class="rule"></span><span class="tag">Why Lumen exists</span></div>
@@ -686,7 +789,7 @@
     </div>
   </section>
 
-  <!-- ============ 02 THE SYNTHESIS ============ -->
+  <!-- ============ TAB 1 · 02 THE SYNTHESIS ============ -->
   <section aria-labelledby="synth-h">
     <div class="wrap grid12">
       <div class="eyebrow rise"><span class="pnum"><span class="dot" aria-hidden="true"></span>02</span> <span class="lbl">The synthesis</span> <span class="rule"></span><span class="tag">Apple and Warp, stacked</span></div>
@@ -738,7 +841,7 @@
     </div>
   </section>
 
-  <!-- ============ 03 FOUNDATIONS ============ -->
+  <!-- ============ TAB 1 · 03 FOUNDATIONS ============ -->
   <section aria-labelledby="found-h">
     <div class="wrap grid12">
       <div class="eyebrow rise"><span class="pnum"><span class="dot" aria-hidden="true"></span>03</span> <span class="lbl">Foundations</span> <span class="rule"></span><span class="tag">One mood, one mark, one face</span></div>
@@ -822,33 +925,14 @@
         <figcaption><span class="plate-tag">Type</span><b>Satoshi, 300 to 900.</b> The numbers ride on OpenType tabular figures, so a column of freight rates stacks digit over digit with no second font loaded.</figcaption>
       </figure>
 
-      <!-- nine emit targets, typographic matrix -->
-      <div class="emit rise">
-        <div class="emit-head">
-          <span class="t">One source, nine emit targets.</span>
-          <span class="c">Style Dictionary</span>
-        </div>
-        <div class="emit-grid">
-          <div class="e"><span class="en">01</span><span class="et">Web, React</span></div>
-          <div class="e"><span class="en">02</span><span class="et">iOS, SwiftUI</span></div>
-          <div class="e"><span class="en">03</span><span class="et">Android, Compose</span></div>
-          <div class="e"><span class="en">04</span><span class="et">React Native</span></div>
-          <div class="e"><span class="en">05</span><span class="et">macOS desktop</span></div>
-          <div class="e"><span class="en">06</span><span class="et">Windows desktop</span></div>
-          <div class="e"><span class="en">07</span><span class="et">Shopify Liquid</span></div>
-          <div class="e"><span class="en">08</span><span class="et">BigCommerce</span></div>
-          <div class="e"><span class="en">09</span><span class="et">WooCommerce</span></div>
-        </div>
-        <p class="emit-note rise"><b>Honest about coverage.</b> The tokens and the consumption guides reach all nine targets. The native component examples are a partial proof of concept so far, not nine finished apps.</p>
-      </div>
     </div>
   </section>
 
-  <!-- ============ 04 TEMPLATES ============ -->
+  <!-- ============ TAB 1 · 04 TEMPLATES ============ -->
   <section aria-labelledby="tmpl-h">
     <div class="wrap grid12">
       <div class="eyebrow rise"><span class="pnum"><span class="dot" aria-hidden="true"></span>04</span> <span class="lbl">Reference templates</span> <span class="rule"></span><span class="tag">Same language, different density</span></div>
-      <h2 class="title s-head rise" id="tmpl-h">Eight surfaces that answer one question.</h2>
+      <h2 class="title s-head rise" id="tmpl-h">Eight reference templates, one standard to match.</h2>
       <div class="lead-col rise"><p class="lead">Each template is the canonical answer to "is this how a Lumen surface looks?", from marketing breath all the way to operator dense.</p></div>
 
       <div class="stack rise">
@@ -887,11 +971,179 @@
     </div>
   </section>
 
-  <!-- ============ 05 LLM-FIRST ============ -->
+  <!-- ============ TAB 1 · 05 THREE PRIMITIVES ============ -->
+  <section aria-labelledby="prim-h">
+    <div class="wrap grid12">
+      <div class="eyebrow rise"><span class="pnum"><span class="dot" aria-hidden="true"></span>05</span> <span class="lbl">Three primitives</span> <span class="rule"></span><span class="tag">Where the feeling lives</span></div>
+      <h2 class="title s-head rise" id="prim-h">A number, a live dot, a rate ticker.</h2>
+      <div class="lead-col rise"><p class="lead">An operator sees three small pieces of Lumen far more than any button. That is where the operator-console feeling comes from, so they got most of the polish.</p></div>
+
+      <div class="stack rise">
+        <div class="r"><span class="no">01</span><div><b>Numbers as hero</b><div class="d">Big bold tabular figures with a small tracked unit, right-aligned in tables so the digits stack. The most-read element on any operator surface.</div></div></div>
+        <div class="r"><span class="no">02</span><div><b>One signature pulse</b><div class="d">An 8-pixel filled green dot with a 2-pixel ring, pulsing on a slow ease-out loop. It is the only ambient motion in the system, it runs only when something is genuinely live, and it honors reduced motion.</div></div></div>
+        <div class="r"><span class="no">03</span><div><b>The marquee that earns its keep</b><div class="d">A horizontal stream of freight-lane rates in tabular figures, on a slow continuous loop. It says operator console louder than any hero image could.</div></div></div>
+      </div>
+
+      <figure class="plate full rise" style="margin-top:var(--s9)">
+        <div class="spec">
+          <div class="spec-pad">
+            <p class="spec-label">The three signatures <span class="rule"></span> <span class="k2">Where the operator mood lives</span></p>
+            <div class="prims">
+              <div class="pcard pstat">
+                <div class="pk">Shipments today</div>
+                <div class="snum">1,284</div>
+                <div class="srow">
+                  <span class="delta">&#9650; +12.4% wow</span>
+                  <svg class="spark" viewBox="0 0 120 34" fill="none" preserveAspectRatio="none" aria-hidden="true"><polyline points="0,28 18,24 34,26 52,17 70,20 88,11 104,13 120,4" pathLength="1" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </div>
+              </div>
+              <div class="pcard plive">
+                <span class="dot pulse" aria-hidden="true" style="width:16px;height:16px;margin:6px auto 22px"></span>
+                <div class="llabel">Live</div>
+                <div class="lsub">the only ambient motion, a 3s pulse</div>
+              </div>
+              <div class="pticker">
+                <div class="tk">Rate ticker &middot; freight lanes</div>
+                <div class="tickrow" aria-label="A ticker of freight-lane rates in tabular figures: LAX to SFO 262 dollars down, ORD to ATL 485 dollars up, DFW to PHX 390 dollars, SEA to DEN 612 dollars down, MIA to JFK 724 dollars up, BOS to CLT 540 dollars.">
+                  <span class="li">LAX&rarr;SFO <span class="rate">$262</span><span class="d dn">&#9660;</span></span>
+                  <span class="li">ORD&rarr;ATL <span class="rate">$485</span><span class="d up">&#9650;</span></span>
+                  <span class="li">DFW&rarr;PHX <span class="rate">$390</span></span>
+                  <span class="li">SEA&rarr;DEN <span class="rate">$612</span><span class="d dn">&#9660;</span></span>
+                  <span class="li">MIA&rarr;JFK <span class="rate">$724</span><span class="d up">&#9650;</span></span>
+                  <span class="li">BOS&rarr;CLT <span class="rate">$540</span></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <figcaption><span class="plate-tag">The primitives</span><b>Stat, LiveDot, RateTicker.</b> The pieces an operator reads a hundred times a shift, so care shows up here as speed and legibility, not decoration.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- ============ TAB 1 · CLOSING MONTAGE ============ -->
+  <section aria-label="The system, end to end">
+    <div class="wrap grid12">
+      <div class="show-head rise"><span>The system, end to end</span><span class="rule"></span><span>Eight surfaces, one language</span></div>
+      <div class="sheet rise">
+        <figure><div class="st"><img src="assets/tile-foundations.webp" alt="Lumen Foundations reference surface" width="1120" height="700" loading="lazy" decoding="async"></div><figcaption><span class="idx">01</span> Foundations</figcaption></figure>
+        <figure><div class="st"><img src="assets/tile-landing.webp" alt="Lumen Marketing and Landing surface" width="1120" height="700" loading="lazy" decoding="async"></div><figcaption><span class="idx">02</span> Landing</figcaption></figure>
+        <figure><div class="st"><img src="assets/tile-saas.webp" alt="Lumen SaaS Dashboard surface" width="1120" height="700" loading="lazy" decoding="async"></div><figcaption><span class="idx">03</span> SaaS</figcaption></figure>
+        <figure><div class="st"><img src="assets/tile-tool.webp" alt="Lumen Web Tool surface" width="1120" height="700" loading="lazy" decoding="async"></div><figcaption><span class="idx">04</span> Tool</figcaption></figure>
+        <figure><div class="st"><img src="assets/tile-commerce.webp" alt="Lumen Commerce storefront surface" width="1120" height="700" loading="lazy" decoding="async"></div><figcaption><span class="idx">05</span> Commerce</figcaption></figure>
+        <figure><div class="st"><img src="assets/tile-mobile.webp" alt="Lumen Mobile surface, iOS and Android" width="1120" height="700" loading="lazy" decoding="async"></div><figcaption><span class="idx">06</span> Mobile</figcaption></figure>
+        <figure><div class="st"><img src="assets/tile-desktop.webp" alt="Lumen Native Desktop surface, macOS and Windows" width="1120" height="700" loading="lazy" decoding="async"></div><figcaption><span class="idx">07</span> Desktop</figcaption></figure>
+        <figure><div class="st"><img src="assets/tile-library.webp" alt="Lumen component Library surface" width="1120" height="700" loading="lazy" decoding="async"></div><figcaption><span class="idx">08</span> Library</figcaption></figure>
+      </div>
+      <figure class="plate full rise" style="margin-top:var(--s6)">
+        <figcaption><b>Eight surfaces, one system.</b> Foundations, Landing, SaaS, Tool, Commerce, Mobile, Desktop, and Library, all speaking the same language at very different densities.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  </div>
+  <div class="tabpanel" role="tabpanel" id="panel-ai" aria-labelledby="tab-ai" hidden>
+
+  <!-- ============ TAB 2 · 01 WHY AGENT-FIRST ============ -->
+  <section aria-labelledby="why-h">
+    <div class="wrap grid12">
+      <div class="eyebrow rise"><span class="pnum"><span class="dot" aria-hidden="true"></span>01</span> <span class="lbl">Why agent-first</span> <span class="rule"></span><span class="tag">Why the agent needs it</span></div>
+      <h2 class="title s-head rise" id="why-h">The system had to be legible to a machine first.</h2>
+      <div class="lead-col rise"><p class="lead">On this team an AI writes most of the UI code. That one fact changes what a design system is for. It is no longer a reference a person consults. It is the rulebook an agent has to obey while it types, and when the rulebook is not machine-readable the agent fills the gaps with the average of everything it was trained on. The screen looks plausible and quietly drifts off-system.</p></div>
+
+      <div class="cols2 rise">
+        <div class="col">
+          <div class="k"><span class="dot" aria-hidden="true"></span> No memory</div>
+          <div class="kt">Every decision, restated each run.</div>
+          <p>An agent keeps nothing between sessions. Whatever it understood yesterday is gone, so the system hands it every rule again at the start of every job, as tokens and specs it reads before it writes a line.</p>
+        </div>
+        <div class="col">
+          <div class="k"><span class="dot" aria-hidden="true"></span> A boundary, not a hope</div>
+          <div class="kt">Docs say what exists. A lint says what is banned.</div>
+          <p>Documentation can list the tokens. It cannot stop an agent reaching for one that was retired, or hardcoding a hex. For that you need a check that fails the build. An agent-first system needs both, and both run in CI.</p>
+        </div>
+      </div>
+
+      <p class="status-note rise" style="margin-top:var(--s8)">A Figma library cannot be read or validated by the thing writing the code. A file of tokens and a JSON schema can. So the source of truth lives in the repo, in formats an agent parses natively, and those same files are what a person reads.</p>
+
+      <div class="scale rise" style="margin-top:var(--s7)">
+        <div class="unit"><div class="n">1</div><div class="u">Designer, solo</div></div>
+        <div class="unit"><div class="n">~18</div><div class="u">Days to first ship</div></div>
+        <div class="unit"><div class="n">73</div><div class="u">Research sources</div></div>
+        <div class="unit"><div class="n">35</div><div class="u">Decision records</div></div>
+        <div class="unit"><div class="n">82</div><div class="u">Commits</div></div>
+      </div>
+      <p class="scale-note rise"><span class="dot" aria-hidden="true"></span> I built and shipped the whole system on my own in about eighteen days: the tokens, the contracts, the enforcement, the distribution, and the docs an agent reads first. When I built it, most of the public work on agent-readable design systems was essays and talks. This is the version that compiles, installs with one command, and fails the build when someone breaks it.</p>
+    </div>
+  </section>
+
+
+  <!-- ============ TAB 2 · 02 TOKENS AS CODE ============ -->
+  <section aria-labelledby="tok-h">
+    <div class="wrap grid12">
+      <div class="eyebrow rise"><span class="pnum"><span class="dot" aria-hidden="true"></span>02</span> <span class="lbl">Tokens as code</span> <span class="rule"></span><span class="tag">DTCG JSON, one source</span></div>
+      <h2 class="title s-head rise" id="tok-h">One set of values, compiled to ten targets.</h2>
+      <div class="lead-col rise"><p class="lead">The tokens are not a Figma style set. They are DTCG JSON in the repo, thirty-four files in three layers, and a Style Dictionary build fans them out to every platform that consumes them. A value changes in one place and every target rebuilds from it.</p></div>
+
+      <figure class="plate full rise">
+        <div class="spec">
+          <div class="spec-pad">
+            <p class="spec-label">Three layers <span class="rule"></span> <span class="k2">Primitive to semantic to component-bound</span></p>
+            <div class="tok-layers" role="img" aria-label="The three token layers and their real leaf-token counts: 243 primitive, 411 semantic, and 416 component-bound, totalling 1,070 tokens across 34 DTCG files.">
+              <div class="tl">
+                <div class="tl-h"><b>Primitive</b><span>Raw values. The ramps, the scale, the palette.</span></div>
+                <div class="tl-bar"><i style="width:23%"></i></div>
+                <div class="tl-n">243</div>
+              </div>
+              <div class="tl">
+                <div class="tl-h"><b>Semantic</b><span>Role-named. <span class="mono">color.text.success</span>, never a raw green.</span></div>
+                <div class="tl-bar"><i style="width:38%"></i></div>
+                <div class="tl-n">411</div>
+              </div>
+              <div class="tl">
+                <div class="tl-h"><b>Component-bound</b><span>Per-component values, wired to the semantic layer.</span></div>
+                <div class="tl-bar"><i style="width:39%"></i></div>
+                <div class="tl-n">416</div>
+              </div>
+              <div class="tl total">
+                <div class="tl-h"><b>Total</b><span>Across thirty-four DTCG token files.</span></div>
+                <div class="tl-bar" aria-hidden="true"></div>
+                <div class="tl-n">1,070</div>
+              </div>
+            </div>
+            <p class="spec-cap">Components read the semantic layer only. They never import a primitive, and a lint fails the build if one slips through, so a value can be retuned once and every surface follows. These are the real leaf-token counts on disk, not a round number for a slide.</p>
+          </div>
+        </div>
+        <figcaption><span class="plate-tag">Token architecture</span><b>Primitive, semantic, component-bound.</b> Three layers, 1,070 values, one place to change any of them.</figcaption>
+      </figure>
+
+      <div class="emit rise">
+        <div class="emit-head">
+          <span class="t">One source, ten compile targets.</span>
+          <span class="c">Style Dictionary</span>
+        </div>
+        <div class="emit-grid">
+          <div class="e"><span class="en">01</span><span class="et">CSS variables</span></div>
+          <div class="e"><span class="en">02</span><span class="et">Tailwind v4 theme</span></div>
+          <div class="e"><span class="en">03</span><span class="et">TypeScript</span></div>
+          <div class="e"><span class="en">04</span><span class="et">iOS Swift</span></div>
+          <div class="e"><span class="en">05</span><span class="et">Android XML</span></div>
+          <div class="e"><span class="en">06</span><span class="et">Compose Kotlin</span></div>
+          <div class="e"><span class="en">07</span><span class="et">Flutter Dart</span></div>
+          <div class="e"><span class="en">08</span><span class="et">Shopify Liquid</span></div>
+          <div class="e"><span class="en">09</span><span class="et">SCSS</span></div>
+          <div class="e"><span class="en">10</span><span class="et">JSON flat</span></div>
+        </div>
+        <p class="emit-note rise"><b>Honest about coverage.</b> The tokens compile to all ten formats. Components ship example snippets for a handful of platforms, web, React Native, iOS, and Android, and the rest are porting guides rather than finished native apps.</p>
+      </div>
+    </div>
+  </section>
+
+<!-- ============ TAB 2 · 03 THE CONTRACT ============ -->
   <section aria-labelledby="llm-h">
     <div class="wrap grid12">
-      <div class="eyebrow rise"><span class="pnum"><span class="dot" aria-hidden="true"></span>05</span> <span class="lbl">LLM-first</span> <span class="rule"></span><span class="tag">The schema is the source</span></div>
-      <h2 class="title s-head rise" id="llm-h">Documentation an agent can follow tightly.</h2>
+      <div class="eyebrow rise"><span class="pnum"><span class="dot" aria-hidden="true"></span>03</span> <span class="lbl">The contract</span> <span class="rule"></span><span class="tag">The schema is the source</span></div>
+      <h2 class="title s-head rise" id="llm-h">Documentation an agent can follow exactly.</h2>
       <div class="lead-col rise"><p class="lead">Most design systems are documentation that engineers translate into code. Lumen flips it. The schema is the source, and every AI tool gets a contract it can read in its own format.</p></div>
 
       <div class="cols2 rise">
@@ -903,7 +1155,7 @@
         <div class="col">
           <div class="k"><span class="dot" aria-hidden="true"></span> One layered contract</div>
           <div class="kt">Every agent, its own format.</div>
-          <p>An <b>llms.txt</b> for discovery, an <b>AGENTS.md</b> for the universal rules, then tool-specific files for Claude, Cursor, and Warp. All of them mirror one source, and the rules are enforced by lint.</p>
+          <p>An <b>llms.txt</b> for discovery, an <b>AGENTS.md</b> that carries twenty-five hard rules, then mirror files for Claude, Cursor, Warp, and Copilot. Each one restates the same source, and a lint enforces the rules.</p>
         </div>
       </div>
 
@@ -955,15 +1207,20 @@
         </div>
         <figcaption><span class="plate-tag">The contract</span><b>Readable by a machine first.</b> On a team where the agent usually holds the keyboard, the spec an agent can follow is the spec that actually ships.</figcaption>
       </figure>
+      <div class="stack rise" style="margin-top:var(--s8)">
+        <div class="r"><span class="no">A</span><div><b>Validated before it merges</b><div class="d">Every <b>component.json</b> is checked against a shared JSON schema with AJV. A missing required field, a bad enum, or a token that does not resolve fails the check, so a broken contract never reaches the registry.</div></div></div>
+        <div class="r"><span class="no">B</span><div><b>Installed with one command</b><div class="d">Lumen ships as a shadcn registry, so a consumer pulls a component with <span class="mono">npx shadcn add</span>. That is the format the AI coding tools already read, so an agent installs a real Lumen component instead of hand-rolling a lookalike.</div></div></div>
+        <div class="r"><span class="no">C</span><div><b>Queried live over MCP</b><div class="d">A purpose-built MCP server exposes nine tools, so an agent can list and read components, tokens, decision records, and patterns from the running system instead of guessing from its training data.</div></div></div>
+      </div>
     </div>
   </section>
 
-  <!-- ============ 06 THE AUDIT ============ -->
+  <!-- ============ TAB 2 · 04 THE AUDIT ============ -->
   <section aria-labelledby="audit-h">
     <div class="wrap grid12">
-      <div class="eyebrow rise"><span class="pnum"><span class="dot" aria-hidden="true"></span>06</span> <span class="lbl">R1 to R16</span> <span class="rule"></span><span class="tag">Vigilance, retired</span></div>
-      <h2 class="title s-head rise" id="audit-h">Bugs hide from the same kind of looking.</h2>
-      <div class="lead-col rise"><p class="lead">Most systems drift because they lean on people remembering the rules. I replaced that with checks the build runs on its own. Each round added a new kind of measurement, and a new kind of measurement is what kept surfacing a new class of bug.</p></div>
+      <div class="eyebrow rise"><span class="pnum"><span class="dot" aria-hidden="true"></span>04</span> <span class="lbl">R1 to R16</span> <span class="rule"></span><span class="tag">Vigilance, retired</span></div>
+      <h2 class="title s-head rise" id="audit-h">Each new kind of check caught a new kind of bug.</h2>
+      <div class="lead-col rise"><p class="lead">Most systems drift because they lean on people remembering the rules. I replaced that with checks the build runs on its own. Each round added a new kind of measurement, and a new kind of measurement is what kept surfacing a new class of bug. What survived is twelve lint rules across five tiers: semantic tokens only, no hardcoded hex, no raw px, no accent in a shadow, and no retired token left behind in prose or code. The build fails on off-system code, so the vocabulary stays bounded on its own.</p></div>
 
       <div class="ladder rise">
         <div class="row"><div class="p">R1&ndash;R3</div><div class="txt"><b>Static, interaction, contract</b><span>Sticky-header bleed, product-page pickers failing the first click, hardcoded calendar offsets. Per-route audits.</span></div></div>
@@ -971,7 +1228,7 @@
         <div class="row"><div class="p">R5&ndash;R6</div><div class="txt"><b>Mobile metrics and single-source docs</b><span>Audits at 320 and 375, catching layout inflation, then a catalog that disagreed with itself on how many components existed.</span></div></div>
         <div class="row hot"><div class="p">R11</div><div class="txt"><b>Green retired from every shadow</b><span>Brand identity is a green fill, never a green light. A lint walks the token JSON and fails the build on any accent in a shadow.</span></div></div>
         <div class="row hot"><div class="p">R14</div><div class="txt"><b>Docs-to-tokens drift</b><span>The token check could not read prose. A second lint walks every doc and fails the build on any prescriptive use of a retired token, off a list, so the next retirement is one line, not two hundred find-and-replaces.</span></div></div>
-        <div class="row hot"><div class="p">R16</div><div class="txt"><b>A contrast bug becomes a guard</b><span>My own operator tool, built on Lumen, shipped text at 1.66:1 on green across 11 or more sites, because a developer reached for a token name that did not exist and it fell through quietly. I added the token, a defensive component, a build-failing check, and a doc. On its first run the new check caught the same bug hiding in Lumen's own example code.</span></div></div>
+        <div class="row hot"><div class="p">R16</div><div class="txt"><b>A contrast bug becomes a guard</b><span>A TMS operator console I built on Lumen rendered text at 1.66:1 on green across 11 or more of its pages, because an agent reached for a token name that did not exist and it fell through quietly. I added the token, a defensive component, a build-failing check, and a doc. On its first run the new check caught the same bug hiding in Lumen's own example code.</span></div></div>
       </div>
 
       <figure class="plate full rise" style="margin-top:var(--s8)">
@@ -988,10 +1245,10 @@
                 <span class="gtag pass"><span class="dot" aria-hidden="true"></span> <span class="ratio">14.7:1</span> &middot; Pass AAA</span>
               </div>
             </div>
-            <p class="spec-cap">My own operator tool shipped <b>1.66:1</b> text on green across eleven or more sites, because a developer reached for a token name that did not exist and it fell through quietly. I added the token, a defensive component, a build-failing check, and a doc. <b>On its first run the check caught the same bug hiding in Lumen's own example code.</b></p>
+            <p class="spec-cap">A TMS console I built on Lumen rendered <b>1.66:1</b> text on green across 11 or more of its pages, because an agent reached for a token name that did not exist and it fell through quietly. I added the token, a defensive component, a build-failing check, and a doc. <b>On its first run the check caught the same bug hiding in Lumen's own example code.</b></p>
           </div>
         </div>
-        <figcaption><span class="plate-tag">Guard &middot; Contrast</span><b>1.66:1 to 14.7:1.</b> Fixed at the system level across every affected site, then wired into a check so it cannot come back.</figcaption>
+        <figcaption><span class="plate-tag">Guard &middot; Contrast</span><b>1.66:1 to 14.7:1.</b> Fixed at the system level across every page it affected, then wired into a check so it cannot come back.</figcaption>
       </figure>
 
       <figure class="plate full rise" style="margin-top:var(--s8)">
@@ -1023,77 +1280,27 @@
     </div>
   </section>
 
-  <!-- ============ 07 THREE PRIMITIVES ============ -->
-  <section aria-labelledby="prim-h">
-    <div class="wrap grid12">
-      <div class="eyebrow rise"><span class="pnum"><span class="dot" aria-hidden="true"></span>07</span> <span class="lbl">Three primitives</span> <span class="rule"></span><span class="tag">Where the feeling lives</span></div>
-      <h2 class="title s-head rise" id="prim-h">A number, a live dot, a rate ticker.</h2>
-      <div class="lead-col rise"><p class="lead">An operator sees three small pieces of Lumen far more than any button. That is where the operator-console feeling comes from, so they got most of the polish.</p></div>
-
-      <div class="stack rise">
-        <div class="r"><span class="no">01</span><div><b>Numbers as hero</b><div class="d">Big bold tabular figures with a small tracked unit, right-aligned in tables so the digits stack. The most-read element on any operator surface.</div></div></div>
-        <div class="r"><span class="no">02</span><div><b>One signature pulse</b><div class="d">An 8-pixel filled green dot with a 2-pixel ring, pulsing on a slow ease-out loop. It is the only ambient motion in the system, it runs only when something is genuinely live, and it honors reduced motion.</div></div></div>
-        <div class="r"><span class="no">03</span><div><b>The marquee that earns its keep</b><div class="d">A horizontal stream of freight-lane rates in tabular figures, on a slow continuous loop. It says operator console louder than any hero image could.</div></div></div>
-      </div>
-
-      <figure class="plate full rise" style="margin-top:var(--s9)">
-        <div class="spec">
-          <div class="spec-pad">
-            <p class="spec-label">The three signatures <span class="rule"></span> <span class="k2">Where the operator mood lives</span></p>
-            <div class="prims">
-              <div class="pcard pstat">
-                <div class="pk">Shipments today</div>
-                <div class="snum">1,284</div>
-                <div class="srow">
-                  <span class="delta">&#9650; +12.4% wow</span>
-                  <svg class="spark" viewBox="0 0 120 34" fill="none" preserveAspectRatio="none" aria-hidden="true"><polyline points="0,28 18,24 34,26 52,17 70,20 88,11 104,13 120,4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                </div>
-              </div>
-              <div class="pcard plive">
-                <span class="dot pulse" aria-hidden="true" style="width:16px;height:16px;margin:6px auto 22px"></span>
-                <div class="llabel">Live</div>
-                <div class="lsub">the only ambient motion, a 3s pulse</div>
-              </div>
-              <div class="pticker">
-                <div class="tk">Rate ticker &middot; freight lanes</div>
-                <div class="tickrow" aria-label="A ticker of freight-lane rates in tabular figures: LAX to SFO 262 dollars down, ORD to ATL 485 dollars up, DFW to PHX 390 dollars, SEA to DEN 612 dollars down, MIA to JFK 724 dollars up, BOS to CLT 540 dollars.">
-                  <span class="li">LAX&rarr;SFO <span class="rate">$262</span><span class="d dn">&#9660;</span></span>
-                  <span class="li">ORD&rarr;ATL <span class="rate">$485</span><span class="d up">&#9650;</span></span>
-                  <span class="li">DFW&rarr;PHX <span class="rate">$390</span></span>
-                  <span class="li">SEA&rarr;DEN <span class="rate">$612</span><span class="d dn">&#9660;</span></span>
-                  <span class="li">MIA&rarr;JFK <span class="rate">$724</span><span class="d up">&#9650;</span></span>
-                  <span class="li">BOS&rarr;CLT <span class="rate">$540</span></span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <figcaption><span class="plate-tag">The primitives</span><b>Stat, LiveDot, RateTicker.</b> The pieces an operator reads a hundred times a shift, so care shows up here as speed and legibility, not decoration.</figcaption>
-      </figure>
-    </div>
-  </section>
-
-  <!-- ============ 08 HONESTY ============ -->
+  <!-- ============ TAB 2 · 05 HONESTY ============ -->
   <section aria-labelledby="proof-h">
     <div class="wrap grid12">
-      <div class="eyebrow rise"><span class="pnum"><span class="dot" aria-hidden="true"></span>08</span> <span class="lbl">Honesty</span> <span class="rule"></span><span class="tag">What it is, and what it isn't</span></div>
+      <div class="eyebrow rise"><span class="pnum"><span class="dot" aria-hidden="true"></span>05</span> <span class="lbl">Honesty</span> <span class="rule"></span><span class="tag">What it is, and what it isn't</span></div>
       <h2 class="title s-head rise" id="proof-h">Coherence and defects prevented, not a dollar figure.</h2>
-      <div class="lead-col rise"><p class="lead">Lumen is live, and it runs real work. Our operator tool is built on it, and the team's AI agents read from it directly. What it does not have is an adoption chart or a revenue line, and I am not going to draw one.</p></div>
+      <div class="lead-col rise"><p class="lead">I built Lumen for Warp's context, targeting its brand, as a complete and governed system. What I am putting in front of you is that system and the rigor behind it, not an adoption chart and not a revenue line. This is internal platform work, there is no honest dollar figure to hang on it, and I am not going to invent one.</p></div>
 
       <div class="ledger rise">
         <div class="can">
           <div class="lh"><span class="dot" aria-hidden="true"></span> What I can prove</div>
           <ul>
-            <li><span class="m" aria-hidden="true"></span><span>The size of the system, all built solo with the AI doing the typing: <b>900+ design tokens, 98 component contracts, 9 emit targets, and 35 written decision records.</b></span></li>
+            <li><span class="m" aria-hidden="true"></span><span>The size of the system, all built solo with the AI doing the typing: <b>1,070 design tokens across three layers, 98 component contracts, 10 compile targets, and 35 written decision records.</b></span></li>
             <li><span class="m" aria-hidden="true"></span><span>A <b>16-round audit</b> where I changed the measurement each round instead of re-walking the same screens. It kept finding a new class of bug.</span></li>
             <li><span class="m" aria-hidden="true"></span><span>On the reference build <span class="labtag"><span class="dot" aria-hidden="true"></span> Lab</span>: page load down about <b>31 percent</b>, layout shift at zero, and zero unnamed controls across <b>714 interactive elements</b>. Lab numbers, and I label them that way.</span></li>
-            <li><span class="m" aria-hidden="true"></span><span>The contrast bug my own tool shipped, fixed at the system level from <b>1.66:1 to 14.7:1</b> across every affected site.</span></li>
+            <li><span class="m" aria-hidden="true"></span><span>A contrast bug a console I built on Lumen surfaced, fixed at the system level from <b>1.66:1 to 14.7:1</b> across every page it affected.</span></li>
           </ul>
         </div>
         <div class="wont">
           <div class="lh"><span class="dot" aria-hidden="true" style="background:var(--ink-faint)"></span> What I will not claim</div>
           <ul>
-            <li>Adoption numbers. Real adoption is our tool running on it and the agents reading from it, not a count across all of Warp.</li>
+            <li>Adoption numbers. I built this targeting Warp's brand and context. I am not going to claim the company runs it in production, or count surfaces across Warp that I cannot show you.</li>
             <li>Revenue or conversion. This is internal platform work. It buys coherence and prevents defects, and I do not get to invent a dollar figure for that.</li>
           </ul>
         </div>
@@ -1103,11 +1310,11 @@
     </div>
   </section>
 
-  <!-- ============ 09 REFLECTION ============ -->
+  <!-- ============ TAB 2 · 06 REFLECTION ============ -->
   <section aria-labelledby="refl-h">
     <div class="wrap grid12">
-      <div class="eyebrow rise"><span class="pnum"><span class="dot" aria-hidden="true"></span>09</span> <span class="lbl">Reflection</span> <span class="rule"></span><span class="tag">What building it taught me</span></div>
-      <h2 class="title s-head rise" id="refl-h">Vigilance is the wrong currency for consistency.</h2>
+      <div class="eyebrow rise"><span class="pnum"><span class="dot" aria-hidden="true"></span>06</span> <span class="lbl">Reflection</span> <span class="rule"></span><span class="tag">What building it taught me</span></div>
+      <h2 class="title s-head rise" id="refl-h">Consistency can't depend on people remembering.</h2>
 
       <div class="refl rise">
         <div class="r">
@@ -1126,26 +1333,7 @@
     </div>
   </section>
 
-  <!-- ============ CLOSING MONTAGE ============ -->
-  <section aria-label="The system, end to end">
-    <div class="wrap grid12">
-      <div class="show-head rise"><span>The system, end to end</span><span class="rule"></span><span>Eight surfaces, one language</span></div>
-      <div class="sheet rise">
-        <figure><div class="st"><img src="assets/tile-foundations.webp" alt="Lumen Foundations reference surface" width="1120" height="700" loading="lazy" decoding="async"></div><figcaption><span class="idx">01</span> Foundations</figcaption></figure>
-        <figure><div class="st"><img src="assets/tile-landing.webp" alt="Lumen Marketing and Landing surface" width="1120" height="700" loading="lazy" decoding="async"></div><figcaption><span class="idx">02</span> Landing</figcaption></figure>
-        <figure><div class="st"><img src="assets/tile-saas.webp" alt="Lumen SaaS Dashboard surface" width="1120" height="700" loading="lazy" decoding="async"></div><figcaption><span class="idx">03</span> SaaS</figcaption></figure>
-        <figure><div class="st"><img src="assets/tile-tool.webp" alt="Lumen Web Tool surface" width="1120" height="700" loading="lazy" decoding="async"></div><figcaption><span class="idx">04</span> Tool</figcaption></figure>
-        <figure><div class="st"><img src="assets/tile-commerce.webp" alt="Lumen Commerce storefront surface" width="1120" height="700" loading="lazy" decoding="async"></div><figcaption><span class="idx">05</span> Commerce</figcaption></figure>
-        <figure><div class="st"><img src="assets/tile-mobile.webp" alt="Lumen Mobile surface, iOS and Android" width="1120" height="700" loading="lazy" decoding="async"></div><figcaption><span class="idx">06</span> Mobile</figcaption></figure>
-        <figure><div class="st"><img src="assets/tile-desktop.webp" alt="Lumen Native Desktop surface, macOS and Windows" width="1120" height="700" loading="lazy" decoding="async"></div><figcaption><span class="idx">07</span> Desktop</figcaption></figure>
-        <figure><div class="st"><img src="assets/tile-library.webp" alt="Lumen component Library surface" width="1120" height="700" loading="lazy" decoding="async"></div><figcaption><span class="idx">08</span> Library</figcaption></figure>
-      </div>
-      <figure class="plate full rise" style="margin-top:var(--s6)">
-        <figcaption><b>Eight surfaces, one system.</b> Foundations, Landing, SaaS, Tool, Commerce, Mobile, Desktop, and Library, all speaking the same language at very different densities.</figcaption>
-      </figure>
     </div>
-  </section>
-
 </main>
 
 <!-- ============================================================
@@ -1157,6 +1345,7 @@
       <div class="brand"><span class="dot" aria-hidden="true"></span> Lumen</div>
       <p><b>Warp's LLM-first design system.</b> Sole architect: the token architecture, the governance, the visual language, and the QA bar. I worked directly with the founders and directed the AI agents that wrote most of the code. Built at Warp, an AI-native freight company.</p>
       <p class="fine">Set in Satoshi on an Obsidian canvas, in the system's own language, because a case study about a design system should look like the design system. One Spring Green accent, and neutral shadows everywhere, because this is the system that retired green from the light.</p>
+      <p class="warp-credit"><span class="warp-credit-lbl">Designed at</span><svg class="warp-mark" viewBox="0 0 660 186" role="img" aria-label="Warp" focusable="false" xmlns="http://www.w3.org/2000/svg"><path d="M660 185.035H0V0H660V185.035ZM14.0597 171.327H646.141V13.9593H14.0597V171.327Z" fill="currentColor" aria-hidden="true"/><path d="M300.976 53.2756L332.509 131.608H351.239L319.705 53.2756H300.976Z" fill="currentColor" aria-hidden="true"/><path d="M215.919 131.608H234.648L266.182 53.2756H247.453L215.919 131.608Z" fill="currentColor" aria-hidden="true"/><path d="M150.892 107.405L136.431 71.3523H115.593L101.131 107.405L78.2342 53.2756H60.0068L93.047 131.608H109.517L125.987 90.5839L142.457 131.608H158.927L192.017 53.2756H173.739L150.892 107.405Z" fill="currentColor" aria-hidden="true"/><path d="M471.856 82.8511C471.816 75.0646 468.691 67.6113 463.166 62.1242C457.642 56.6371 450.167 53.5636 442.381 53.5769H388.502V131.608H405.323V112.125H440.021L447.854 131.608H465.981L456.691 108.41C461.258 105.886 465.065 102.183 467.715 97.6881C470.364 93.1928 471.759 88.0691 471.755 82.8511H471.856ZM405.323 70.3481H442.381C445.71 70.3481 448.903 71.6706 451.257 74.0248C453.611 76.379 454.934 79.572 454.934 82.9013C454.934 86.2307 453.611 89.4236 451.257 91.7778C448.903 94.132 445.71 95.4546 442.381 95.4546H405.323V70.3481Z" fill="currentColor" aria-hidden="true"/><path d="M570.768 53.5769H516.939V131.608H533.711V112.125H570.768C574.612 112.125 578.419 111.368 581.971 109.897C585.522 108.426 588.749 106.269 591.468 103.551C594.186 100.833 596.342 97.6055 597.814 94.0538C599.285 90.5021 600.042 86.6954 600.042 82.8511C600.042 79.0067 599.285 75.2 597.814 71.6483C596.342 68.0966 594.186 64.8695 591.468 62.1511C588.749 59.4327 585.522 57.2764 581.971 55.8053C578.419 54.3341 574.612 53.5769 570.768 53.5769ZM570.768 95.4043H533.711V70.2978H570.768C574.097 70.2978 577.29 71.6204 579.644 73.9746C581.998 76.3288 583.321 79.5217 583.321 82.8511C583.321 86.1804 581.998 89.3734 579.644 91.7276C577.29 94.0818 574.097 95.4043 570.768 95.4043Z" fill="currentColor" aria-hidden="true"/><path d="M292.04 76.1794H275.219V94.1557H292.04V76.1794Z" fill="currentColor" aria-hidden="true"/><path d="M275.219 131.615H292.04V113.84H275.219V131.615Z" fill="currentColor" aria-hidden="true"/></svg></p>
       <a class="backlink" href="/">&larr; Back to portfolio</a>
     </div>
     <div class="note rise">
@@ -1193,5 +1382,88 @@
     });
   })();
 </script>
+
+<!-- [PAGE-CUSTOM] the two tabs — WAI-ARIA tabs pattern: roving tabindex, arrow/Home/End keys,
+     automatic activation, aria-selected drives the accent underline + which panel is shown.
+     Progressive enhancement: without JS the <noscript> rule unhides panel-ai so all content stays reachable. -->
+<script>
+  (function(){
+    var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var tablist = document.querySelector('.tablist[role="tablist"]');
+    if(!tablist) return;
+    var tabs = Array.prototype.slice.call(tablist.querySelectorAll('[role="tab"]'));
+    var NAV = 53; // the fixed site nav height, so the bar lands just beneath it
+    function panelOf(t){ return document.getElementById(t.getAttribute('aria-controls')); }
+    var HASH = { 'tab-system':'system', 'tab-ai':'ai' };
+    function select(tab, moveFocus, updateHash){
+      tabs.forEach(function(t){
+        var on = (t === tab);
+        t.setAttribute('aria-selected', on ? 'true' : 'false');
+        t.tabIndex = on ? 0 : -1;
+        var p = panelOf(t);
+        if(p) p.hidden = !on;
+      });
+      var panel = panelOf(tab);
+      if(panel){
+        // content the user just chose should be present at once, not re-animated in from opacity 0
+        panel.querySelectorAll('.rise').forEach(function(e){ e.classList.add('in'); });
+      }
+      if(moveFocus) tab.focus();
+      if(updateHash && history.replaceState){ history.replaceState(null, '', '#' + HASH[tab.id]); }
+      // if the bar has scrolled up under the fixed nav (a switch from deep in a panel), bring it back into view
+      var top = tablist.getBoundingClientRect().top;
+      if(top < NAV){ window.scrollTo({ top: window.scrollY + top - NAV - 10, behavior: reduce ? 'auto' : 'smooth' }); }
+    }
+    tabs.forEach(function(tab, i){
+      tab.addEventListener('click', function(){ select(tab, false, true); });
+      tab.addEventListener('keydown', function(e){
+        var n = tabs.length, j;
+        switch(e.key){
+          case 'ArrowRight': case 'Right': case 'ArrowDown': case 'Down': j = (i+1)%n; break;
+          case 'ArrowLeft':  case 'Left':  case 'ArrowUp':   case 'Up':   j = (i-1+n)%n; break;
+          case 'Home': j = 0; break;
+          case 'End':  j = n-1; break;
+          default: return;
+        }
+        e.preventDefault();
+        select(tabs[j], true, true);
+      });
+    });
+    // deep-linking: a shared #ai / #system URL opens on that tab; back/forward + manual hash edits switch too
+    function fromHash(scroll){
+      var hh = (location.hash || '').toLowerCase().replace('#','');
+      if(hh === 'ai') select(document.getElementById('tab-ai'), false, false);
+      else if(hh === 'system') select(document.getElementById('tab-system'), false, false);
+    }
+    fromHash(false);                                  // on first paint, no scroll
+    window.addEventListener('hashchange', function(){ fromHash(false); });
+  })();
+</script>
+
+<!-- LENIS SMOOTH SCROLL — same lib + config as the neelmyno.in homepage (see homepage index.html).
+     Loaded site-absolute from /js/lenis_mini.js, exactly like the shared nav logo + favicon: the path
+     resolves on the deployed site and 404s only in isolated local preview, where it falls back cleanly
+     to native scroll. Skipped entirely under prefers-reduced-motion, matching the reveal-animation guard. -->
+<script src="/js/lenis_mini.js"></script>
+<script>
+  (function(){
+    if(!window.Lenis || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    var lenis = new Lenis({
+      lerp: .1,
+      wheelMultiplier: .7,
+      gestureOrientation: "vertical",
+      normalizeWheel: false,
+      smoothTouch: false,
+    });
+    function raf(time){ lenis.raf(time); requestAnimationFrame(raf); }
+    requestAnimationFrame(raf);
+  })();
+</script>
+<style>
+  html.lenis{height:auto}
+  .lenis.lenis-smooth{scroll-behavior:auto}
+  .lenis.lenis-smooth [data-lenis-prevent]{overscroll-behavior:contain}
+  .lenis.lenis-stopped{overflow:hidden}
+</style>
 </body>
 </html>

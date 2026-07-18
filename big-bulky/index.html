@@ -1,0 +1,1071 @@
+<!doctype html>
+<html lang="en">
+<head>
+<!-- ============================================================
+     BIG & BULKY · SHOPIFY  —  dedicated case-study page
+     Shell (head + REAL site header + base reset/container/masthead/
+     colophon/.rise) is reused from projects/_shared/case-study-scaffold.html.
+     The site header (.nav) is copied BYTE-FOR-BYTE and is untouched.
+     This page derives its OWN look (design Step 0): warm consumer retail.
+       Brand-lock: cream canvas, warm near-black ink, ONE terracotta signal
+       used only for actions, the Warp rate, and states that are genuinely
+       true. Type is Fraunces (display serif) + Hanken Grotesk (body).
+     IMAGES (honesty-tiered):
+       - REAL screenshots of the real Shopify app (assets/*.webp): the
+         onboarding home, the delivery-rules timeline, the Rules of the Road
+         gate, the wallet payment step, and two composites of real admin
+         screens. Native Polaris is kept native; the page never recolours
+         Shopify chrome or alters a real label, number, or figure.
+       - Code-drawn SPECIMENS for the shipping before/after, the tracking
+         status label, and the Plus-only checkout delivery scheduler, drawn
+         in authentic Shopify style with real strings from the live
+         warp-checkout-ui extension source and Neel's verified 2026-07-06
+         dev-store checkout, clearly presented as illustrations, not as
+         claimed captures.
+       - NO capture-pending placeholders remain. The Plus-only Warp Delivery
+         Scheduler, which renders only inside a live Shopify Plus checkout, is
+         now drawn as a code specimen (Fig. 12) from the real extension's
+         State A and the four dated rates seen on July 6, not awaited as a
+         capture.
+     ============================================================ -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>You bought a couch · Warp Big &amp; Bulky, a real delivery date inside Shopify checkout</title>
+<meta name="description" content="How I designed and built Warp Big & Bulky, a Shopify app that turns freight into a real, dated delivery choice inside checkout. Solo build, submitted to Shopify review, verified live on a Plus dev store.">
+
+<!-- [SHARED-VERBATIM] site integration: favicon + apple-touch-icon (parity with neelmyno.in) -->
+<link href="/images/web/favicon_32x32.png" rel="shortcut icon" type="image/x-icon">
+<link href="/images/web/webclip_256x256.png" rel="apple-touch-icon">
+
+<!-- [PAGE-CUSTOM] social preview -->
+<meta property="og:type" content="article">
+<meta property="og:title" content="Warp Big & Bulky, a real delivery date inside Shopify checkout">
+<meta property="og:description" content="A Shopify app that turns freight into a dated delivery choice at checkout. Designed and built solo, verified live on a Shopify Plus development store.">
+<meta property="og:image" content="https://neelmyno.in/big-bulky/assets/surface-montage.webp">
+<meta property="og:url" content="https://neelmyno.in/big-bulky/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Warp Big & Bulky, a real delivery date inside Shopify checkout">
+<meta name="twitter:description" content="A Shopify app that turns freight into a dated delivery choice at checkout. Built solo, verified live on a Shopify Plus dev store.">
+<meta name="twitter:image" content="https://neelmyno.in/big-bulky/assets/surface-montage.webp">
+
+<!-- [SHARED-VERBATIM] Google Analytics — the same property as neelmyno.in -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-0G48YWW7ZE"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag() { dataLayer.push(arguments); }
+  gtag('js', new Date());
+  gtag('config', 'G-0G48YWW7ZE');
+</script>
+
+<!-- [PAGE-CUSTOM] the case-study body typeface: Fraunces (display serif) + Hanken Grotesk (body).
+     The HEADER does NOT use these — it self-hosts Inter Display via @font-face below. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;0,9..144,900;1,9..144,400;1,9..144,600&family=Hanken+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+  /* ============================================================
+     [PAGE-RE-THEMABLE] :root tokens. VALUES re-themed for this product,
+     NAMES kept because the shell (reset, masthead, .wrap, colophon, .rise)
+     consumes them. The .nav header consumes NONE of these.
+     Brand-lock derived Step 0: warm consumer / e-commerce checkout.
+     ============================================================ */
+  :root{
+    --paper:#F7F2E8;        /* warm cream canvas, never pure #fff */
+    --paper-2:#F1EADC;      /* tonal band / figure ground */
+    --paper-3:#EAE1CF;      /* deeper band */
+    --surface:#FDFBF6;      /* warm near-white card, never pure #fff */
+    --ink:#211C15;          /* warm near-black */
+    --ink-2:#191410;        /* deepest display ink */
+    --ink-dim:#5C5346;      /* body secondary        ~6.7:1 on cream */
+    --ink-faint:#726858;    /* small labels          ~4.9:1 on cream */
+    --line:#E4DBCA;         /* hairline rules */
+    --line-strong:#D0C5AF;  /* stronger hairline */
+    --amber:#C0512E;        /* THE one signal: terracotta. actions, the Warp rate, true states. white text on it = 4.7:1 */
+    --amber-ink:#9E3C1D;    /* terracotta as small text on cream, AA ~6:1 (links, focus ring, fig tags) */
+    --pill:#F3DCCB;         /* soft clay-tint for ::selection; ink on it ~11:1 */
+    --on-amber:#FFFFFF;     /* text on the terracotta fill (measured: white wins on this deep warm accent) */
+    --mark:#C0512E;         /* brand + eyebrow mark (same terracotta) */
+    /* neutral, warm elevation only — no accent in any shadow (sin 2) */
+    --shadow-photo:0 2px 18px rgba(25,20,14,.10), 0 1px 3px rgba(25,20,14,.07);
+    --shadow-float:0 20px 50px rgba(25,20,14,.14), 0 4px 12px rgba(25,20,14,.08);
+    --shadow-lift:0 14px 34px rgba(25,20,14,.13), 0 2px 6px rgba(25,20,14,.07);
+    --sans:'Hanken Grotesk','Helvetica Neue',Helvetica,Arial,system-ui,sans-serif;
+    --wide:'Fraunces','Iowan Old Style',Georgia,'Times New Roman',serif;
+
+    --fs-mega:clamp(3.6rem,12vw,9rem);
+    --fs-cover:clamp(2.7rem,8.6vw,6.6rem);
+    --fs-display:clamp(2.2rem,6.8vw,5.4rem);
+    --fs-h1:clamp(1.95rem,4.2vw,3.4rem);
+    --fs-h2:clamp(1.45rem,2.6vw,2.05rem);
+    --fs-lead:clamp(1.18rem,1.8vw,1.55rem);
+    --fs-body:clamp(1.02rem,1.05vw,1.12rem);
+    --fs-sm:0.9375rem;
+    --fs-label:0.72rem;
+    --fs-micro:0.6875rem;
+
+    /* one modular spacing scale, 4px base */
+    --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:32px;
+    --s7:48px; --s8:64px; --s9:96px; --s10:128px; --s11:160px;
+
+    --maxw:1160px;
+    --pad:clamp(20px,5vw,60px);
+    --ease-out:cubic-bezier(0.22,1,0.36,1);        /* drives .rise (shell) */
+    --ease-out-quint:cubic-bezier(0.23,1,0.32,1);  /* named easing (reveal / hover) */
+    --ease-soft:cubic-bezier(0.32,0.72,0,1);       /* larger-surface slide */
+    --ease-hover:cubic-bezier(0.4,0,0.2,1);        /* hover micro-interactions */
+  }
+
+  /* ============================================================
+     [SHARED-VERBATIM] base reset — consumes the tokens above.
+     ============================================================ */
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+  body{
+    margin:0;background:var(--paper);color:var(--ink);
+    font-family:var(--sans);font-size:var(--fs-body);line-height:1.62;
+    font-feature-settings:"kern" 1,"liga" 1;
+    -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
+    overflow-x:hidden;
+  }
+  img{display:block;max-width:100%;height:auto}
+  ::selection{background:var(--pill);color:var(--ink-2)}
+  a{color:var(--amber-ink);text-underline-offset:.16em;text-decoration-thickness:.06em}
+  :focus-visible{outline:2.5px solid var(--amber-ink);outline-offset:3px;border-radius:3px}
+  .tnum{font-feature-settings:"tnum" 1,"lnum" 1}
+
+  /* ---- rails ---- */
+  .wrap{max-width:var(--maxw);margin-inline:auto;padding-inline:var(--pad)}
+  .grid12{display:grid;grid-template-columns:repeat(12,1fr);gap:clamp(20px,3vw,40px)}
+  section{padding-block:clamp(58px,9vw,124px);position:relative}
+  section + section{border-top:1px solid var(--line)}
+
+  /* the brand/eyebrow mark — a small terracotta rounded square (this product's mark) */
+  .mk{display:inline-block;width:.62em;height:.62em;background:var(--mark);border-radius:2.5px;flex:0 0 auto}
+
+  /* ============================================================
+     [SHARED-VERBATIM] SITE NAV — the real homepage component, copied
+     byte-for-byte from the scaffold. Do NOT rebuild. Consumes zero :root tokens.
+     ============================================================ */
+  @font-face{font-family:"Inter Display";src:url("https://assets.website-files.com/6279077bf697b924fac6e205/636dfe8261df29a8a191ebc6_Inter-Display.woff2") format("woff2");font-weight:400;font-style:normal;font-display:swap}
+  @font-face{font-family:"Inter Display";src:url("https://assets.website-files.com/6279077bf697b924fac6e205/636dfe98b0633015995d2554_Inter-DisplayBold.woff2") format("woff2");font-weight:700;font-style:normal;font-display:swap}
+  @font-face{font-family:"Inter Display";src:url("https://assets.website-files.com/6279077bf697b924fac6e205/636dfea34a3e3c1b85745887_Inter-DisplayLight.woff2") format("woff2");font-weight:300;font-style:normal;font-display:swap}
+  .nav{position:fixed;top:0;right:0;bottom:auto;left:0;z-index:100;background-color:hsla(0,0%,100%,.7);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);transition:background-color .2s,color .2s;font-family:"Inter Display",sans-serif;font-size:16px;line-height:1.5}
+  .nav.dark{color:#ecedee}
+  .nav .page-padding{padding-right:40px;padding-left:40px}
+  .nav .container{width:100%;max-width:1200px;margin-right:auto;margin-left:auto}
+  .nav-inner{position:relative;display:flex;padding-top:6px;padding-bottom:6px;justify-content:center;align-items:center;border-bottom:1px solid rgba(2,23,53,.1);transition:border-color .2s}
+  .nav-logo{position:absolute;top:auto;right:auto;bottom:auto;left:0;z-index:102;display:flex;align-items:center;margin-left:-16px;padding:6px 16px;font-size:17px;text-decoration:none;color:inherit}
+  .nav-logo img{width:60px;height:auto;display:block}
+  .nav-menu{display:flex;align-items:center}
+  .nav-link{position:relative;z-index:102;display:inline-block;padding:8px 14px;color:#687076;text-decoration:none}
+  .nav-link:hover{color:#151718}
+  .nav .cta{display:flex;align-items:center;font-weight:500;padding:8px 20px;color:#006adc;font-size:20px;text-decoration:none}
+  .nav .cta.cta--nav{position:absolute;right:0;z-index:102;margin-right:-20px;font-size:16px}
+  .nav .cta-chevron{display:flex;align-items:center;margin-left:6px}
+  .nav .cta-chevron svg{display:block}
+  /* the nav is fixed, like the homepage — offset the page so the masthead clears it (nav is 53px tall) */
+  body{padding-top:53px}
+  @media screen and (max-width:767px){
+    .nav .page-padding{padding-right:20px;padding-left:20px}
+    .nav-inner{justify-content:space-between}
+    .nav-logo{position:static;margin-left:0;padding-left:0}
+    .nav-menu{display:none}
+    .nav .cta.cta--nav{position:static;margin-right:0;font-size:15px}
+  }
+  /* [PAGE-CUSTOM] page-matched nav: warm the reused white site header to the cream canvas + terracotta CTA (Neel's page-matched-nav call) */
+  .nav{background-color:rgba(247,242,232,.78)}
+  .nav-inner{border-bottom:1px solid rgba(33,28,21,.12)}
+  .nav-link{color:var(--ink-dim)}
+  .nav-link:hover{color:var(--ink)}
+  .nav .cta{color:var(--amber)}
+  /* logo stays black on the cream band (no invert) */
+
+  /* ============================================================
+     [PAGE-RE-THEMABLE] MASTHEAD — a print-style running head, not sticky.
+     ============================================================ */
+  .masthead{border-bottom:1px solid var(--line)}
+  .masthead .row{display:flex;align-items:center;justify-content:space-between;gap:20px;padding-block:16px}
+  .brand{font-family:var(--wide);font-weight:800;letter-spacing:0;font-size:1.12rem;display:inline-flex;align-items:center;gap:10px}
+  .brand .mk{width:15px;height:15px}
+  .masthead .ident{font-family:var(--sans);font-size:var(--fs-micro);letter-spacing:.13em;text-transform:uppercase;color:var(--ink-faint);font-weight:600;text-align:right}
+  @media (max-width:560px){.masthead .ident{display:none}}
+
+  /* ============================================================
+     [PAGE-CUSTOM] BODY — this page's own components.
+     ============================================================ */
+  h1,h2,h3{margin:0;font-weight:700}
+  p{margin:0 0 1.05em;max-width:62ch}
+  .kicker{font-family:var(--sans);font-size:var(--fs-label);font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-dim);margin:0;display:inline-flex;align-items:center;gap:10px}
+  .lead{font-size:var(--fs-lead);line-height:1.42;font-weight:400;color:var(--ink);letter-spacing:-.003em;max-width:34ch}
+  .body{color:var(--ink-dim);max-width:58ch}
+  .body b,.lead b{color:var(--ink);font-weight:600}
+  .dim{color:var(--ink-dim)}.faint{color:var(--ink-faint)}
+  /* one highlighted word — a translucent terracotta marker (one accent, used as a highlighter tint) */
+  .hl{background:linear-gradient(transparent 62%, rgba(192,81,46,.20) 62%);padding:0 .04em;font-weight:600;color:var(--ink-2)}
+
+  /* generic section eyebrow: [mark] NN · LABEL ————— tag */
+  .eyebrow{grid-column:1/-1;display:flex;align-items:center;gap:14px;font-family:var(--sans);font-size:var(--fs-label);letter-spacing:.14em;text-transform:uppercase;color:var(--ink-dim);font-weight:700;margin:0 0 var(--s7)}
+  .eyebrow .num{display:inline-flex;align-items:center;gap:9px;color:var(--ink);font-weight:800;letter-spacing:.06em;font-feature-settings:"tnum" 1}
+  .eyebrow .lbl{color:var(--ink);font-weight:800;letter-spacing:.12em}
+  .eyebrow .rule{flex:1;height:1px;background:var(--line-strong);min-width:24px}
+  .eyebrow .tag{color:var(--ink-faint);font-weight:600}
+  @media (max-width:440px){.eyebrow .tag{display:none}}
+
+  .title{font-family:var(--wide);font-weight:600;font-size:var(--fs-h1);line-height:1.04;letter-spacing:-.02em;color:var(--ink-2);max-width:19ch;font-optical-sizing:auto}
+  .s-head{grid-column:1/-1;margin-bottom:var(--s6)}
+  .lead-col{grid-column:1 / span 8;margin-bottom:var(--s5)}
+  .prose{grid-column:1 / span 7}
+  @media (max-width:920px){.lead-col,.prose{grid-column:1/-1}}
+
+  /* ============ COVER ============ */
+  #cover{padding-block:clamp(36px,5vw,72px) clamp(52px,8vw,104px)}
+  .cover-copy{grid-column:1 / span 7;align-self:center}
+  @media (max-width:920px){.cover-copy{grid-column:1/-1}}
+  .cover-kicker{margin-bottom:var(--s6)}
+  .cover-h1{font-family:var(--wide);font-weight:600;font-size:var(--fs-cover);line-height:1;letter-spacing:-.028em;color:var(--ink-2);margin:0 0 var(--s5);font-optical-sizing:auto}
+  .cover-h1 .dot{color:var(--amber)}
+  .cover-lead{font-size:var(--fs-lead);line-height:1.44;font-weight:400;color:var(--ink);max-width:42ch;margin:0 0 var(--s6)}
+  .cover-lead .em{font-weight:600;font-style:italic;font-family:var(--wide)}
+  /* meta table, hung on a strong ink rule */
+  .meta{border-top:2px solid var(--ink);margin:0;max-width:40rem}
+  .meta div{display:grid;grid-template-columns:8.5rem 1fr;gap:10px 18px;padding:12px 0;border-bottom:1px solid var(--line)}
+  .meta dt{font-family:var(--sans);font-size:var(--fs-micro);letter-spacing:.13em;text-transform:uppercase;color:var(--ink-faint);font-weight:700;padding-top:4px}
+  .meta dd{margin:0;font-size:var(--fs-sm);font-weight:500;color:var(--ink);line-height:1.48}
+  .meta .reach{align-items:center}
+  .meta .reach dd{font-family:var(--wide);font-weight:600;font-size:1.7rem;letter-spacing:-.01em;display:flex;align-items:center;gap:11px;font-feature-settings:"tnum" 1}
+  .meta .reach .mk{width:12px;height:12px}
+  .meta .reach .s{display:block;font-family:var(--sans);font-size:var(--fs-micro);font-weight:600;color:var(--ink-faint);letter-spacing:.03em;text-transform:uppercase;margin-top:0}
+  .meta .reach .rr{display:flex;flex-direction:column;gap:2px}
+
+  /* ============ placeholder image box (NO UI drawn in code) ============ */
+  figure.shot{width:min(320px,76vw);max-width:100%;margin:var(--s7) 0 0}
+  figure.shot.wide{width:100%}
+  figure.shot.mid{width:min(560px,92vw)}
+  figure.shot.tall{width:min(300px,72vw)}
+  figure.shot.center{margin-inline:auto}
+  /* delivered image = clean framed card (solid hairline, real screenshot fills it) */
+  .ph{position:relative;display:block;width:100%;border:1px solid var(--line-strong);background:var(--paper-2);border-radius:16px;overflow:hidden}
+  .ph img{position:absolute;inset:0;z-index:2;width:100%;height:100%;object-fit:cover;border-radius:16px;background:transparent;color:transparent;font-size:0;text-indent:-9999px}
+  /* legacy centered placeholder meta (only shows if an image is genuinely missing) */
+  .ph-meta{position:absolute;inset:0;z-index:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;text-align:center;padding:20px}
+  .ph-res{font-family:var(--sans);font-weight:700;font-size:var(--fs-sm);letter-spacing:.06em;color:var(--ink);font-feature-settings:"tnum" 1,"lnum" 1;border:1px solid var(--line-strong);border-radius:999px;padding:5px 13px;background:var(--paper)}
+  .ph-lab{font-family:var(--sans);font-weight:600;font-size:var(--fs-micro);letter-spacing:.11em;text-transform:uppercase;color:var(--ink-faint);max-width:34ch;line-height:1.5}
+
+  /* ============ CHECKOUT DELIVERY-SCHEDULER SPECIMEN (Fig. 12): the Plus-only
+     Warp scheduler, drawn in code from the real warp-checkout-ui extension
+     (Checkout.tsx State A + warp-state.ts) and Neel's verified 2026-07-06 dev-store
+     checkout. Same authentic-Shopify visual language as the .rate-spec above; clearly
+     a specimen, never a claimed screenshot. Every visible string traces to the
+     extension source or Neel's first-hand account (the grounding law). */
+  .spec-tag{display:inline-flex;align-items:center;gap:9px;margin:0 0 12px;
+    font-family:var(--sans);font-weight:800;font-size:var(--fs-micro);letter-spacing:.15em;text-transform:uppercase;color:var(--amber-ink);
+    border:1px solid var(--line-strong);background:var(--paper);border-radius:999px;padding:6px 13px}
+  .spec-tag .spec-dot{width:8px;height:8px;border-radius:50%;background:var(--amber);flex:0 0 auto}
+  /* the shipping-rate price: right-aligned, near-black, tabular, reads as a real Shopify rate price */
+  .rate-spec .opt .price{font-size:14px;font-weight:600;color:#20242A;white-space:nowrap;padding-top:1px;font-feature-settings:"tnum" 1,"lnum" 1}
+  /* State A success banner: the scheduler's "confirmed" block, in the page's warm
+     palette (no green, no side-stripe accent). The terracotta calendar + check marks
+     are the one true-state signal; the copy is verbatim from Checkout.tsx. */
+  .rate-spec .sched-banner{margin:4px 12px 14px;padding:13px 15px 14px;border-radius:10px;background:#FBF3EC;border:1px solid #ECD9C8}
+  .rate-spec .sched-banner svg{flex:0 0 auto;display:block;color:var(--amber)}
+  .rate-spec .sb-title{display:flex;align-items:center;gap:9px;font-size:14px;font-weight:700;color:#20242A;line-height:1.3}
+  .rate-spec .sb-date{display:flex;align-items:center;gap:8px;margin-top:9px;font-size:15px;font-weight:700;color:#20242A;line-height:1.3;font-feature-settings:"tnum" 1,"lnum" 1}
+  .rate-spec .sb-sub{margin:8px 0 0;font-size:12.5px;line-height:1.45;color:#6B7177;max-width:none}
+  .spec-note{margin:12px 2px 0;font-family:var(--sans);font-size:var(--fs-sm);line-height:1.5;color:var(--ink-dim)}
+  .spec-note b{color:var(--ink);font-weight:600}
+  figcaption{width:100%;margin-top:14px;font-family:var(--sans);font-size:var(--fs-sm);line-height:1.5;color:var(--ink-dim)}
+  figcaption b{color:var(--ink);font-weight:600;display:block;font-family:var(--wide);font-size:1.02rem;margin-bottom:2px;letter-spacing:-.01em}
+  .fn-tag{display:inline-block;font-family:var(--sans);font-weight:700;font-size:var(--fs-micro);letter-spacing:.1em;text-transform:uppercase;color:var(--amber-ink);margin-right:.5em;margin-bottom:6px}
+  /* calm hover on figures — neutral shadow only, never an accent glow */
+  @media (hover:hover){
+    figure.shot .ph{transition:transform .16s var(--ease-hover),box-shadow .16s var(--ease-hover),border-color .16s var(--ease-hover)}
+    figure.shot:hover .ph{transform:translateY(-2px);box-shadow:var(--shadow-lift);border-color:var(--line-strong)}
+  }
+
+  /* ============ HERO BAND (wide montage) ============ */
+  .band{background:var(--paper-2);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+  .band-head{grid-column:1/-1;display:flex;align-items:center;gap:14px;font-family:var(--sans);font-size:var(--fs-label);letter-spacing:.14em;text-transform:uppercase;color:var(--ink-dim);font-weight:700;margin-bottom:var(--s6)}
+  .band-head .rule{flex:1;height:1px;background:var(--line-strong)}
+  .band figure.shot{grid-column:1/-1;margin-top:0}
+
+  /* ============ SNAPSHOT (typographic, no images) ============ */
+  .snap-head{grid-column:1/-1;display:flex;align-items:baseline;gap:14px;font-family:var(--sans);font-size:var(--fs-label);letter-spacing:.16em;text-transform:uppercase;color:var(--ink-dim);font-weight:800;margin-bottom:var(--s6)}
+  .snap-head .tag{color:var(--ink-faint);font-weight:600;letter-spacing:.1em}
+  @media (max-width:440px){.snap-head .tag{display:none}}
+  .snap-lead{grid-column:1 / span 10;font-family:var(--wide);font-size:clamp(1.6rem,3.6vw,2.7rem);font-weight:500;line-height:1.14;letter-spacing:-.018em;margin:0 0 var(--s8);color:var(--ink-2);font-optical-sizing:auto}
+  @media (max-width:920px){.snap-lead{grid-column:1/-1}}
+  .three{grid-column:1/-1;display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(24px,3vw,48px)}
+  @media (max-width:820px){.three{grid-template-columns:1fr;max-width:36rem}}
+  .three .col{padding-top:var(--s4);border-top:2px solid var(--ink)}
+  .three .col .k{font-family:var(--wide);font-weight:600;font-size:1.2rem;letter-spacing:-.01em;margin-bottom:8px;display:flex;align-items:center;gap:9px}
+  .three .col .v{color:var(--ink-dim);font-size:var(--fs-sm);line-height:1.52;max-width:34ch}
+  .three .col .v b{color:var(--ink);font-weight:600}
+  .snap-status{grid-column:1/-1;margin-top:var(--s9);border-top:2px solid var(--ink);padding-top:var(--s5);display:grid;grid-template-columns:minmax(160px,3fr) 9fr;gap:18px 44px;align-items:baseline}
+  @media (max-width:640px){.snap-status{grid-template-columns:1fr;gap:12px}}
+  .snap-status .v{font-family:var(--wide);font-weight:600;font-size:clamp(2.6rem,6.5vw,4.4rem);line-height:.9;letter-spacing:-.02em;display:flex;align-items:baseline;gap:.16em;color:var(--ink-2);font-feature-settings:"tnum" 1}
+  .snap-status .v .mk{width:14px;height:14px;align-self:center}
+  .snap-status .rl{color:var(--ink-dim);font-size:var(--fs-sm);line-height:1.55;max-width:60ch}
+  .snap-status .rl b{color:var(--ink);font-weight:600}
+  .chips{grid-column:1/-1;margin-top:var(--s6);display:flex;gap:10px;flex-wrap:wrap}
+  .chip{display:inline-flex;align-items:center;gap:9px;border:1px solid var(--line-strong);background:var(--paper);padding:8px 14px;border-radius:999px;font-size:var(--fs-sm);font-weight:600;color:var(--ink)}
+  .chip .mk{width:8px;height:8px;border-radius:50%}
+
+  /* ============ scenario quote ============ */
+  .scenario{grid-column:1/-1;margin:var(--s8) 0 0}
+  .scenario q{display:block;font-family:var(--wide);font-style:italic;font-weight:500;font-size:clamp(1.7rem,4.2vw,3.1rem);line-height:1.1;letter-spacing:-.018em;quotes:none;max-width:20ch;color:var(--ink-2);font-optical-sizing:auto}
+  .scenario q::before{content:"\201C"}.scenario q::after{content:"\201D"}
+  .scenario .cap{margin-top:var(--s4);font-family:var(--sans);font-size:var(--fs-label);letter-spacing:.1em;text-transform:uppercase;color:var(--ink-faint);font-weight:600;display:flex;gap:9px;align-items:center}
+
+  /* ============ before / after ============ */
+  .ba{grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr;gap:clamp(20px,3vw,40px);margin-top:var(--s7)}
+  @media (max-width:760px){.ba{grid-template-columns:1fr;gap:var(--s7)}}
+  .ba figure.shot{width:100%;margin-top:0}
+  .ba .tagchip{display:inline-block;font-family:var(--sans);font-weight:800;font-size:var(--fs-micro);letter-spacing:.14em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:12px}
+  .ba .after .tagchip{color:var(--amber-ink)}
+
+  /* ============ reframe (old -> shipped) ============ */
+  .reframe{grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr;gap:clamp(24px,4vw,56px);margin-top:var(--s7)}
+  @media (max-width:760px){.reframe{grid-template-columns:1fr;gap:var(--s6)}}
+  .brief-b{padding-top:var(--s4);border-top:1px solid var(--line-strong)}
+  .brief-b .k{font-family:var(--sans);font-size:var(--fs-micro);letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:var(--ink-faint);margin-bottom:12px}
+  .brief-b.old .t{font-family:var(--wide);font-size:clamp(1.3rem,2.6vw,1.85rem);font-weight:500;color:var(--ink-faint);text-decoration:line-through;text-decoration-thickness:2px;text-decoration-color:var(--line-strong);letter-spacing:-.01em;line-height:1.16}
+  .brief-b.new .k{color:var(--ink)}
+  .brief-b.new .t{font-family:var(--wide);font-size:clamp(1.45rem,3vw,2.1rem);font-weight:600;color:var(--ink-2);letter-spacing:-.015em;line-height:1.14}
+
+  /* ============ steps (three-step reality) ============ */
+  .steps{grid-column:1/-1;margin-top:var(--s8);border-top:2px solid var(--ink)}
+  .steps .st{display:grid;grid-template-columns:minmax(56px,1fr) 11fr;gap:18px 30px;align-items:baseline;padding:22px 0;border-bottom:1px solid var(--line)}
+  @media (max-width:560px){.steps .st{grid-template-columns:1fr;gap:6px}}
+  .steps .st .n{font-family:var(--wide);font-weight:600;font-size:clamp(1.4rem,3vw,2.1rem);line-height:.9;color:var(--ink-faint);font-feature-settings:"tnum" 1}
+  .steps .st.hot .n{color:var(--amber-ink)}
+  .steps .st .k{font-family:var(--wide);font-size:clamp(1.1rem,2vw,1.35rem);font-weight:600;letter-spacing:-.01em;display:block;margin-bottom:3px;color:var(--ink-2)}
+  .steps .st .v{color:var(--ink-dim);font-size:var(--fs-sm);line-height:1.5}
+
+  /* ============ key-move callout ============ */
+  .keymove{grid-column:1 / span 9;margin-top:var(--s7);padding-left:22px;border-left:3px solid var(--amber)}
+  .keymove p{margin:0;font-size:var(--fs-lead);line-height:1.44;font-weight:400;color:var(--ink);max-width:60ch}
+  .keymove p b{font-weight:600}
+  @media (max-width:920px){.keymove{grid-column:1/-1}}
+
+  /* ============ decisions (numbered typographic list) ============ */
+  .decisions{grid-column:1/-1;margin-top:var(--s7);border-top:2px solid var(--ink)}
+  .d-row{display:grid;grid-template-columns:44px 1fr;gap:18px;padding:22px 0;border-bottom:1px solid var(--line);align-items:baseline}
+  @media (max-width:560px){.d-row{grid-template-columns:1fr;gap:6px}}
+  .d-row .no{font-family:var(--wide);font-weight:600;color:var(--ink-faint);font-feature-settings:"tnum" 1;font-size:1.05rem}
+  .d-row b{font-family:var(--wide);font-weight:600;font-size:clamp(1.1rem,2vw,1.35rem);letter-spacing:-.012em;color:var(--ink-2);display:block;margin-bottom:5px}
+  .d-row span{color:var(--ink-dim);font-size:var(--fs-sm);line-height:1.55;max-width:64ch;display:block}
+  .d-row .tok{display:inline-block;font-family:var(--sans);font-weight:600;color:var(--ink);border:1px solid var(--line-strong);background:var(--surface);border-radius:6px;padding:.03em .34em;font-size:.92em;line-height:1.3}
+
+  /* ============ ladder (narrative debugging steps) ============ */
+  .ladder{grid-column:1/-1;margin-top:var(--s7);border-top:2px solid var(--ink)}
+  .l-row{display:grid;grid-template-columns:minmax(88px,1fr) 11fr;gap:20px 32px;align-items:baseline;padding:26px 0;border-bottom:1px solid var(--line)}
+  @media (max-width:640px){.l-row{grid-template-columns:1fr;gap:8px}}
+  .l-row .p{font-family:var(--wide);font-weight:600;font-size:clamp(1.5rem,3.2vw,2.3rem);line-height:.9;letter-spacing:-.01em;color:var(--ink-faint);font-feature-settings:"tnum" 1}
+  .l-row.first .p{color:var(--amber-ink)}
+  .l-row .txt b{font-family:var(--wide);font-size:clamp(1.15rem,2.1vw,1.45rem);font-weight:600;letter-spacing:-.012em;display:block;margin-bottom:6px;color:var(--ink-2)}
+  .l-row .txt p{color:var(--ink-dim);font-size:var(--fs-sm);line-height:1.56;margin:0;max-width:62ch}
+  /* the one-word fix, set as type (a code token, not a UI widget) */
+  .fix{margin-top:var(--s4);display:flex;align-items:center;gap:clamp(12px,2.4vw,26px);flex-wrap:wrap}
+  .fix .tok{font-family:var(--sans);font-weight:600;font-size:clamp(1.15rem,2.6vw,1.7rem);letter-spacing:-.01em;border:1.5px solid var(--line-strong);border-radius:10px;padding:.14em .5em;background:var(--surface)}
+  .fix .tok.old{color:var(--ink-faint);text-decoration:line-through;text-decoration-thickness:2px;text-decoration-color:var(--line-strong)}
+  .fix .tok.new{color:var(--ink-2);border-color:var(--line-strong)}
+  .fix .arrow{font-family:var(--wide);font-weight:700;color:var(--amber);font-size:clamp(1.2rem,2.6vw,1.7rem)}
+  .fix-note{margin-top:var(--s3);font-size:var(--fs-sm);color:var(--ink-dim);max-width:60ch}
+
+  /* ============ pull quote ============ */
+  .pull{grid-column:1/-1;margin-top:var(--s8);border-top:2px solid var(--ink);border-bottom:2px solid var(--ink);padding:var(--s6) 0}
+  .pull q{quotes:none;display:block;font-family:var(--wide);font-weight:500;font-size:clamp(1.45rem,3.4vw,2.5rem);line-height:1.14;letter-spacing:-.016em;color:var(--ink-2);max-width:28ch;font-optical-sizing:auto}
+  .pull q::before{content:"\201C"}.pull q::after{content:"\201D"}
+  .pull .attr{margin-top:var(--s4);font-family:var(--sans);font-size:var(--fs-label);letter-spacing:.1em;text-transform:uppercase;color:var(--ink-faint);font-weight:600;display:flex;gap:9px;align-items:center}
+
+  /* ============ data (the checkable bar) ============ */
+  .data{grid-column:1/-1;margin-top:var(--s7);border-top:2px solid var(--ink)}
+  .d-item{display:grid;grid-template-columns:minmax(180px,4fr) 8fr;gap:14px 40px;align-items:baseline;padding:24px 0;border-bottom:1px solid var(--line)}
+  @media (max-width:640px){.d-item{grid-template-columns:1fr;gap:8px}}
+  .d-item .fig{font-family:var(--wide);font-weight:600;font-size:clamp(2.4rem,6.2vw,4.6rem);line-height:.86;letter-spacing:-.022em;color:var(--ink-2);position:relative;display:inline-block;justify-self:start;font-feature-settings:"tnum" 1}
+  .d-item.hot .fig::after{content:"";position:absolute;left:0;right:0;bottom:-10px;height:6px;background:var(--amber)}
+  .d-item .lab{font-size:var(--fs-sm);color:var(--ink-dim);line-height:1.56;max-width:52ch}
+  .d-item .lab b{color:var(--ink);font-weight:600}
+
+  /* ============ the ledger (proven vs won't claim) — the signature honesty section ============ */
+  .ledger{grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr;gap:clamp(28px,5vw,72px);margin-top:var(--s7)}
+  @media (max-width:820px){.ledger{grid-template-columns:1fr;gap:var(--s8)}}
+  .lg-col{border-top:2px solid var(--ink)}
+  .lg-head{font-family:var(--sans);font-size:var(--fs-label);letter-spacing:.16em;text-transform:uppercase;font-weight:800;color:var(--ink);padding-top:var(--s4);margin-bottom:var(--s3);display:flex;align-items:center;gap:10px}
+  .lg-col.wont .lg-head{color:var(--ink-faint)}
+  .lg-row{display:grid;grid-template-columns:20px 1fr;gap:14px;padding:18px 0;border-bottom:1px solid var(--line);align-items:start}
+  .lg-row .m{width:12px;height:12px;margin-top:6px;flex:0 0 auto}
+  .lg-row .m.fill{background:var(--amber);border-radius:3px}
+  .lg-row .m.hollow{border:2px solid var(--line-strong);border-radius:3px;background:transparent}
+  .lg-row .t{font-size:var(--fs-sm);line-height:1.56;color:var(--ink-dim)}
+  .lg-row .t b{color:var(--ink);font-weight:600}
+  .lg-col.wont .lg-row .t .no{color:var(--ink-faint);font-weight:600}
+  .statusnote{grid-column:1/-1;margin-top:var(--s8);border-top:2px solid var(--ink);padding-top:var(--s6);font-family:var(--wide);font-size:clamp(1.2rem,2.4vw,1.65rem);font-weight:500;line-height:1.34;letter-spacing:-.012em;color:var(--ink-2);max-width:52ch;font-optical-sizing:auto}
+  .statusnote b{font-weight:600}
+
+  /* ============ reflection ============ */
+  .refl{grid-column:1/-1;margin-top:var(--s6);border-top:2px solid var(--ink)}
+  .refl .r{display:grid;grid-template-columns:minmax(150px,2fr) 9fr;gap:16px 44px;padding:26px 0;border-bottom:1px solid var(--line);align-items:baseline}
+  @media (max-width:640px){.refl .r{grid-template-columns:1fr;gap:8px}}
+  .refl .r .k{font-family:var(--sans);font-size:var(--fs-micro);letter-spacing:.14em;text-transform:uppercase;font-weight:800;color:var(--ink);display:inline-flex;align-items:center;gap:9px}
+  .refl .r .k .mk{width:9px;height:9px}
+  .refl .r .t{font-size:clamp(1.1rem,2vw,1.42rem);font-weight:500;letter-spacing:-.008em;line-height:1.34;color:var(--ink);font-family:var(--wide);font-optical-sizing:auto}
+  .refl .r .t b{font-weight:600;color:var(--ink-2)}
+
+  /* ============ [PAGE-RE-THEMABLE] COLOPHON / FOOTER ============ */
+  .colophon{background:var(--paper-2);border-top:1px solid var(--line)}
+  .colophon .wrap{padding-block:clamp(52px,7vw,88px)}
+  .colophon .cred{grid-column:1 / span 7}
+  .colophon .note{grid-column:9 / span 4;align-self:start}
+  @media (max-width:920px){.colophon .cred,.colophon .note{grid-column:1/-1}.colophon .note{margin-top:var(--s7)}}
+  .colophon .brand{font-family:var(--wide);font-weight:600;font-size:clamp(1.9rem,5vw,3rem);letter-spacing:-.015em;margin-bottom:var(--s5);display:inline-flex;align-items:center;gap:12px}
+  .colophon .brand .mk{width:20px;height:20px}
+  .colophon .cred p{color:var(--ink-dim);font-size:var(--fs-sm);line-height:1.62;max-width:62ch}
+  .colophon .cred p b{color:var(--ink)}
+  .colophon .cred .fine{font-size:var(--fs-micro);letter-spacing:.02em;color:var(--ink-faint);margin-top:var(--s5)}
+  .colophon .note dl{margin:0;border-top:2px solid var(--ink)}
+  .colophon .note div{display:grid;grid-template-columns:auto 1fr;gap:10px 18px;padding:11px 0;border-bottom:1px solid var(--line)}
+  .colophon .note dt{font-family:var(--sans);font-size:var(--fs-micro);letter-spacing:.12em;text-transform:uppercase;color:var(--ink-faint);font-weight:700}
+  .colophon .note dd{margin:0;font-size:var(--fs-sm);color:var(--ink);font-weight:600;text-align:right}
+  .colophon .note dd .mk{display:inline-block;width:10px;height:10px;vertical-align:baseline;margin-left:6px}
+  .backlink{grid-column:1/-1;display:inline-flex;align-items:center;gap:.5rem;margin-top:var(--s7);font-family:var(--sans);font-size:var(--fs-sm);color:var(--ink-dim);text-decoration:none;font-weight:700}
+  .backlink:hover{color:var(--ink)}
+  @media (hover:hover){.backlink{transition:gap .16s var(--ease-hover),color .16s var(--ease-hover)}.backlink:hover{gap:.75rem}}
+
+  /* ============ [SHARED-VERBATIM] calm reveal — CSS transition only, reduced-motion safe ============ */
+  .rise{opacity:0;transform:translateY(14px);transition:opacity .6s var(--ease-out-quint),transform .6s var(--ease-out-quint)}
+  .rise.in{opacity:1;transform:none}
+  /* subtle intra-group stagger */
+  .stagger .rise:nth-child(2),.three .col:nth-child(2),.d-row:nth-child(2),.d-item:nth-child(2){transition-delay:.06s}
+  .three .col:nth-child(3),.d-row:nth-child(3),.d-item:nth-child(3){transition-delay:.12s}
+  .d-row:nth-child(4),.d-item:nth-child(4){transition-delay:.18s}
+  @media (prefers-reduced-motion:reduce){
+    .rise{opacity:1;transform:none;transition:none}
+    figure.shot:hover .ph{transform:none}
+    .backlink:hover{gap:.5rem}
+  }
+
+  /* [P5 · additive motion] the status stepper reveals top to bottom as the exhibit
+     scrolls in: each marker settles and the connector line grows between them, so the
+     delivery status reads as it progresses. Rides the existing .ba.exhibit.rise -> .in
+     trigger; NO new JS. Transform/opacity only, so no layout shift. Resting, no-JS, and
+     reduced-motion states are the finished static stepper, unchanged. */
+  .track-spec li .mrk{transform-origin:center}
+  .track-spec li::before{transform-origin:top}
+  .exhibit.in .track-spec li .mrk{animation:tsMrk .42s var(--ease-out-quint) both}
+  .exhibit.in .track-spec li::before{animation:tsLine .32s var(--ease-out-quint) both}
+  .exhibit.in .track-spec li:nth-child(1) .mrk{animation-delay:.05s}
+  .exhibit.in .track-spec li:nth-child(1)::before{animation-delay:.18s}
+  .exhibit.in .track-spec li:nth-child(2) .mrk{animation-delay:.32s}
+  .exhibit.in .track-spec li:nth-child(2)::before{animation-delay:.45s}
+  .exhibit.in .track-spec li:nth-child(3) .mrk{animation-delay:.59s}
+  .exhibit.in .track-spec li:nth-child(3)::before{animation-delay:.72s}
+  .exhibit.in .track-spec li:nth-child(4) .mrk{animation-delay:.86s}
+  @keyframes tsMrk{from{opacity:0;transform:scale(.2)}to{opacity:1;transform:none}}
+  @keyframes tsLine{from{transform:scaleY(0)}to{transform:scaleY(1)}}
+  @media (prefers-reduced-motion:reduce){
+    .exhibit.in .track-spec li .mrk,.exhibit.in .track-spec li::before{animation:none}
+  }
+
+  /* [P5 · additive motion] the checkout rate-spec after-column populates its dated Warp options in
+     sequence, and the selected option's radio lands. Rides the existing .ba.rise -> .in trigger; NO
+     new JS. Scoped to the rate-spec .ba (the exhibit .ba has no .rate-spec/.opt). No label, price, or
+     date is touched. Resting / no-JS / reduced-motion = the finished static specimen; no layout shift. */
+  .ba.in .after .opt{animation:optIn .5s var(--ease-out-quint) both}
+  .ba.in .after .opt:nth-child(2){animation-delay:.12s}
+  .ba.in .after .opt.sel .rd{animation:rdIn .45s var(--ease-out-quint) .3s both}
+  @keyframes optIn{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:none}}
+  @keyframes rdIn{from{opacity:0;transform:scale(.3)}to{opacity:1;transform:none}}
+  @media (prefers-reduced-motion:reduce){.ba.in .after .opt,.ba.in .after .opt.sel .rd{animation:none}}
+
+  /* ============================================================
+     [PAGE-CUSTOM · added in elevation] runt guards + new components
+     ============================================================ */
+  /* kill heading runts/orphans on every display line */
+  .cover-h1,.title,.snap-lead,.scenario q,.pull q,.brief-b .t,.statusnote,
+  .three .col .k,.d-row b,.l-row .txt b,.refl .r .t,.cc-name{text-wrap:balance}
+  .cover-lead,.lead,.body,.d-item .lab,.lg-row .t{text-wrap:pretty}
+
+  /* ---- core honesty exhibit: tracking specimen + caption, side by side on
+     desktop, stacked on mobile (class, not inline, so the stack rule applies) ---- */
+  .ba.exhibit{grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);align-items:center}
+  @media (max-width:760px){.ba.exhibit{grid-template-columns:1fr;gap:var(--s5)}}
+
+  /* ---- cover: editorial two-column, no fabricated screen ---- */
+  .cover-side{grid-column:8 / span 5;align-self:center}
+  @media (max-width:920px){.cover-side{grid-column:1/-1;margin-top:var(--s7)}}
+  .cover-status{display:flex;flex-wrap:wrap;gap:9px;margin:var(--s2) 0 0}
+  .cover-status .c{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line-strong);
+    background:var(--surface);border-radius:999px;padding:7px 14px;font-size:var(--fs-sm);font-weight:600;color:var(--ink)}
+  .cover-status .c .mk{width:8px;height:8px;border-radius:2px}
+  .cover-status .c.q{color:var(--ink-dim);font-weight:500}
+
+  /* ---- checkout rate SPECIMEN (before/after) — authentic Shopify look,
+     drawn in code as a clearly-conceptual illustration (no fabricated price,
+     the real dev-store render is the flagged capture) ---- */
+  .rate-spec{--w-sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:#FDFCFA;border:1px solid #E7E1D4;border-radius:14px;overflow:hidden;
+    font-family:var(--w-sans);box-shadow:var(--shadow-photo)}
+  .rate-spec .rs-cart{display:flex;align-items:center;gap:12px;padding:15px 18px;border-bottom:1px solid #EFEAE0}
+  .rate-spec .rs-thumb{width:42px;height:42px;border-radius:8px;flex:0 0 auto;
+    background:linear-gradient(135deg,#EAE2D2,#DCD2BE);position:relative;overflow:hidden;border:1px solid #E0D8C6}
+  .rate-spec .rs-thumb::after{content:"";position:absolute;left:7px;right:7px;bottom:9px;height:15px;border-radius:4px 4px 3px 3px;
+    background:#C9BFAB;box-shadow:0 -7px 0 -3px #D3C9B5}
+  .rate-spec .rs-ct{font-size:14px;line-height:1.3}
+  .rate-spec .rs-ct b{display:block;color:#20242A;font-weight:600}
+  .rate-spec .rs-ct span{color:#6B7177;font-size:12.5px}
+  .rate-spec .rs-h{padding:13px 18px 4px;font-size:11.5px;font-weight:600;letter-spacing:.02em;text-transform:uppercase;color:#8A9096}
+  .rate-spec .rs-opts{padding:6px 12px 14px;display:flex;flex-direction:column;gap:8px}
+  .rate-spec .opt{display:flex;align-items:flex-start;gap:12px;padding:13px 14px;border:1px solid #E1DBCF;border-radius:10px;background:#fff}
+  .rate-spec .opt .rd{width:18px;height:18px;border-radius:50%;border:1.5px solid #C4CACF;flex:0 0 auto;margin-top:1px;position:relative}
+  .rate-spec .opt .tx{flex:1;min-width:0}
+  .rate-spec .opt .tx .t{display:block;font-size:14px;font-weight:600;color:#20242A;line-height:1.35}
+  .rate-spec .opt .tx .s{display:block;font-size:12.5px;color:#727880;margin-top:3px;line-height:1.4}
+  .rate-spec .opt .badge{font-size:11px;font-weight:700;color:#727880;letter-spacing:.02em;white-space:nowrap;padding-top:2px}
+  .rate-spec.before .opt{background:#FAFAF8}
+  .rate-spec.before{filter:saturate(.86)}
+  /* before is the status quo: neutral selection, no terracotta (accent = the better option only) */
+  .rate-spec.before .opt.sel{border-color:#DBD5C9;box-shadow:none;background:#F6F5F1}
+  .rate-spec.before .opt.sel .rd{border-color:#9198A0}
+  .rate-spec.before .opt.sel .rd::after{content:"";position:absolute;inset:3px;border-radius:50%;background:#9198A0}
+  /* the selected Warp row: terracotta accent, the ONE signal */
+  .rate-spec .opt.sel{border-color:var(--amber);box-shadow:inset 0 0 0 1px var(--amber);background:#FDF6F1}
+  .rate-spec .opt.sel .rd{border-color:var(--amber)}
+  .rate-spec .opt.sel .rd::after{content:"";position:absolute;inset:3px;border-radius:50%;background:var(--amber)}
+  .rate-spec .opt.sel .tx .t .day{color:var(--amber-ink)}
+  .rate-spec .opt .tx .t .day{font-weight:700}
+
+  /* ---- tracking status SPECIMEN (a generic stepper with the app's real
+     status vocabulary) — clearly a specimen, not a claimed screenshot ---- */
+  .track-spec{--w-sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:#FDFCFA;border:1px solid #E7E1D4;border-radius:14px;padding:22px 22px 24px;font-family:var(--w-sans);box-shadow:var(--shadow-photo);max-width:none}
+  .track-spec .ts-h{font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:#8A9096;margin-bottom:5px}
+  .track-spec .ts-status{font-size:19px;font-weight:700;color:#20242A;display:flex;align-items:center;gap:10px;margin-bottom:3px}
+  .track-spec .ts-status .live{width:9px;height:9px;border-radius:50%;background:var(--amber);position:relative;flex:0 0 auto}
+  .track-spec .ts-sub{font-size:13px;color:#727880;margin-bottom:18px}
+  .track-spec ol{list-style:none;margin:0;padding:0}
+  .track-spec li{display:flex;gap:13px;align-items:flex-start;padding-bottom:16px;position:relative}
+  .track-spec li:last-child{padding-bottom:0}
+  .track-spec li .mrk{width:16px;height:16px;border-radius:50%;flex:0 0 auto;margin-top:1px;border:2px solid #CFD4D9;background:#fff;z-index:2}
+  .track-spec li::before{content:"";position:absolute;left:7px;top:17px;bottom:-1px;width:2px;background:#E4E7EA}
+  .track-spec li:last-child::before{display:none}
+  .track-spec li.done .mrk{background:#57606A;border-color:#57606A}
+  .track-spec li.now .mrk{border-color:var(--amber);background:var(--amber);outline:2px solid var(--amber);outline-offset:2px}
+  .track-spec li.now::before,.track-spec li.done::before{background:#57606A}
+  .track-spec li .lb{font-size:14px;color:#4A5058;line-height:1.3}
+  .track-spec li.now .lb{color:#20242A;font-weight:700}
+  .track-spec li .lb .t2{display:block;font-size:12px;font-weight:500;color:#8A9096;margin-top:1px}
+
+  /* ============ [PAGE-CUSTOM · P18 product-first rebalance] ============ */
+  /* two real screens side by side (the eligibility modes small-multiple);
+     same grid mechanics as .ba, stacks on mobile so Polaris stays legible */
+  .twoup{display:grid;grid-template-columns:1fr 1fr;gap:clamp(20px,3vw,40px)}
+  @media (max-width:760px){.twoup{grid-template-columns:1fr;gap:var(--s6)}}
+  .twoup .modelab{display:inline-block;font-family:var(--sans);font-weight:800;font-size:var(--fs-micro);letter-spacing:.14em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:11px}
+  @media (hover:hover){
+    .twoup .ph{transition:transform .16s var(--ease-hover),box-shadow .16s var(--ease-hover),border-color .16s var(--ease-hover)}
+    .twoup > div:hover .ph{transform:translateY(-2px);box-shadow:var(--shadow-lift);border-color:var(--line-strong)}
+  }
+  @media (prefers-reduced-motion:reduce){.twoup > div:hover .ph{transform:none}}
+
+  /* [WARP CREDIT] the real Warp wordmark as a quiet "Designed at" brand credit,
+     rendered in calm ink (NOT the terracotta accent) so the page keeps its one-signal
+     discipline; the mark's shape carries the recognition, not a second colour. One use
+     per page, content not nav. Matches the other three Warp case studies. */
+  .warp-credit{display:flex;align-items:center;gap:10px;margin:var(--s5) 0 0}
+  .warp-credit-lbl{font-size:var(--fs-micro);letter-spacing:.12em;text-transform:uppercase;color:var(--ink-faint);font-weight:700;line-height:1}
+  .warp-mark{height:18px;width:auto;display:block;color:var(--ink-dim);flex:0 0 auto}
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     [SHARED-VERBATIM] SITE NAV — the real homepage component (identical
+     markup to neelmyno.in). Copied byte-for-byte; not rebuilt.
+     ============================================================ -->
+<div class="nav">
+  <div class="page-padding">
+    <div class="container">
+      <div class="nav-inner">
+        <a href="/" aria-current="page" class="nav-logo w-inline-block w--current" aria-label="Neel Tengariya — home">
+          <div><img width="60" src="/images/home/navbar/logo_full_black_copyright.svg" alt="Neel logo"></div>
+        </a>
+        <div class="nav-menu">
+          <a href="/#home" class="nav-link">Home</a>
+          <a href="/#work" class="nav-link">Work</a>
+          <a href="/#experience" class="nav-link">Experience</a>
+          <a href="/" class="nav-link">About</a>
+          <a href="/resume/neel_tengariya_resume.pdf" class="cta cta--nav w-inline-block" download>
+            <div>Download Resume</div>
+            <div class="cta-chevron w-embed"><svg width="7" height="10" xmlns="http://www.w3.org/2000/svg"><path d="M1.566.434 6.131 5 1.566 9.566.434 8.434 3.869 5 .434 1.566z" fill="currentColor" /></svg></div>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ MASTHEAD (running head, not sticky) ============ -->
+<header class="masthead">
+  <div class="wrap row">
+    <div class="brand"><span class="mk" aria-hidden="true"></span><span>Big &amp; Bulky</span></div>
+    <div class="ident">Warp &middot; Shopify app &middot; Case study</div>
+  </div>
+</header>
+
+<main>
+
+<!-- ============ COVER ============ -->
+<section id="cover" aria-label="Cover">
+  <div class="wrap grid12">
+    <div class="cover-copy">
+      <p class="kicker cover-kicker rise"><span class="mk" aria-hidden="true"></span> Warp Big &amp; Bulky &middot; Shopify app &middot; 2026</p>
+      <h1 class="cover-h1 rise">You bought a couch<span class="dot">.</span></h1>
+      <p class="cover-lead rise">Then you wait for a phone call to schedule it. For anything big and heavy, checkout makes a delivery promise it cannot keep, and the real scheduling happens later, by phone, after your money is gone. I designed and built the Warp app that turns that moment into a <span class="em">real, dated delivery choice</span> inside Shopify.</p>
+      <div class="cover-status rise">
+        <span class="c">Solo build</span>
+        <span class="c"><span class="mk" aria-hidden="true"></span>Verified live on a Plus dev store</span>
+        <span class="c">Submitted to Shopify review</span>
+        <span class="c q">Charges $0</span>
+      </div>
+    </div>
+    <div class="cover-side rise">
+      <dl class="meta">
+        <div><dt>Role</dt><dd>Product designer and builder, solo. Product design first, then I wrote the app, directing AI to do most of the typing.</dd></div>
+        <div><dt>What's mine</dt><dd>The problem, the flows, the data model, the honesty rules in the UI, the billing redesign, the release calls, and the debugging.</dd></div>
+        <div><dt>Team</dt><dd>Warp's CRO and a teammate drove product direction in weekly reviews. The freight backend is the Warp team's. The app and every commit are mine.</dd></div>
+        <div><dt>When &amp; stack</dt><dd>March to July 2026. Remix, Polaris, three Shopify extensions, Prisma, Vercel.</dd></div>
+        <div class="reach"><dt>Scale</dt><dd><span class="mk" aria-hidden="true"></span><span class="rr"><span class="tnum">479 commits</span><span class="s">every one mine, git-verified</span></span></dd></div>
+      </dl>
+    </div>
+  </div>
+</section>
+
+<!-- ============ HERO BAND — the whole surface ============ -->
+<section class="band" aria-label="Inside the Shopify admin">
+  <div class="wrap grid12">
+    <div class="band-head rise"><span>Inside the Shopify admin</span><span class="rule"></span><span>Where the merchant sets it up</span></div>
+    <figure class="shot wide rise">
+      <span class="ph" style="aspect-ratio:2880/1620">
+        <img src="assets/surface-montage.webp" alt="Three real screens from the Warp Big and Bulky app in the Shopify admin: the seven-step setup checklist, the money-flow step showing pass-through billing, and the launch-readiness check." width="2880" height="1620" loading="eager" fetchpriority="high">
+      </span>
+      <figcaption><span class="fn-tag">Fig. 01</span><b>The merchant's side.</b> Three real screens from the Shopify admin: the seven-step setup checklist, the money-flow step, and the launch-readiness check. The checkout a shopper sees, and the tracking after, come later.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ============ SNAPSHOT ============ -->
+<section aria-labelledby="snap-h">
+  <div class="wrap grid12">
+    <div class="snap-head rise"><span id="snap-h">At a glance</span><span class="tag">The thirty-second version</span></div>
+    <p class="snap-lead rise">Buy a book and checkout knows what happens next. Buy a sofa and it guesses. Warp puts a <span class="hl">real delivery date</span> in the same place a shopper already picks shipping, then books the freight in the background.</p>
+    <div class="three rise stagger">
+      <div class="col rise"><div class="k"><span class="mk" aria-hidden="true"></span>The merchant</div><div class="v">Seven steps in the Shopify admin: warehouse, eligible products, delivery rules, who pays, and the rules of the road. Set once.</div></div>
+      <div class="col rise"><div class="k"><span class="mk" aria-hidden="true"></span>The shopper</div><div class="v">One dated choice at checkout. <b>Warp &middot; 07/08</b>, priced like any other rate, with nothing new to learn.</div></div>
+      <div class="col rise"><div class="k"><span class="mk" aria-hidden="true"></span>The operations</div><div class="v">After the order, the app books the freight, holds it until pickup is confirmed, and hands over a tracking page.</div></div>
+    </div>
+
+    <figure class="shot wide rise" style="grid-column:1/-1;margin-top:var(--s8)">
+      <span class="ph" style="aspect-ratio:2600/1489">
+        <img src="assets/warehouse.webp" alt="The Warehouses step in the Shopify admin: one active fulfillment center, Warp LA Warehouse, with its weekday operating hours and a note reading that Warp's delivery range is 90 miles, set automatically with nothing for the merchant to choose." width="2600" height="1489" loading="lazy">
+      </span>
+      <figcaption><span class="fn-tag">Fig. 02</span><b>A real screen, already built.</b> The Warehouses step in the admin: one active fulfillment center with its open hours, and a 90-mile delivery range Warp sets automatically. The merchant chooses nothing about range; the app already knows how far a truck reaches in a day.</figcaption>
+    </figure>
+
+    <div class="snap-status rise">
+      <div class="v"><span class="mk" aria-hidden="true"></span><span class="tnum">1,493</span></div>
+      <div class="rl">Tests green, on a build of <b>479 commits, all mine</b>. Built, hardened, and submitted to Shopify review, then verified working live on a Shopify Plus development store. It is not publicly listed, so no shopper has used it yet.</div>
+    </div>
+    <div class="chips rise">
+      <span class="chip"><span class="mk" aria-hidden="true"></span>Big-and-bulky consumer checkout</span>
+      <span class="chip"><span class="mk" aria-hidden="true"></span>One platform, Shopify</span>
+      <span class="chip"><span class="mk" aria-hidden="true"></span>Pass-through billing, no markup</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ^01 THE PROBLEM ============ -->
+<section id="problem" aria-labelledby="problem-h">
+  <div class="wrap grid12">
+    <div class="eyebrow rise"><span class="num"><span class="mk" aria-hidden="true"></span>01</span> <span class="lbl">The problem</span> <span class="rule"></span><span class="tag">Where checkout gives up</span></div>
+    <h2 class="title s-head rise" id="problem-h">Checkout was built for parcels, not freight.</h2>
+    <div class="lead-col rise"><p class="lead">Everything that makes checkout feel solid was built for parcels. Freight fits none of it.</p></div>
+    <div class="prose rise"><p class="body">You get a vague three to five business days, you pay, and a week later a person calls to arrange the real delivery. The part that matters most for something heavy, when it shows up and whether you will be home, is the part checkout waves away.</p></div>
+
+    <div class="scenario rise">
+      <q>I bought a couch, and now I wait for someone to call me.</q>
+      <div class="cap"><span class="mk" aria-hidden="true"></span> The status quo for anything big and heavy.</div>
+    </div>
+
+    <div class="ba rise">
+      <div class="before">
+        <span class="tagchip">Before</span>
+        <figure class="shot">
+          <div class="rate-spec before" role="img" aria-label="A status-quo checkout shipping step for a sofa: one option, Standard shipping, 3 to 5 business days, with no date.">
+            <div class="rs-cart"><span class="rs-thumb" aria-hidden="true"></span><span class="rs-ct"><b>Modern Linen Sofa</b><span>Qty 1</span></span></div>
+            <div class="rs-h">Delivery</div>
+            <div class="rs-opts">
+              <div class="opt sel"><span class="rd" aria-hidden="true"></span><span class="tx"><span class="t">Standard shipping</span><span class="s">3 to 5 business days</span></span><span class="badge">No date</span></div>
+            </div>
+          </div>
+          <figcaption><span class="fn-tag">Fig. 03</span>The status quo: one vague option, "3 to 5 business days," with no real date to plan a delivery around.</figcaption>
+        </figure>
+      </div>
+      <div class="after">
+        <span class="tagchip">After</span>
+        <figure class="shot">
+          <div class="rate-spec" role="img" aria-label="The same shipping step with Warp: dated options such as Warp for Wednesday July 8 and Thursday July 9, each a specific delivery day.">
+            <div class="rs-cart"><span class="rs-thumb" aria-hidden="true"></span><span class="rs-ct"><b>Modern Linen Sofa</b><span>Qty 1</span></span></div>
+            <div class="rs-h">Delivery</div>
+            <div class="rs-opts">
+              <div class="opt sel"><span class="rd" aria-hidden="true"></span><span class="tx"><span class="t">Warp &middot; <span class="day">Wed, Jul 8</span></span><span class="s">Delivered 1:30 to 8:30 PM &middot; within 90 miles</span></span></div>
+              <div class="opt"><span class="rd" aria-hidden="true"></span><span class="tx"><span class="t">Warp &middot; <span class="day">Thu, Jul 9</span></span><span class="s">Delivered 1:30 to 8:30 PM &middot; within 90 miles</span></span></div>
+            </div>
+          </div>
+          <figcaption><span class="fn-tag">Fig. 04</span>The same moment with Warp: each option is a real day the freight can arrive, sitting where shipping already lives. Drawn to show the pattern; the live dev-store render is further down.</figcaption>
+        </figure>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ^02 THE REFRAME ============ -->
+<section id="reframe" aria-labelledby="reframe-h">
+  <div class="wrap grid12">
+    <div class="eyebrow rise"><span class="num"><span class="mk" aria-hidden="true"></span>02</span> <span class="lbl">The reframe</span> <span class="rule"></span><span class="tag">Where the design budget went</span></div>
+    <h2 class="title s-head rise" id="reframe-h">The first customer is the merchant, not the shopper.</h2>
+    <div class="lead-col rise"><p class="lead">It reset the whole project.</p></div>
+    <div class="prose rise">
+      <p class="body">In an app that lives inside Shopify, the merchant decides to install it and keep it. If they cannot get through setup, or cannot see how it makes them money in the first minute, no shopper ever reaches the checkout I was fussing over. So I moved the design budget. The merchant's onboarding got the care. The shopper's checkout got calm defaults and nothing to think about.</p>
+      <p class="body">The other thing the research gave me was mine to carry: for a commerce app, onboarding is the whole experience. A merchant sets it up once and forgets it exists while orders flow in the background. They never get a second chance to be impressed, so whatever friction sits in setup is the product.</p>
+    </div>
+
+    <div class="reframe rise">
+      <div class="brief-b old"><div class="k">The brief I was handed</div><div class="t">Polish the checkout the shopper sees.</div></div>
+      <div class="brief-b new"><div class="k">The brief I shipped against</div><div class="t">Win the merchant's first five minutes, because no shopper reaches checkout otherwise.</div></div>
+    </div>
+
+    <div class="steps rise">
+      <div class="st"><div class="n">01</div><div><span class="k">Merchant installs</span><span class="v">From the Shopify App Store, into their admin.</span></div></div>
+      <div class="st hot"><div class="n">02</div><div><span class="k">Merchant finishes setup</span><span class="v">Seven steps. The one place friction can kill the whole thing.</span></div></div>
+      <div class="st"><div class="n">03</div><div><span class="k">Shopper sees Warp at checkout</span><span class="v">Only now does the surface I was polishing ever appear.</span></div></div>
+    </div>
+
+    <figure class="shot wide rise" style="grid-column:1/-1;margin-top:var(--s8)">
+      <span class="ph" style="aspect-ratio:1600/900">
+        <img src="assets/onboarding-home.webp" alt="The merchant onboarding home in the Shopify admin: Set up Warp big and bulky final mile, a setup-progress card reading 6 of 7 steps completed at 86 percent, with rows for account details, warehouse, products, delivery rules and money flow each marked done." width="1600" height="900" loading="lazy">
+      </span>
+      <figcaption><span class="fn-tag">Fig. 05</span><b>The merchant's first five minutes.</b> The onboarding home in the Shopify admin: a seven-step checklist reading "6 of 7 steps completed," each done step a green row, one step still to go before the store can go live.</figcaption>
+    </figure>
+
+    <figure class="shot wide rise" style="grid-column:1/-1;margin-top:var(--s7)">
+      <span class="ph" style="aspect-ratio:2600/1810">
+        <img src="assets/warehouse-add.webp" alt="The add-warehouse form in the Shopify admin, open as a modal: fields for warehouse name, street address, pickup phone and open hours; a toggle to automatically email the bill of lading, tracking link and shipment sticker to the warehouse team on every dispatched pickup; and a delivery-coverage note that Warp delivers within 90 miles, set automatically with no input needed." width="2600" height="1810" loading="lazy">
+      </span>
+      <figcaption><span class="fn-tag">Fig. 06</span><b>One setup step, up close.</b> Adding a warehouse takes what Warp needs to run a pickup: the address, a contact, the open hours, and one optional toggle that emails the bill of lading, tracking link, and shipment sticker to the warehouse team on every dispatched pickup. The 90-mile coverage is set for the merchant, never asked of them.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ============ ^03 THREE SURFACES ============ -->
+<section id="surfaces" aria-labelledby="surfaces-h">
+  <div class="wrap grid12">
+    <div class="eyebrow rise"><span class="num"><span class="mk" aria-hidden="true"></span>03</span> <span class="lbl">The solution</span> <span class="rule"></span><span class="tag">Admin, checkout, ops</span></div>
+    <h2 class="title s-head rise" id="surfaces-h">Three surfaces, one delivery promise.</h2>
+    <div class="lead-col rise"><p class="lead">The app lives in three places.</p></div>
+    <div class="prose rise"><p class="body">A seven-step setup wizard in the Shopify admin. The rates a shopper sees at checkout. And the quiet operations after purchase, where it books the freight, holds the order until pickup is confirmed, and hands the shopper a tracking page.</p></div>
+
+    <div class="prose rise" style="grid-column:1/span 7;margin-top:var(--s5)"><p class="body">The first thing the merchant chooses about their own catalog is which products even qualify for Warp. The screen below is where they say so, and where the hard limits are drawn in the same breath.</p></div>
+
+    <figure class="shot wide rise" style="grid-column:1/-1;margin-top:var(--s5)">
+      <span class="ph" style="aspect-ratio:2600/1908">
+        <img src="assets/eligibility-tag.webp" alt="The eligible-products step in the Shopify admin, step 3 of 7. A merchant picks one of three ways to identify big-and-bulky products: by product tag (selected), by selecting products manually, or by collection. A Product Tags card holds the tag warp-big-bulky, with a note that the tag is only used by Warp and shoppers never see it. Below, a What Warp can carry panel states the fixed limits: up to 500 lb per item and up to 60 by 60 by 60 inches per box, with a cart-mix policy note." width="2600" height="1908" loading="lazy">
+      </span>
+      <figcaption><span class="fn-tag">Fig. 07</span><b>Which products qualify, and the limits, in one screen.</b> The default path tags a product "warp-big-bulky," a tag the shopper never sees. Below it, the hard limits are stated plainly on the same screen: up to 500 lb per item and 60 by 60 by 60 inches per box, and anything over that quietly hides Warp at checkout instead of promising a delivery it cannot make.</figcaption>
+    </figure>
+
+    <figure class="rise" style="grid-column:1/-1;margin:var(--s6) 0 0">
+      <div class="twoup">
+        <div><span class="modelab">The second way &middot; by hand</span><span class="ph" style="aspect-ratio:1600/701"><img src="assets/eligibility-manual.webp" alt="The same eligible-products step with Select products manually chosen: a scrollable list of the store's products, each with a Not selected control, so the merchant can pick big-and-bulky items one by one." width="1600" height="701" loading="lazy"></span></div>
+        <div><span class="modelab">The third way &middot; by collection</span><span class="ph" style="aspect-ratio:1600/701"><img src="assets/eligibility-collection.webp" alt="The same step with By collection chosen: a list of the store's collections, Home page, Automated Collection and Hydrogen, each selectable so a whole collection becomes eligible at once." width="1600" height="701" loading="lazy"></span></div>
+      </div>
+      <figcaption style="grid-column:auto"><span class="fn-tag">Fig. 08</span><b>Two more ways to say the same thing.</b> If tags do not fit the store, the merchant picks products by hand or points Warp at whole collections. One decision, three routes into it, so setup fits the catalog a store already keeps.</figcaption>
+    </figure>
+
+    <div class="keymove rise">
+      <p>I made the delivery date a property of the shipping rate itself, so <b>"Warp &middot; 07/08" is just another rate Shopify already knows how to show</b>. Scheduling works on every Shopify plan that way, with the richer in-checkout card as a bonus on the plans that support it. It trades a slicker widget for far wider reach, which is the right trade for a wedge.</p>
+    </div>
+
+    <figure class="shot wide rise" style="grid-column:1/-1;margin-top:var(--s8)">
+      <span class="ph" style="aspect-ratio:2600/1488">
+        <img src="assets/delivery-rules.webp" alt="The delivery-rules step in the Shopify admin: a card titled How a Warp day works, with a timeline from 8am to 8pm marking a 12:30 PM cutoff, a 12:30 to 1:30 PM pickup window, and a 1:30 to 8:30 PM delivery window; same-day and next-day are both toggled on." width="2600" height="1488" loading="lazy">
+      </span>
+      <figcaption><span class="fn-tag">Fig. 09</span><b>A real day the freight can arrive.</b> The delivery-rules step draws the Warp day: a 12:30 PM cutoff, a 12:30 to 1:30 PM pickup, a 1:30 to 8:30 PM delivery. That machinery is what lets "Warp &middot; 07/08" behave like an ordinary shipping rate a shopper just picks.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ============ ^04 HONESTY IN THE UI ============ -->
+<section id="labels" aria-labelledby="labels-h">
+  <div class="wrap grid12">
+    <div class="eyebrow rise"><span class="num"><span class="mk" aria-hidden="true"></span>04</span> <span class="lbl">The core</span> <span class="rule"></span><span class="tag">Every label is true</span></div>
+    <h2 class="title s-head rise" id="labels-h">Every label equals what actually happens.</h2>
+    <div class="lead-col rise"><p class="lead">This app moves real money and makes real delivery promises, so a label that does not match reality is worse than something ugly.</p></div>
+    <div class="prose rise"><p class="body">Four decisions that shipped, each of them defensible line by line in the code.</p></div>
+
+    <div class="decisions rise stagger">
+      <div class="d-row rise"><div class="no">01</div><div><b>Booking in progress, not confirmed.</b><span>The shopper pays the store first, and Warp books the freight a moment later. There is no honest "confirmed" at the instant checkout completes, so the shopper never sees one. They see where the order actually is.</span></div></div>
+      <div class="d-row rise"><div class="no">02</div><div><b>Two separate vocabularies.</b><span>The shopper's status and the merchant's status never share words. A shopper who already paid never sees "payment pending." That is the merchant's thing to resolve, and it stays on the merchant's screen.</span></div></div>
+      <div class="d-row rise"><div class="no">03</div><div><b>Pick a date, not a time window.</b><span>The first spec had a two-hour slot picker. Warp cannot guarantee two hours, so the shipped rule is a date with an 8:30 PM outside bound. I will not design a precision the operation cannot serve.</span></div></div>
+      <div class="d-row rise"><div class="no">04</div><div><b>No markup, no spread.</b><span>The billing screen says it plainly and makes the merchant tick a box to acknowledge it. A <span class="tok">grep</span> of the code turns up no markup field, no spread, no margin, because none of them exist.</span></div></div>
+    </div>
+
+    <figure class="shot wide rise" style="grid-column:1/-1;margin-top:var(--s9)">
+      <span class="ph" style="aspect-ratio:2600/1897">
+        <img src="assets/rules-of-the-road.webp" alt="The Rules of the Road step in the Shopify admin, headed 'The 10 things every Warp merchant should know before going live,' with a green 'You're set' banner, a '10 of 10 confirmed' status, and rule cards each marked Confirmed with an acknowledgement checkbox: Warp delivers within 90 miles; same-day cutoff is 12:30 PM; shoppers pick a date, not a time window." width="2600" height="1897" loading="lazy">
+      </span>
+      <figcaption><span class="fn-tag">Fig. 10</span><b>Ten operational truths, read and ticked before go-live.</b> Rather than engineer every hard edge away, the app names it: the 90-mile limit, the 12:30 cutoff, "pick a date, not a window." The merchant reads and acknowledges each of the ten before the store can go live.</figcaption>
+    </figure>
+
+    <div class="ba exhibit rise" style="margin-top:var(--s9)">
+      <div>
+        <figure class="shot" style="max-width:440px">
+          <div class="track-spec" role="img" aria-label="The shopper's post-checkout status, drawn as a specimen: a headline Booking in progress, above a stepper reading Ordered done, Booking in progress current, Picked up, Delivered.">
+            <div class="ts-h">Warp delivery &middot; status</div>
+            <div class="ts-status"><span class="live" aria-hidden="true"></span>Booking in progress</div>
+            <div class="ts-sub">The freight is being booked now. No fake "confirmed."</div>
+            <ol>
+              <li class="done"><span class="mrk" aria-hidden="true"></span><span class="lb">Ordered</span></li>
+              <li class="now"><span class="mrk" aria-hidden="true"></span><span class="lb">Booking in progress</span></li>
+              <li><span class="mrk" aria-hidden="true"></span><span class="lb">Picked up</span></li>
+              <li><span class="mrk" aria-hidden="true"></span><span class="lb">Delivered<span class="t2">Between 1:30 and 8:30 PM</span></span></li>
+            </ol>
+          </div>
+        </figure>
+      </div>
+      <div>
+        <figcaption style="margin-top:0"><span class="fn-tag">Fig. 11</span><b>What the shopper actually sees.</b> The status the instant checkout completes: "Booking in progress," never a "confirmed" the app can't honestly promise before Warp has taken the job. Drawn here as a specimen of the app's status vocabulary; the shopper's full live tracking page renders only on the Plus dev store.</figcaption>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ^05 THE HARD PART ============ -->
+<section id="hardpart" aria-labelledby="hardpart-h">
+  <div class="wrap grid12">
+    <div class="eyebrow rise"><span class="num"><span class="mk" aria-hidden="true"></span>05</span> <span class="lbl">The hard part</span> <span class="rule"></span><span class="tag">Six weeks of the wrong bug</span></div>
+    <h2 class="title s-head rise" id="hardpart-h">Rejected six times for a bug that wasn't in the code.</h2>
+    <div class="prose rise" style="grid-column:1/span 8"><p class="body">Shopify rejected the app about six times over roughly six weeks, always on the same rule: the checkout extension "did not display." The code was correct, and an audit confirmed it. The real cause took actual debugging to find, and it was never where the rejection pointed.</p></div>
+
+    <div class="ladder rise">
+      <div class="l-row first"><div class="p tnum">3h</div><div class="txt"><b>Reviewed in under three hours. One bug.</b><p>I had braced for a four to six week queue. Shopify picked it up in under three hours, which told me the submission package was complete. Then it came back with a single rejection: the checkout card rendered nothing. They had tested a Helsinki, euro checkout, where Warp correctly returns no rate, so of course nothing showed. Fast pickup, not a pass.</p></div></div>
+      <div class="l-row"><div class="p tnum">&times;6</div><div class="txt"><b>The same rejection, over and over.</b><p>"Checkout extensions must display properly." I kept re-reading the code that drew the card. It was fine. Chasing a rendering bug in correct code is a special kind of stuck.</p></div></div>
+      <div class="l-row"><div class="p">Logs</div><div class="txt"><b>I stopped trusting the rejection and read the logs.</b><p>Two real failures were sitting in the carrier-service logs the whole time. Shopify sends <span class="tok" style="font-family:var(--sans);font-weight:600;border:1px solid var(--line-strong);background:var(--surface);border-radius:6px;padding:.03em .34em">null</span> for an empty optional field. My schema used a rule that accepts a missing field but rejects a null one. A single null failed the whole check and hid every Warp rate.</p>
+        <div class="fix">
+          <span class="tok old">.optional()</span>
+          <span class="arrow" aria-hidden="true">&rarr;</span>
+          <span class="tok new">.nullish()</span>
+        </div>
+        <p class="fix-note">One word, plus a regression test that reproduces both logged failures.</p>
+      </div></div>
+      <div class="l-row"><div class="p">Plus</div><div class="txt"><b>The card was Plus-only. The store wasn't.</b><p>In-checkout extensions are a Shopify Plus feature. The demo store had drifted onto a lower plan, so the card could never render for a reviewer, whatever the code did. The earlier plan had written this off as unfixable. It wasn't. Shopify hands you a free Plus development store for exactly this, and an unsaved block previews in the editor but never renders on a live checkout, which was its own quiet trap.</p></div></div>
+      <div class="l-row"><div class="p tnum">7/6</div><div class="txt"><b>The whole checkout, working, on a real Plus store.</b><p>I spun up the free Plus dev store, placed and saved the card on the checkout shipping step, and watched it work. The scheduler card rendered, and four dated Warp rates appeared: 07/07 through 07/10, each at $106.22, with the 1:30 to 8:30 window and the 90-mile note. That is the moment the six-week blocker died.</p></div></div>
+    </div>
+
+    <figure class="rise" style="grid-column:1/-1;margin-top:var(--s8);max-width:520px;margin-inline:auto;width:100%">
+      <span class="spec-tag"><span class="spec-dot" aria-hidden="true"></span>Specimen &middot; drawn from the live checkout extension</span>
+      <div class="rate-spec" role="img" aria-label="The Warp checkout shipping step, drawn as a specimen: a Modern Linen Sofa in the cart, then four dated Warp delivery options, Tuesday July 7, Wednesday July 8 which is selected, Thursday July 9, and Friday July 10, each $106.22 and each delivered 1:30 to 8:30 PM within 90 miles. Below them the Warp scheduler card confirms: Your delivery is scheduled, Wednesday, July 8. Warp delivers between 1:30 PM and 8:30 PM. We will text you a precise ETA the morning of delivery.">
+        <div class="rs-cart"><span class="rs-thumb" aria-hidden="true"></span><span class="rs-ct"><b>Modern Linen Sofa</b><span>Qty 1</span></span></div>
+        <div class="rs-h">Delivery</div>
+        <div class="rs-opts">
+          <div class="opt"><span class="rd" aria-hidden="true"></span><span class="tx"><span class="t">Warp &middot; <span class="day">Tue, Jul 7</span></span><span class="s">Delivered 1:30 to 8:30 PM &middot; within 90 miles</span></span><span class="price tnum">$106.22</span></div>
+          <div class="opt sel"><span class="rd" aria-hidden="true"></span><span class="tx"><span class="t">Warp &middot; <span class="day">Wed, Jul 8</span></span><span class="s">Delivered 1:30 to 8:30 PM &middot; within 90 miles</span></span><span class="price tnum">$106.22</span></div>
+          <div class="opt"><span class="rd" aria-hidden="true"></span><span class="tx"><span class="t">Warp &middot; <span class="day">Thu, Jul 9</span></span><span class="s">Delivered 1:30 to 8:30 PM &middot; within 90 miles</span></span><span class="price tnum">$106.22</span></div>
+          <div class="opt"><span class="rd" aria-hidden="true"></span><span class="tx"><span class="t">Warp &middot; <span class="day">Fri, Jul 10</span></span><span class="s">Delivered 1:30 to 8:30 PM &middot; within 90 miles</span></span><span class="price tnum">$106.22</span></div>
+        </div>
+        <div class="sched-banner">
+          <div class="sb-title"><svg width="16" height="16" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><circle cx="10" cy="10" r="10" fill="currentColor"></circle><path d="M5.7 10.3l2.8 2.7 5.8-6" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg><span>Your delivery is scheduled</span></div>
+          <div class="sb-date"><svg width="16" height="16" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><rect x="2.75" y="4.25" width="14.5" height="13" rx="2.4" fill="none" stroke="currentColor" stroke-width="1.7"></rect><line x1="2.75" y1="8.25" x2="17.25" y2="8.25" stroke="currentColor" stroke-width="1.7"></line><line x1="6.75" y1="2.5" x2="6.75" y2="5.75" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"></line><line x1="13.25" y1="2.5" x2="13.25" y2="5.75" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"></line></svg><span>Wednesday, July 8</span></div>
+          <p class="sb-sub">Warp delivers between 1:30 PM and 8:30 PM. We'll text you a precise ETA the morning of delivery.</p>
+        </div>
+      </div>
+      <p class="spec-note">This card renders only inside a live Shopify Plus checkout, so it is drawn here from the extension source, not captured as a screenshot. <b>$106.22 is that dev store's rate for a test sofa, not a production price.</b></p>
+      <figcaption><span class="fn-tag">Fig. 12</span><b>The moment the six-week blocker died.</b> The Plus-only Warp Delivery Scheduler on the checkout shipping step: four dated Warp rates with Wednesday, July 8 selected, and the confirmation that selection triggers. Drawn in code from the real warp-checkout-ui extension and the checkout that ran live on the Plus dev store on July 6.</figcaption>
+    </figure>
+
+    <blockquote class="pull rise">
+      <q>The fix came from climbing. From the symptom the reviewer named, up to the platform's real rules: a Plus-only surface, an editor preview that is not a live render, and one line of validation that rejected a legal null.</q>
+      <div class="attr"><span class="mk" aria-hidden="true"></span> None of it was in the code that drew the card.</div>
+    </blockquote>
+  </div>
+</section>
+
+<!-- ============ ^06 BUILT TO A BAR ============ -->
+<section id="bar" aria-labelledby="bar-h">
+  <div class="wrap grid12">
+    <div class="eyebrow rise"><span class="num"><span class="mk" aria-hidden="true"></span>06</span> <span class="lbl">The rigor</span> <span class="rule"></span><span class="tag">Numbers you can run</span></div>
+    <h2 class="title s-head rise" id="bar-h">Built so you can check every number.</h2>
+    <div class="lead-col rise"><p class="lead">None of this rests on my word. It is in the repo, and every number here is something you could run yourself.</p></div>
+
+    <div class="data rise stagger">
+      <div class="d-item hot rise"><div class="fig tnum">479</div><div class="lab"><b>commits, every one mine.</b> Git-verified on a solo build, March to July 2026.</div></div>
+      <div class="d-item rise"><div class="fig tnum">1,493</div><div class="lab"><b>tests, green.</b> The suite that guards the money path and the checkout.</div></div>
+      <div class="d-item rise"><div class="fig tnum">19</div><div class="lab"><b>adversarial review passes in June</b> that grew the suite by more than 500 tests and closed the cancel-while-charging race, where a shopper cancelling at the exact moment the system was charging a card and dispatching a driver could do both. I closed it end to end, with a durable record of every cancel and guards that check it before any money moves.</div></div>
+      <div class="d-item rise"><div class="fig tnum">0</div><div class="lab"><b>blockers</b> in a maximum-effort submission audit across the money path, checkout, webhooks, and security.</div></div>
+    </div>
+
+    <div class="keymove rise" style="margin-top:var(--s8)">
+      <p>I pulled Stripe out of the app entirely. The app is free and the freight is a strict pass-through on the merchant's own Warp account, so handling cards inside the app added a compliance surface for no benefit. <b>The merchant now picks a Warp balance or a card already on file, and the app never touches card data.</b></p>
+    </div>
+
+    <figure class="shot wide rise" style="grid-column:1/-1;margin-top:var(--s7)">
+      <span class="ph" style="aspect-ratio:2600/1974">
+        <img src="assets/payment-wallet.webp" alt="The payment step in the Shopify admin: the funding source is set to 'Wallet balance, settle each booking from your prepaid Warp balance,' with no card-entry field anywhere. A 'What you're authorizing' panel shows the pass-through dollar flow, and an amber banner honestly reports a failure state, 'Couldn't reach your Warp wallet.'" width="2600" height="1974" loading="lazy">
+      </span>
+      <figcaption><span class="fn-tag">Fig. 13</span><b>Compliance by subtraction.</b> The redesigned payment step: link Warp, settle from a wallet balance or a saved Warp card, with no card-entry field anywhere in the app. Even the failure is honest: the amber banner tells the merchant the wallet could not be read and what they can still do, instead of pretending it is fine.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ============ ^07 THE LEDGER (proven vs won't claim) ============ -->
+<section id="honest" aria-labelledby="honest-h">
+  <div class="wrap grid12">
+    <div class="eyebrow rise"><span class="num"><span class="mk" aria-hidden="true"></span>07</span> <span class="lbl">The honest line</span> <span class="rule"></span><span class="tag">Where it really stands</span></div>
+    <h2 class="title s-head rise" id="honest-h">Honest about what it is, and what it isn't.</h2>
+    <div class="lead-col rise" style="grid-column:1/span 9"><p class="lead" style="max-width:52ch">The app is built, hardened, submitted to Shopify review, and verified working live on a Plus development store. It is not publicly listed, so no real shopper has used it yet. I am precise about that.</p></div>
+
+    <figure class="shot wide rise" style="grid-column:1/-1;margin-top:var(--s7)">
+      <span class="ph" style="aspect-ratio:2600/1489">
+        <img src="assets/orders.webp" alt="The Warp orders screen in the Shopify admin showing an empty state: a large centered message reading No Warp orders yet, with the subtext that orders placed with Warp Delivery will appear here." width="2600" height="1489" loading="lazy">
+      </span>
+      <figcaption><span class="fn-tag">Fig. 14</span><b>Zero, shown plainly.</b> The Warp orders screen, exactly as it stands: "No Warp orders yet." The app is submitted, not publicly live, so there is nothing here yet, and the ledger below is just as literal about what I can and cannot claim.</figcaption>
+    </figure>
+
+    <div class="ledger rise">
+      <div class="lg-col proven">
+        <div class="lg-head"><span class="mk" aria-hidden="true" style="width:11px;height:11px"></span>What I can prove</div>
+        <div class="lg-row"><span class="m fill" aria-hidden="true"></span><div class="t">The full checkout, <b>verified live on a free Shopify Plus dev store on July 6</b>: the scheduler card rendered and four dated Warp rates appeared.</div></div>
+        <div class="lg-row"><span class="m fill" aria-hidden="true"></span><div class="t">The first submission was <b>reviewed in under three hours against a four to six week queue</b>, and came back with one bug. A fast first look, never an approval, and I say it that way.</div></div>
+        <div class="lg-row"><span class="m fill" aria-hidden="true"></span><div class="t">A maximum-effort submission audit found <b>zero blockers</b> across the money path, checkout, webhooks, and security.</div></div>
+        <div class="lg-row"><span class="m fill" aria-hidden="true"></span><div class="t"><b>479 commits, all mine</b>, and a test suite at 1,493 green.</div></div>
+      </div>
+      <div class="lg-col wont">
+        <div class="lg-head"><span class="m hollow" aria-hidden="true" style="width:11px;height:11px;margin:0"></span>What I won't claim</div>
+        <div class="lg-row"><span class="m hollow" aria-hidden="true"></span><div class="t"><span class="no">Installs, active merchants, or GMV.</span> There are none, because it is not publicly live. A zero dressed up as a result is still a lie.</div></div>
+        <div class="lg-row"><span class="m hollow" aria-hidden="true"></span><div class="t"><span class="no">Any conversion or order-value lift.</span> "A better delivery promise sells more couches" is the bet this whole thing is built on, not a number I measured.</div></div>
+        <div class="lg-row"><span class="m hollow" aria-hidden="true"></span><div class="t"><span class="no">Adoption of any kind.</span> One furniture store was lined up as the anchor partner. That is a prospect, not a metric.</div></div>
+      </div>
+    </div>
+
+    <p class="statusnote rise">What is real here is the judgment and the craft: taking a founder's whiteboard sketch to a rigorously built, compliance-aware, submitted product, solo, and holding the line on scope and honesty the whole way. <b>That part is true whether or not anyone has installed it yet.</b></p>
+  </div>
+</section>
+
+<!-- ============ ^08 REFLECTION ============ -->
+<section id="reflection" aria-labelledby="reflection-h">
+  <div class="wrap grid12">
+    <div class="eyebrow rise"><span class="num"><span class="mk" aria-hidden="true"></span>08</span> <span class="lbl">Reflection</span> <span class="rule"></span><span class="tag">The lesson cost six weeks</span></div>
+    <h2 class="title s-head rise" id="reflection-h">Read the platform before arguing with it.</h2>
+    <div class="prose rise" style="grid-column:1/span 8">
+      <p class="body">Half the hard parts here were not design or code. They were understanding what Shopify actually allows, its Plus-only surfaces, its carrier rules, its billing policy, and designing inside that instead of wishing it away. The six weeks I lost were six weeks of arguing with a platform rule instead of reading it.</p>
+    </div>
+
+    <div class="refl rise">
+      <div class="r">
+        <div class="k"><span class="mk" aria-hidden="true"></span> Kept</div>
+        <div class="t">Refusing the convenient fiction. Every time I turned down a fake "confirmed" or a two-hour window we could not hit, <b>the checkout got clearer and easier to trust</b>.</div>
+      </div>
+      <div class="r">
+        <div class="k"><span class="mk" aria-hidden="true"></span> Would change</div>
+        <div class="t">I accepted "the card can't render" as unfixable for weeks. The free Plus dev store was in the docs the whole time. <b>Read the platform before arguing with it</b>.</div>
+      </div>
+      <div class="r">
+        <div class="k"><span class="mk" aria-hidden="true"></span> Carried</div>
+        <div class="t">Honesty as a design material. It started on an earlier app, and <b>this is where it held up against real money and a real reviewer</b>.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ THE LISTING (closing montage) ============ -->
+<section class="band" aria-label="The submitted App Store listing">
+  <div class="wrap grid12">
+    <div class="band-head rise"><span>The submitted listing</span><span class="rule"></span><span>The App Store screens</span></div>
+    <figure class="shot wide rise">
+      <span class="ph" style="aspect-ratio:2880/1620">
+        <img src="assets/appstore-montage.webp" alt="A montage of the submitted Warp Big and Bulky listing: the app icon and wordmark, a submitted-to-Shopify-review tag, and four real Shopify admin screens, the onboarding home, the add-fulfillment-center step, the money-flow diagram, and the launch-readiness check." width="2880" height="1620" loading="lazy">
+      </span>
+      <figcaption><span class="fn-tag">Fig. 15</span><b>The submitted listing.</b> The Warp Big &amp; Bulky app icon and four real screens from the Shopify admin: the onboarding home, the warehouse step, the money-flow diagram, and the launch-readiness check.</figcaption>
+    </figure>
+  </div>
+</section>
+
+</main>
+
+<!-- ============ COLOPHON ============ -->
+<footer class="colophon">
+  <div class="wrap grid12">
+    <div class="cred rise">
+      <div class="brand"><span class="mk" aria-hidden="true"></span>Big &amp; Bulky</div>
+      <p><b>Warp Big &amp; Bulky, a Shopify app.</b> Product designer and builder, solo. I did the product design, then wrote the app directing AI to do most of the typing, and I owned the flows, the data model, the honesty rules in the UI, the billing redesign, the release calls, and the debugging. Warp's CRO and a teammate drove product direction in weekly reviews, and the freight backend is the Warp team's.</p>
+      <p class="fine">Type is Fraunces and Hanken Grotesk. One warm terracotta signal on a cream canvas, kept for actions, the Warp rate, and states that are true. Every number here is git-verified or drawn from the build record.</p>
+      <p class="warp-credit"><span class="warp-credit-lbl">Designed at</span><svg class="warp-mark" viewBox="0 0 660 186" role="img" aria-label="Warp" focusable="false" xmlns="http://www.w3.org/2000/svg"><path d="M660 185.035H0V0H660V185.035ZM14.0597 171.327H646.141V13.9593H14.0597V171.327Z" fill="currentColor" aria-hidden="true"/><path d="M300.976 53.2756L332.509 131.608H351.239L319.705 53.2756H300.976Z" fill="currentColor" aria-hidden="true"/><path d="M215.919 131.608H234.648L266.182 53.2756H247.453L215.919 131.608Z" fill="currentColor" aria-hidden="true"/><path d="M150.892 107.405L136.431 71.3523H115.593L101.131 107.405L78.2342 53.2756H60.0068L93.047 131.608H109.517L125.987 90.5839L142.457 131.608H158.927L192.017 53.2756H173.739L150.892 107.405Z" fill="currentColor" aria-hidden="true"/><path d="M471.856 82.8511C471.816 75.0646 468.691 67.6113 463.166 62.1242C457.642 56.6371 450.167 53.5636 442.381 53.5769H388.502V131.608H405.323V112.125H440.021L447.854 131.608H465.981L456.691 108.41C461.258 105.886 465.065 102.183 467.715 97.6881C470.364 93.1928 471.759 88.0691 471.755 82.8511H471.856ZM405.323 70.3481H442.381C445.71 70.3481 448.903 71.6706 451.257 74.0248C453.611 76.379 454.934 79.572 454.934 82.9013C454.934 86.2307 453.611 89.4236 451.257 91.7778C448.903 94.132 445.71 95.4546 442.381 95.4546H405.323V70.3481Z" fill="currentColor" aria-hidden="true"/><path d="M570.768 53.5769H516.939V131.608H533.711V112.125H570.768C574.612 112.125 578.419 111.368 581.971 109.897C585.522 108.426 588.749 106.269 591.468 103.551C594.186 100.833 596.342 97.6055 597.814 94.0538C599.285 90.5021 600.042 86.6954 600.042 82.8511C600.042 79.0067 599.285 75.2 597.814 71.6483C596.342 68.0966 594.186 64.8695 591.468 62.1511C588.749 59.4327 585.522 57.2764 581.971 55.8053C578.419 54.3341 574.612 53.5769 570.768 53.5769ZM570.768 95.4043H533.711V70.2978H570.768C574.097 70.2978 577.29 71.6204 579.644 73.9746C581.998 76.3288 583.321 79.5217 583.321 82.8511C583.321 86.1804 581.998 89.3734 579.644 91.7276C577.29 94.0818 574.097 95.4043 570.768 95.4043Z" fill="currentColor" aria-hidden="true"/><path d="M292.04 76.1794H275.219V94.1557H292.04V76.1794Z" fill="currentColor" aria-hidden="true"/><path d="M275.219 131.615H292.04V113.84H275.219V131.615Z" fill="currentColor" aria-hidden="true"/></svg></p>
+      <a class="backlink" href="/">&larr; Back to portfolio</a>
+    </div>
+    <div class="note rise">
+      <dl>
+        <div><dt>Type</dt><dd>Fraunces &middot; Hanken</dd></div>
+        <div><dt>Stack</dt><dd>Remix, Polaris, Prisma</dd></div>
+        <div><dt>Accent</dt><dd>One terracotta signal <span class="mk" aria-hidden="true"></span></dd></div>
+        <div><dt>Status</dt><dd>Submitted, verified on Plus dev store</dd></div>
+        <div><dt>Case study</dt><dd>Neel Tengariya, 2026</dd></div>
+      </dl>
+    </div>
+  </div>
+</footer>
+
+<!-- [SHARED-VERBATIM] calm reveal only — no app UI is drawn in code, no keyframes -->
+<script>
+  // calm reveal only — no app UI is drawn in code, no keyframes
+  (function(){
+    var els = document.querySelectorAll('.rise');
+    if(!('IntersectionObserver' in window) || matchMedia('(prefers-reduced-motion: reduce)').matches){
+      els.forEach(function(e){e.classList.add('in')}); return;
+    }
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(en){ if(en.isIntersecting){ en.target.classList.add('in'); io.unobserve(en.target);} });
+    }, {rootMargin:'0px 0px -8% 0px', threshold:0.06});
+    els.forEach(function(e){io.observe(e)});
+  })();
+</script>
+
+<!-- LENIS SMOOTH SCROLL — same lib + config as the neelmyno.in homepage (see homepage index.html).
+     Loaded site-absolute from /js/lenis_mini.js, exactly like the shared nav logo + favicon: the path
+     resolves on the deployed site and 404s only in isolated local preview, where it falls back cleanly
+     to native scroll. Skipped entirely under prefers-reduced-motion, matching the reveal-animation guard. -->
+<script src="/js/lenis_mini.js"></script>
+<script>
+  (function(){
+    if(!window.Lenis || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    var lenis = new Lenis({
+      lerp: .1,
+      wheelMultiplier: .7,
+      gestureOrientation: "vertical",
+      normalizeWheel: false,
+      smoothTouch: false,
+    });
+    function raf(time){ lenis.raf(time); requestAnimationFrame(raf); }
+    requestAnimationFrame(raf);
+  })();
+</script>
+<style>
+  html.lenis{height:auto}
+  .lenis.lenis-smooth{scroll-behavior:auto}
+  .lenis.lenis-smooth [data-lenis-prevent]{overscroll-behavior:contain}
+  .lenis.lenis-stopped{overflow:hidden}
+</style>
+</body>
+</html>

@@ -336,6 +336,10 @@
   .colophon .note dt{font-size:var(--fs-micro);letter-spacing:.12em;text-transform:uppercase;color:var(--ink-faint);font-weight:700}
   .colophon .note dd{margin:0;font-size:var(--fs-sm);color:var(--ink);font-weight:600;text-align:right}
   .colophon .note dd .u{display:inline-block;width:10px;height:10px;background:var(--accent);vertical-align:baseline;margin-left:6px}
+  /* [WARP CREDIT] the real Warp wordmark as a quiet "Designed at" brand credit. Rendered in calm ink (NOT the accent) so the page keeps its one-green discipline; the mark's shape carries the recognition, not a second green. One use per page, content not nav. */
+  .warp-credit{display:flex;align-items:center;gap:10px;margin:var(--s5) 0 0}
+  .warp-credit-lbl{font-size:var(--fs-micro);letter-spacing:.12em;text-transform:uppercase;color:var(--ink-faint);font-weight:600;line-height:1}
+  .warp-mark{height:18px;width:auto;display:block;color:var(--ink-dim);flex:0 0 auto}
   .backlink{grid-column:1/-1;display:inline-flex;align-items:center;gap:.5rem;margin-top:var(--s7);font-size:var(--fs-sm);color:var(--ink-dim);text-decoration:none;font-weight:700;transition:color .15s var(--ease-out)}
   .backlink:hover{color:var(--ink)}
   .backlink:active{transform:translateY(1px)}
@@ -354,8 +358,11 @@
          container (never the page body) so the states grid and the two-panel
          comparisons stay legible at a larger scale. The caption stays anchored. ---- */
   @media (max-width:640px){
+    /* [P17] !important defeats the per-figure inline aspect-ratio so the mobile box
+       is full-height (height:auto), letting each dense figure scroll inside its own
+       container as intended, instead of being vertically cropped to the desktop ratio. */
     figure.shot.wide.montage .ph{
-      aspect-ratio:auto;height:auto;display:block;overflow-x:auto;overflow-y:hidden;
+      aspect-ratio:auto !important;height:auto;display:block;overflow-x:auto;overflow-y:hidden;
       -webkit-overflow-scrolling:touch;scrollbar-width:thin;scrollbar-color:var(--line-strong) transparent}
     figure.shot.wide.montage .ph img{
       position:relative;inset:auto;width:auto;height:auto;min-width:660px;object-fit:unset;border-radius:0}
@@ -554,6 +561,19 @@
       <q>Predict what the user does with a control, then criticize your own decision, before someone else has to.</q>
       <div class="attr"><span class="caret" aria-hidden="true">^</span> The fix that stuck was a way of working. Before I ship a control now I run its three clicks in my head: the first click, the undo, and the cold-land.</div>
     </blockquote>
+
+    <!-- [P17] visibility coda · the real setup modal behind the honest row + why the control earns its place -->
+    <div class="lead-col rise"><p class="lead">Behind the honest row is the modal that sets it, and the reason a page carries a control like this at all.</p></div>
+
+    <figure class="shot wide montage rise">
+      <div class="ph" style="aspect-ratio:2484/1998">
+        <img src="assets/tracking-alerts-modal.webp" alt="The Customize arrival alerts modal from the redesigned tracking page. A Type field to choose SMS or email, a Recipient field for a phone number or email address, and a list of nine real shipment events a person can be notified about. Two are checked by default, shipment picked up successfully and shipment delivered successfully. A Cancel button and a Save alerts button sit at the bottom." width="2484" height="1998" loading="lazy">
+        <span class="ph-meta"><span class="ph-tag">Image</span><span class="ph-res">2484 &times; 1998</span><span class="ph-label">Customize arrival alerts &middot; the setup surface</span></span>
+      </div>
+      <figcaption><span class="fn-tag">Fig. 04 &middot; Visibility, opt-in</span><b>Nine real events, on the channel the person already reads.</b> Every one is an event the status engine already tracks, so an alert can only fire for something that truly happened. Two are on by default, picked up and delivered, the ones nearly everyone wants.</figcaption>
+    </figure>
+
+    <div class="rolehonest rise"><p>The most common question a shipment gets is where it is, and across ecommerce that one question is a large share of post-purchase support, about a third of it on a normal week and more at peak. Let people pick the events they care about and the alert answers it before anyone opens a chat. I built the control to carry that load and earn a little trust doing it. I never instrumented it, so I will not claim it did.</p></div>
   </div>
 </section>
 
@@ -561,7 +581,7 @@
 <section id="shipped" aria-labelledby="shipped-h">
   <div class="wrap grid12">
     <div class="eyebrow rise"><span class="num"><span class="caret" aria-hidden="true">^</span>05</span> <span class="lbl">Shipped twice</span> <span class="rule"></span><span class="tag">No drift</span></div>
-    <h2 class="title s-head rise" id="shipped-h">Shipped twice, guaranteed identical.</h2>
+    <h2 class="title s-head rise" id="shipped-h">Shipped twice, provably identical.</h2>
     <div class="lead-col rise"><p class="lead">A redesign is worth nothing if it drifts on the way into production. So I froze the backend, proved it, and shipped the design in a way that makes the built UI provably match the reviewed one.</p></div>
 
     <div class="rules rise">
@@ -593,15 +613,49 @@
         <img src="assets/tracking-shipped-twice.webp" alt="Two build artifacts side by side rendering the same design from one reviewed render core: on the left the vanilla HTML prototype showing shipment P-57127-2619, on the right the Angular drop-in showing P-44767-2619. The layout, type, and motion are identical, and both cards read the same coherent shipment state; only the shipment data behind each differs, so the built UI cannot drift from what was reviewed." width="2880" height="1620" loading="lazy">
         <span class="ph-meta"><span class="ph-tag">Image</span><span class="ph-res">2880 &times; 1620</span><span class="ph-label">Vanilla and Angular builds &middot; one render core, two shipments</span></span>
       </div>
-      <figcaption><span class="fn-tag">Fig. 04 &middot; No drift</span><b>Two artifacts, one render core.</b> The vanilla prototype and the Angular drop-in render the same design because the drop-in reuses the reviewed core byte-for-byte and adapts only the data behind it, so a single engineer can integrate it with a guarantee that the UI matches what was reviewed.</figcaption>
+      <figcaption><span class="fn-tag">Fig. 05 &middot; No drift</span><b>Two artifacts, one render core.</b> The vanilla prototype and the Angular drop-in render the same design because the drop-in reuses the reviewed core byte-for-byte and adapts only the data behind it, so a single engineer can integrate it with a guarantee that the UI matches what was reviewed.</figcaption>
     </figure>
   </div>
 </section>
 
-<!-- ============ ^06 HONEST SCOPE ============ -->
+<!-- ============ ^06 THE OFFER ============ -->
+<section id="offer" aria-labelledby="offer-h">
+  <div class="wrap grid12">
+    <div class="eyebrow rise"><span class="num"><span class="caret" aria-hidden="true">^</span>06</span> <span class="lbl">The offer</span> <span class="rule"></span><span class="tag">Watcher to shipper</span></div>
+    <h2 class="title s-head rise" id="offer-h">Most people who open this page aren&rsquo;t customers yet.</h2>
+    <div class="lead-col rise"><p class="lead">Almost nobody who opens this page is a Warp customer. They are the person a shipment is coming to, watching it move. That makes the tracking page one of the widest-reach surfaces the company has, and often the first time a stranger feels Warp work before they ever pay for it.</p></div>
+
+    <figure class="shot wide montage rise">
+      <div class="ph" style="aspect-ratio:2460/1800">
+        <img src="assets/tracking-ship25-offer.webp" alt="The first-shipment offer from the redesigned Warp tracking page. A dark card headed A gift from Warp, a headline reading 25 dollars off your first shipment, a line saying the discount applies automatically at checkout, the code SHIP25 in a copyable chip, a spring-green Get an instant quote button, and fine print reading Valid on your first Warp shipment. One per customer." width="2460" height="1800" loading="lazy">
+        <span class="ph-meta"><span class="ph-tag">Image</span><span class="ph-res">2460 &times; 1800</span><span class="ph-label">The first-shipment offer &middot; SHIP25</span></span>
+      </div>
+      <figcaption><span class="fn-tag">Fig. 06 &middot; Reach meets intent</span><b>A first shipment, offered where the trust already is.</b> Someone watching their freight arrive on time is about as well-primed an audience as Warp could ask for. If they ship anything themselves, this is the moment to ask, with the code and the quote one tap away.</figcaption>
+    </figure>
+
+    <div class="rules rise">
+      <div class="r">
+        <div class="no">01</div>
+        <div>
+          <p class="b">It is a lever for a first booking.</p>
+          <p class="t">The discounts that actually build repeat customers sit in a narrow band, five to twenty percent, big enough to move a first order without teaching people to hold out for a coupon. Twenty-five dollars off a freight shipment is at the small end of that, on purpose. <b>What the money is really buying is the first booking and the chance at everything after it.</b></p>
+        </div>
+      </div>
+      <div class="r">
+        <div class="no">02</div>
+        <div>
+          <p class="b">The gift obeys the same honesty rule as the status.</p>
+          <p class="t">The offer that opens on its own is held back on every failure and return state. A shipment that was cancelled, failed at pickup, or is on its way back <b>never gets a &ldquo;gift from Warp&rdquo; popping up over it</b>. The quote stays a tap away for anyone who wants it. The page just stops celebrating over an order that fell apart.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ^07 HONEST SCOPE ============ -->
 <section id="honest" aria-labelledby="honest-h">
   <div class="wrap grid12">
-    <div class="eyebrow rise"><span class="num"><span class="caret" aria-hidden="true">^</span>06</span> <span class="lbl">Honest scope</span> <span class="rule"></span><span class="tag">What I can prove</span></div>
+    <div class="eyebrow rise"><span class="num"><span class="caret" aria-hidden="true">^</span>07</span> <span class="lbl">Honest scope</span> <span class="rule"></span><span class="tag">What I can prove</span></div>
     <h2 class="title s-head rise" id="honest-h">Honest about what it is, and isn&rsquo;t.</h2>
     <div class="lead-col rise"><p class="lead">This is a ship-ready, backend-audited, adversarially-reviewed redesign package. I deliberately rolled back a standalone deployable version, because a standalone app was not what the team needed. It is not a launch I can attach traffic to, and I would not draw a chart pretending otherwise.</p></div>
 
@@ -631,8 +685,8 @@
 <!-- ============ ^07 REFLECTION ============ -->
 <section id="reflection" aria-labelledby="reflection-h">
   <div class="wrap grid12">
-    <div class="eyebrow rise"><span class="num"><span class="caret" aria-hidden="true">^</span>07</span> <span class="lbl">Reflection</span> <span class="rule"></span><span class="tag">The smallest surface</span></div>
-    <h2 class="title s-head rise" id="reflection-h">The smallest surface is the honest test.</h2>
+    <div class="eyebrow rise"><span class="num"><span class="caret" aria-hidden="true">^</span>08</span> <span class="lbl">Reflection</span> <span class="rule"></span><span class="tag">The smallest surface</span></div>
+    <h2 class="title s-head rise" id="reflection-h">A page this small has nowhere to hide.</h2>
     <div class="lead-col rise"><p class="lead">A tracking page has no room to hide behind features. There is one job and one card, and about thirty seconds of someone&rsquo;s attention. Every choice is either true or it is a small lie a person feels before they can name it.</p></div>
 
     <div class="refl rise">
@@ -663,6 +717,7 @@
       <div class="brand"><span class="caret" aria-hidden="true">^</span>WARP&nbsp;TRACKING</div>
       <p><b>Warp Tracking redesign.</b> Product design engineer at Warp, an AI-native freight company that runs lean and ships daily. Solo design deliverable: the research, the before-state reverse-engineering, the information architecture, the visual and motion design, and a twelve-rule engine that computes the true status. Rahul owns the production Angular app I was modernizing. Troy, our CRO, set the frame. The AI wrote most of the code under my direction.</p>
       <p class="fine">Type is Satoshi with tabular figures, set on a twelve-column grid. The canvas is Lumen obsidian and the one accent is a single spring green that does exactly one job. Shadows are neutral, the way the redesign retired the terminal&rsquo;s green glow.</p>
+      <p class="warp-credit"><span class="warp-credit-lbl">Designed at</span><svg class="warp-mark" viewBox="0 0 660 186" role="img" aria-label="Warp" focusable="false" xmlns="http://www.w3.org/2000/svg"><path d="M660 185.035H0V0H660V185.035ZM14.0597 171.327H646.141V13.9593H14.0597V171.327Z" fill="currentColor" aria-hidden="true"/><path d="M300.976 53.2756L332.509 131.608H351.239L319.705 53.2756H300.976Z" fill="currentColor" aria-hidden="true"/><path d="M215.919 131.608H234.648L266.182 53.2756H247.453L215.919 131.608Z" fill="currentColor" aria-hidden="true"/><path d="M150.892 107.405L136.431 71.3523H115.593L101.131 107.405L78.2342 53.2756H60.0068L93.047 131.608H109.517L125.987 90.5839L142.457 131.608H158.927L192.017 53.2756H173.739L150.892 107.405Z" fill="currentColor" aria-hidden="true"/><path d="M471.856 82.8511C471.816 75.0646 468.691 67.6113 463.166 62.1242C457.642 56.6371 450.167 53.5636 442.381 53.5769H388.502V131.608H405.323V112.125H440.021L447.854 131.608H465.981L456.691 108.41C461.258 105.886 465.065 102.183 467.715 97.6881C470.364 93.1928 471.759 88.0691 471.755 82.8511H471.856ZM405.323 70.3481H442.381C445.71 70.3481 448.903 71.6706 451.257 74.0248C453.611 76.379 454.934 79.572 454.934 82.9013C454.934 86.2307 453.611 89.4236 451.257 91.7778C448.903 94.132 445.71 95.4546 442.381 95.4546H405.323V70.3481Z" fill="currentColor" aria-hidden="true"/><path d="M570.768 53.5769H516.939V131.608H533.711V112.125H570.768C574.612 112.125 578.419 111.368 581.971 109.897C585.522 108.426 588.749 106.269 591.468 103.551C594.186 100.833 596.342 97.6055 597.814 94.0538C599.285 90.5021 600.042 86.6954 600.042 82.8511C600.042 79.0067 599.285 75.2 597.814 71.6483C596.342 68.0966 594.186 64.8695 591.468 62.1511C588.749 59.4327 585.522 57.2764 581.971 55.8053C578.419 54.3341 574.612 53.5769 570.768 53.5769ZM570.768 95.4043H533.711V70.2978H570.768C574.097 70.2978 577.29 71.6204 579.644 73.9746C581.998 76.3288 583.321 79.5217 583.321 82.8511C583.321 86.1804 581.998 89.3734 579.644 91.7276C577.29 94.0818 574.097 95.4043 570.768 95.4043Z" fill="currentColor" aria-hidden="true"/><path d="M292.04 76.1794H275.219V94.1557H292.04V76.1794Z" fill="currentColor" aria-hidden="true"/><path d="M275.219 131.615H292.04V113.84H275.219V131.615Z" fill="currentColor" aria-hidden="true"/></svg></p>
       <a class="backlink" href="/">&larr; Back to portfolio</a>
     </div>
     <div class="note rise">
@@ -704,5 +759,31 @@
     els.forEach(function(e){ io.observe(e); });
   })();
 </script>
+
+<!-- LENIS SMOOTH SCROLL — same lib + config as the neelmyno.in homepage (see homepage index.html).
+     Loaded site-absolute from /js/lenis_mini.js, exactly like the shared nav logo + favicon: the path
+     resolves on the deployed site and 404s only in isolated local preview, where it falls back cleanly
+     to native scroll. Skipped entirely under prefers-reduced-motion, matching the reveal-animation guard. -->
+<script src="/js/lenis_mini.js"></script>
+<script>
+  (function(){
+    if(!window.Lenis || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    var lenis = new Lenis({
+      lerp: .1,
+      wheelMultiplier: .7,
+      gestureOrientation: "vertical",
+      normalizeWheel: false,
+      smoothTouch: false,
+    });
+    function raf(time){ lenis.raf(time); requestAnimationFrame(raf); }
+    requestAnimationFrame(raf);
+  })();
+</script>
+<style>
+  html.lenis{height:auto}
+  .lenis.lenis-smooth{scroll-behavior:auto}
+  .lenis.lenis-smooth [data-lenis-prevent]{overscroll-behavior:contain}
+  .lenis.lenis-stopped{overflow:hidden}
+</style>
 </body>
 </html>

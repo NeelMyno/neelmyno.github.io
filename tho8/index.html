@@ -322,11 +322,17 @@
      (a `ch` cap on the wrapper resolves at body font, ~16px, and jammed the 33px heading into
      ~320px); the heading now sits on one clean line at desktop and balances when it wraps. */
   .bench-head .title{font-size:var(--fs-h2);line-height:1.14;letter-spacing:-.014em;max-width:40ch}
-  .bench-take{grid-column:1/-1;display:flex;gap:10px;flex-wrap:wrap;margin-top:var(--s6)}
+  .bench-take{grid-column:1/-1;display:flex;gap:10px;flex-wrap:wrap;margin-top:var(--s7)}
   .bench-take .t{display:inline-flex;align-items:center;gap:9px;border:1px solid var(--line-strong);background:var(--paper);padding:8px 14px;border-radius:999px;font-size:var(--fs-sm);font-weight:600;color:var(--ink)}
   /* square marker, matching every other accent bullet on the page (one marker vocabulary). */
   .bench-take .t .d{width:8px;height:8px;background:var(--accent);flex:0 0 auto}
   .artifact{grid-column:1/-1;margin-top:var(--s6)}
+  /* The five chips are the grid's five column verdicts, so the grid reads as the evidence directly
+     beneath them: a tight gap couples the pair, while the wider --s7 above the chips breaks them
+     from the intro prose (proximity: related 1x, unrelated 2x). `.artifact`'s own margin-top is
+     nulled by figure.shot{margin:0} (element+class outranks the bare class), so the gap is set here
+     where the specificity survives. */
+  .bench .artifact{margin-top:var(--s5)}
   .artifact.narrow{grid-column:1 / span 9}
   @media (max-width:920px){.artifact.narrow{grid-column:1/-1}}
 
@@ -339,6 +345,40 @@
   .diagram img{display:block;width:100%;height:auto}
   .diagram figcaption{width:100%;margin-top:16px;font-size:var(--fs-sm);line-height:1.5;color:var(--ink-dim);text-align:center}
   .diagram figcaption b{color:var(--ink);font-weight:700}
+
+  /* ============ [P5 · additive] inline animated diagrams ============
+     The committed webp stays the fallback: it shows under no-JS (the default) AND under
+     prefers-reduced-motion. JS swaps in the inline SVG (adds .dgm-live) only when motion is
+     allowed, and the SVG animates once on scroll via the existing .rise -> .in trigger. The inline
+     SVG is the SAME source the webp was rendered from (assets/_diagrams/<name>.html), so content
+     matches exactly. No layout shift: webp and SVG both render at width:100% on the 1240:392 ratio. */
+  .diagram .dgm{display:none}
+  .diagram .dgm-webp{display:block}
+  .dgm-live .diagram .dgm{display:block}
+  .dgm-live .diagram .dgm-webp{display:none}
+  @media (prefers-reduced-motion:reduce){          /* belt-and-suspenders: force the webp under reduced-motion */
+    .dgm-live .diagram .dgm{display:none}
+    .dgm-live .diagram .dgm-webp{display:block}
+  }
+  /* the diagram's own light-theme palette (verbatim from assets/_diagrams/<name>.html), scoped to
+     .dgm so it never collides with the page's dark tokens */
+  .dgm{--paper:#F5F7FA;--surface:#FFFFFF;--ink:#12161C;--ink-2:#0B0E13;--ink-dim:#444C57;--ink-faint:#5E6570;--line:#E2E6EC;--line-strong:#CBD1DA;--accent:#F2572B;--accent-ink:#C02F06}
+  .dgm svg{display:block;width:100%;height:auto}
+  .dgm text{font-family:'Manrope','Segoe UI',system-ui,sans-serif}
+  .dgm .num{font-weight:800;font-size:12.5px;letter-spacing:.14em;fill:var(--accent-ink)}
+  .dgm .name{font-weight:800;font-size:26px;letter-spacing:-.015em;fill:var(--ink-2)}
+  .dgm .thr{font-weight:600;font-size:14.5px;letter-spacing:.002em;fill:var(--ink-dim)}
+  .dgm .ctr-k{font-weight:800;font-size:10.5px;letter-spacing:.22em;fill:var(--ink-faint)}
+  .dgm .ctr-n{font-weight:600;font-size:13px;letter-spacing:.004em;fill:var(--ink-dim)}
+  .dgm-method .name{font-size:22px}
+  .dgm-method .thr{font-variant-numeric:tabular-nums lining-nums}
+  /* animation, keyed off the figure's existing .in; base state = fully drawn/visible = the webp look */
+  .dgm .a-draw{stroke-dasharray:1;stroke-dashoffset:0}
+  .diagram.in .dgm .a-in{animation:dgmFade .55s var(--ease-out-quint) var(--d,0s) both}
+  .diagram.in .dgm .a-draw{animation:dgmDraw .8s var(--ease-out-quint) var(--d,0s) both}
+  @keyframes dgmFade{from{opacity:0}to{opacity:1}}
+  @keyframes dgmDraw{from{stroke-dashoffset:1}to{stroke-dashoffset:0}}
+  @media (prefers-reduced-motion:reduce){.diagram.in .dgm .a-in,.diagram.in .dgm .a-draw{animation:none}}
 
   /* people: a typographic roster, no invented faces */
   .roster{grid-column:1/-1;margin-top:var(--s6);border-top:2px solid var(--ink);display:grid;grid-template-columns:repeat(3,1fr);gap:0}
@@ -586,11 +626,39 @@
 <section id="problem" aria-labelledby="problem-h">
   <div class="wrap grid12">
     <div class="eyebrow rise"><span class="num"><i>^</i>01</span> <span class="lbl">The problem</span> <span class="rule"></span><span class="tag">Where ideas die</span></div>
-    <h2 class="title s-head rise" id="problem-h">Ideas don&rsquo;t die at capture. They die on the way back.</h2>
+    <h2 class="title s-head rise" id="problem-h">Ideas get lost on the way back, not at capture.</h2>
     <div class="lead-col rise"><p class="lead">Across every interview the same loop kept breaking. People wrote the idea down, then couldn&rsquo;t find it, couldn&rsquo;t link it, or couldn&rsquo;t trust the AI that tried to help them with it.</p></div>
 
     <figure class="diagram rise">
-      <img src="assets/problem-lifecycle.webp" alt="The lifecycle of an idea, broken on the return. 01 Capture is alive, two taps in the lightest tool. Then the rail snaps at the handoff between a team system and a private vault, with Slack and email in between, and the later stages stay ghosted and never reached: 02 Connect breaks on title recall, 03 Retrieve takes twenty to thirty seconds then people recreate the note, and 04 Resurface is the gap nobody fills." width="2480" height="784" loading="lazy">
+      <div class="dgm dgm-problem" role="img" aria-label="The lifecycle of an idea, broken on the return. 01 Capture is alive, two taps in the lightest tool. Then the rail snaps at the handoff between a team system and a private vault, with Slack and email in between, and the later stages stay ghosted and never reached: 02 Connect breaks on title recall, 03 Retrieve takes twenty to thirty seconds then people recreate the note, and 04 Resurface is the gap nobody fills.">
+        <svg viewBox="0 0 1240 392" aria-hidden="true">
+          <rect class="bg" x="0" y="0" width="1240" height="392" fill="var(--paper)"/>
+          <line class="a-draw" pathLength="1" style="--d:.05s" x1="190" y1="174" x2="322" y2="174" stroke="var(--line-strong)" stroke-width="1.9" stroke-linecap="round"/>
+          <path class="a-in" style="--d:.42s" d="M322 174 L334 166" fill="none" stroke="var(--accent)" stroke-width="2.4" stroke-linecap="round"/>
+          <path class="a-in" style="--d:.42s" d="M346 182 L358 174" fill="none" stroke="var(--accent)" stroke-width="2.4" stroke-linecap="round"/>
+          <line class="a-in" style="--d:.62s" x1="368" y1="174" x2="1050" y2="174" stroke="var(--line-strong)" stroke-width="1.3" stroke-dasharray="5 6" stroke-linecap="round" opacity="0.72"/>
+          <line class="a-in" style="--d:.5s" x1="340" y1="184" x2="340" y2="273" stroke="var(--ink-faint)" stroke-width="1" opacity="0.3"/>
+          <text class="ctr-k a-in" x="340" y="288" text-anchor="middle" style="fill:var(--accent-ink);--d:.5s">THE HANDOFF</text>
+          <text class="ctr-n a-in" x="340" y="307" text-anchor="middle" style="--d:.5s">team system to private vault, Slack and email between</text>
+          <rect class="a-in" style="--d:.1s" x="184.5" y="168.5" width="11" height="11" rx="1.5" fill="var(--ink-2)"/>
+          <rect class="a-in" style="--d:.62s" x="564.5" y="168.5" width="11" height="11" rx="1.5" fill="var(--paper)" stroke="var(--line-strong)" stroke-width="1.4"/>
+          <rect class="a-in" style="--d:.62s" x="804.5" y="168.5" width="11" height="11" rx="1.5" fill="var(--paper)" stroke="var(--line-strong)" stroke-width="1.4"/>
+          <rect class="a-in" style="--d:.62s" x="1044.5" y="168.5" width="11" height="11" rx="1.5" fill="var(--paper)" stroke="var(--line-strong)" stroke-width="1.4"/>
+          <text class="num a-in" x="190" y="54" text-anchor="middle" style="--d:.1s">01</text>
+          <text class="name a-in" x="190" y="88" text-anchor="middle" style="--d:.1s">Capture</text>
+          <text class="thr a-in" x="190" y="116" text-anchor="middle" style="--d:.1s">Two taps, the lightest tool</text>
+          <text class="num a-in" x="570" y="54" text-anchor="middle" style="fill:#ACB3BC;--d:.72s">02</text>
+          <text class="name a-in" x="570" y="88" text-anchor="middle" style="fill:#8E96A0;--d:.72s">Connect</text>
+          <text class="thr a-in" x="570" y="116" text-anchor="middle" style="fill:#A6ACB5;--d:.72s">Breaks on title recall</text>
+          <text class="num a-in" x="810" y="54" text-anchor="middle" style="fill:#ACB3BC;--d:.8s">03</text>
+          <text class="name a-in" x="810" y="88" text-anchor="middle" style="fill:#8E96A0;--d:.8s">Retrieve</text>
+          <text class="thr a-in" x="810" y="116" text-anchor="middle" style="fill:#A6ACB5;--d:.8s">Twenty to thirty seconds, then recreate</text>
+          <text class="num a-in" x="1050" y="54" text-anchor="middle" style="fill:#ACB3BC;--d:.88s">04</text>
+          <text class="name a-in" x="1050" y="88" text-anchor="middle" style="fill:#8E96A0;--d:.88s">Resurface</text>
+          <text class="thr a-in" x="1050" y="116" text-anchor="middle" style="fill:#A6ACB5;--d:.88s">The gap nobody fills</text>
+        </svg>
+      </div>
+      <img class="dgm-webp" src="assets/problem-lifecycle.webp" alt="The lifecycle of an idea, broken on the return. 01 Capture is alive, two taps in the lightest tool. Then the rail snaps at the handoff between a team system and a private vault, with Slack and email in between, and the later stages stay ghosted and never reached: 02 Connect breaks on title recall, 03 Retrieve takes twenty to thirty seconds then people recreate the note, and 04 Resurface is the gap nobody fills." width="2480" height="784" loading="lazy">
     </figure>
 
     <blockquote class="pull rise">
@@ -604,11 +672,40 @@
 <section id="research" aria-labelledby="research-h">
   <div class="wrap grid12">
     <div class="eyebrow rise"><span class="num"><i>^</i>02</span> <span class="lbl">Research</span> <span class="rule"></span><span class="tag">Two semesters, five phases</span></div>
-    <h2 class="title s-head rise" id="research-h">Problem discovery first. Solutions last.</h2>
+    <h2 class="title s-head rise" id="research-h">I started with the problem, not a solution.</h2>
     <div class="lead-col rise"><p class="lead">Every decision had to trace back to an observation, a quote, or a measured friction point. A finding only reached the requirements if it showed up in at least two of three independent sources.</p></div>
 
     <figure class="diagram rise">
-      <img src="assets/research-method.webp" alt="The research method as a five-phase spine, problem discovery first and solutions last. The four discovery phases: 01 Literature Review, foundations and prior art; 02 Benchmarking, six tools across five dimensions; 03 User Interviews, six people at sixty minutes each; 04 Synthesis, ten findings and ten requirements. Then, past a divider, the lone solutions phase: 05 Design and Test, lo-fi to hi-fi across two rounds." width="2480" height="784" loading="lazy">
+      <div class="dgm dgm-method" role="img" aria-label="The research method as a five-phase spine, problem discovery first and solutions last. The four discovery phases: 01 Literature Review, foundations and prior art; 02 Benchmarking, six tools across five dimensions; 03 User Interviews, six people at sixty minutes each; 04 Synthesis, ten findings and ten requirements. Then, past a divider, the lone solutions phase: 05 Design and Test, lo-fi to hi-fi across two rounds.">
+        <svg viewBox="0 0 1240 392" aria-hidden="true">
+          <rect class="bg" x="0" y="0" width="1240" height="392" fill="var(--paper)"/>
+          <line class="a-draw" pathLength="1" style="--d:.05s" x1="160" y1="240" x2="1075" y2="240" stroke="var(--line-strong)" stroke-width="1.75"/>
+          <line class="a-draw" pathLength="1" style="--d:.6s" x1="910" y1="211" x2="910" y2="269" stroke="var(--line-strong)" stroke-width="1.5"/>
+          <rect class="a-in" style="--d:.25s" x="154.5" y="234.5" width="11" height="11" rx="1.5" fill="var(--accent)"/>
+          <rect class="a-in" style="--d:.33s" x="349.5" y="234.5" width="11" height="11" rx="1.5" fill="var(--accent)"/>
+          <rect class="a-in" style="--d:.41s" x="544.5" y="234.5" width="11" height="11" rx="1.5" fill="var(--accent)"/>
+          <rect class="a-in" style="--d:.49s" x="739.5" y="234.5" width="11" height="11" rx="1.5" fill="var(--accent)"/>
+          <rect class="a-in" style="--d:.7s" x="1069.5" y="234.5" width="11" height="11" rx="1.5" fill="var(--accent)"/>
+          <text class="ctr-k a-in" x="450" y="282" text-anchor="middle" style="--d:.3s">PROBLEM DISCOVERY</text>
+          <text class="ctr-k a-in" x="1075" y="282" text-anchor="middle" style="--d:.72s">SOLUTIONS</text>
+          <text class="num a-in" x="160" y="120" text-anchor="middle" style="--d:.25s">01</text>
+          <text class="name a-in" x="160" y="152" text-anchor="middle" style="--d:.25s">Literature Review</text>
+          <text class="thr a-in" x="160" y="179" text-anchor="middle" style="--d:.25s">Foundations and prior art</text>
+          <text class="num a-in" x="355" y="120" text-anchor="middle" style="--d:.33s">02</text>
+          <text class="name a-in" x="355" y="152" text-anchor="middle" style="--d:.33s">Benchmarking</text>
+          <text class="thr a-in" x="355" y="179" text-anchor="middle" style="--d:.33s">6 tools, 5 dimensions</text>
+          <text class="num a-in" x="550" y="120" text-anchor="middle" style="--d:.41s">03</text>
+          <text class="name a-in" x="550" y="152" text-anchor="middle" style="--d:.41s">User Interviews</text>
+          <text class="thr a-in" x="550" y="179" text-anchor="middle" style="--d:.41s">6 people, 60 minutes</text>
+          <text class="num a-in" x="745" y="120" text-anchor="middle" style="--d:.49s">04</text>
+          <text class="name a-in" x="745" y="152" text-anchor="middle" style="--d:.49s">Synthesis</text>
+          <text class="thr a-in" x="745" y="179" text-anchor="middle" style="--d:.49s">10 findings, 10 requirements</text>
+          <text class="num a-in" x="1075" y="120" text-anchor="middle" style="--d:.7s">05</text>
+          <text class="name a-in" x="1075" y="152" text-anchor="middle" style="--d:.7s">Design and Test</text>
+          <text class="thr a-in" x="1075" y="179" text-anchor="middle" style="--d:.7s">Lo-fi to hi-fi, 2 rounds</text>
+        </svg>
+      </div>
+      <img class="dgm-webp" src="assets/research-method.webp" alt="The research method as a five-phase spine, problem discovery first and solutions last. The four discovery phases: 01 Literature Review, foundations and prior art; 02 Benchmarking, six tools across five dimensions; 03 User Interviews, six people at sixty minutes each; 04 Synthesis, ten findings and ten requirements. Then, past a divider, the lone solutions phase: 05 Design and Test, lo-fi to hi-fi across two rounds." width="2480" height="784" loading="lazy">
     </figure>
 
     <figure class="diagram rise">
@@ -618,7 +715,7 @@
 
     <div class="bench rise">
       <div class="bench-head">
-        <h3 class="title">What today&rsquo;s tools get right, and wrong.</h3>
+        <h3 class="title">How today&rsquo;s note tools compare.</h3>
       </div>
       <p class="body">We ran the same tasks through six networked-note tools, three established note apps and three AI-native ones, and assessed each on the same five dimensions. Two columns came back thin across every one of them: nobody surfaces the right note at the right moment, and nobody shows the proof behind a suggested link. Those two gaps became the product.</p>
       <div class="bench-take">
@@ -629,8 +726,8 @@
         <span class="t"><span class="d"></span>Trust: evidence, or it is ignored</span>
       </div>
       <figure class="shot artifact">
-        <div class="ph" style="--ar:2560/1600">
-          <img src="assets/benchmark-grid.webp" alt="The competitive benchmark grid: six networked-note tools, Obsidian, Notion, Logseq, Tana, Mem, and Readwise, assessed across five dimensions, capture, connection, retrieval, resurfacing, and trust, with a short verdict on each." width="2560" height="1600" loading="lazy">
+        <div class="ph" style="--ar:2560/1300">
+          <img src="assets/benchmark-grid.webp" alt="The competitive benchmark grid: six networked-note tools, Obsidian, Notion, Logseq, Tana, Mem, and Readwise, assessed across five dimensions, capture, connection, retrieval, resurfacing, and trust, with a short verdict on each." width="2560" height="1300" loading="lazy">
           <span class="ph-spec"><span class="spec-res">2560 &times; 1600</span><span class="spec-lbl">Six tools assessed across five dimensions, with a verdict per cell</span></span>
         </div>
         <figcaption><span class="fn-tag"><span class="u" aria-hidden="true"></span>Benchmark</span><b>Six tools, five dimensions, one verdict per cell.</b> Three established note apps, Obsidian, Notion, and Logseq, and three AI-native, Tana, Mem, and Readwise, assessed on capture, connection, retrieval, resurfacing, and trust. The two thin columns were resurfacing and proof, the space almost nobody builds.</figcaption>
@@ -647,7 +744,7 @@
 <section id="people" aria-labelledby="people-h">
   <div class="wrap grid12">
     <div class="eyebrow rise"><span class="num"><i>^</i>03</span> <span class="lbl">The people</span> <span class="rule"></span><span class="tag">Six setups, one story</span></div>
-    <h2 class="title s-head rise" id="people-h">Six people. Six setups. One story.</h2>
+    <h2 class="title s-head rise" id="people-h">Six people, and the same story each time.</h2>
     <div class="lead-col rise"><p class="lead">Sixty minutes each, screen-sharing their real vaults, thinking aloud through four task probes in the tools they already use: make two notes relate, find a note they could not name, judge what else on the page they would trust, and explain why two things belonged together. No hypotheticals. Every observation traces to a real moment of friction.</p></div>
 
     <figure class="diagram rise">
@@ -681,7 +778,32 @@
     <div class="lead-col rise"><p class="lead">When we asked what would make you trust this suggestion, participants ranked evidence types in a strikingly consistent order. I turned that order into the design of every AI surface in Tho8.</p></div>
 
     <figure class="diagram rise">
-      <img src="assets/trust-ladder.webp" alt="The trust ladder, four evidence types ranked by what earns a click. Three earn a click: 01 A shared source, both notes cite the same paper; 02 A two-hop path, A to B to C, a route you can follow; 03 A specific term, a non-generic phrase they share. Then a cut-line, and past it 04 Tags or recency, weak and easy to distrust, is dismissed." width="2480" height="784" loading="lazy">
+      <div class="dgm dgm-trust" role="img" aria-label="The trust ladder, four evidence types ranked by what earns a click. Three earn a click: 01 A shared source, both notes cite the same paper; 02 A two-hop path, A to B to C, a route you can follow; 03 A specific term, a non-generic phrase they share. Then a cut-line, and past it 04 Tags or recency, weak and easy to distrust, is dismissed.">
+        <svg viewBox="0 0 1240 392" aria-hidden="true">
+          <rect class="bg" x="0" y="0" width="1240" height="392" fill="var(--paper)"/>
+          <line class="a-draw" pathLength="1" style="--d:.05s" x1="180" y1="240" x2="730" y2="240" stroke="var(--line-strong)" stroke-width="1.75"/>
+          <line class="a-draw" pathLength="1" style="--d:.55s" x1="890" y1="194" x2="890" y2="286" stroke="var(--line-strong)" stroke-width="1.5"/>
+          <rect class="a-in" style="--d:.2s" x="174.5" y="234.5" width="11" height="11" rx="1.5" fill="var(--accent)"/>
+          <rect class="a-in" style="--d:.32s" x="449.5" y="234.5" width="11" height="11" rx="1.5" fill="var(--ink-dim)"/>
+          <rect class="a-in" style="--d:.44s" x="724.5" y="234.5" width="11" height="11" rx="1.5" fill="var(--ink-dim)"/>
+          <rect class="a-in" style="--d:.7s" x="1062.5" y="234.5" width="11" height="11" rx="1.5" fill="var(--paper)" stroke="var(--ink-faint)" stroke-width="1.5"/>
+          <text class="ctr-k a-in" x="455" y="276" text-anchor="middle" style="--d:.5s">EARNS A CLICK</text>
+          <text class="ctr-k a-in" x="1068" y="276" text-anchor="middle" style="--d:.72s">DISMISSED</text>
+          <text class="num a-in" x="180" y="120" text-anchor="middle" style="--d:.2s">01</text>
+          <text class="name a-in" x="180" y="154" text-anchor="middle" style="--d:.2s">A shared source</text>
+          <text class="thr a-in" x="180" y="182" text-anchor="middle" style="--d:.2s">Both notes cite the same paper</text>
+          <text class="num a-in" x="455" y="120" text-anchor="middle" style="--d:.32s">02</text>
+          <text class="name a-in" x="455" y="154" text-anchor="middle" style="--d:.32s">A two-hop path</text>
+          <text class="thr a-in" x="455" y="182" text-anchor="middle" style="--d:.32s">A to B to C, a route you can follow</text>
+          <text class="num a-in" x="730" y="120" text-anchor="middle" style="--d:.44s">03</text>
+          <text class="name a-in" x="730" y="154" text-anchor="middle" style="--d:.44s">A specific term</text>
+          <text class="thr a-in" x="730" y="182" text-anchor="middle" style="--d:.44s">A non-generic phrase they share</text>
+          <text class="num a-in" x="1068" y="120" text-anchor="middle" style="fill:var(--ink-faint);--d:.7s">04</text>
+          <text class="name a-in" x="1068" y="154" text-anchor="middle" style="fill:var(--ink-dim);--d:.7s">Tags or recency</text>
+          <text class="thr a-in" x="1068" y="182" text-anchor="middle" style="fill:var(--ink-faint);--d:.7s">Weak, and easy to distrust</text>
+        </svg>
+      </div>
+      <img class="dgm-webp" src="assets/trust-ladder.webp" alt="The trust ladder, four evidence types ranked by what earns a click. Three earn a click: 01 A shared source, both notes cite the same paper; 02 A two-hop path, A to B to C, a route you can follow; 03 A specific term, a non-generic phrase they share. Then a cut-line, and past it 04 Tags or recency, weak and easy to distrust, is dismissed." width="2480" height="784" loading="lazy">
     </figure>
 
     <div class="because rise">
@@ -699,11 +821,50 @@
 <section id="loops" aria-labelledby="loops-h">
   <div class="wrap grid12">
     <div class="eyebrow rise"><span class="num"><i>^</i>05</span> <span class="lbl">The shape</span> <span class="rule"></span><span class="tag">Four loops, one surface</span></div>
-    <h2 class="title s-head rise" id="loops-h">Four loops. One surface.</h2>
+    <h2 class="title s-head rise" id="loops-h">Four loops, one workspace.</h2>
     <div class="lead-col rise"><p class="lead">Knowledge work isn&rsquo;t a funnel. It is four nested loops that reinforce each other, and each one has an effort threshold people walk away from the moment you cross it. If any loop breaks, the whole thing feels broken.</p></div>
 
     <figure class="diagram rise">
-      <img src="assets/loops-cycle.webp" alt="The four loops of knowledge work on one spine, closed into a cycle, not a funnel: 01 Capture (don't lose it, in one keystroke), 02 Connect (link by meaning, not titles), 03 Retrieve (find it in thirty seconds or less), and 04 Resurface (right idea, right moment). An ember return arc loops from Resurface back to Capture around a three-pane shell labelled one shell, eight surfaces, one workspace." width="2480" height="784" loading="lazy">
+      <div class="dgm dgm-loops" role="img" aria-label="The four loops of knowledge work on one spine, closed into a cycle, not a funnel: 01 Capture (don't lose it, in one keystroke), 02 Connect (link by meaning, not titles), 03 Retrieve (find it in thirty seconds or less), and 04 Resurface (right idea, right moment). An ember return arc loops from Resurface back to Capture around a three-pane shell labelled one shell, eight surfaces, one workspace.">
+        <svg viewBox="0 0 1240 392" aria-hidden="true">
+          <rect class="bg" x="0" y="0" width="1240" height="392" fill="var(--paper)"/>
+          <line class="a-draw" pathLength="1" style="--d:.05s" x1="190" y1="174" x2="1051" y2="174" stroke="var(--line-strong)" stroke-width="1.75"/>
+          <path class="a-draw" pathLength="1" style="--d:.9s" d="M 1051 174 C 1051 411, 190 411, 190 174" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round"/>
+          <g class="a-in" style="--d:1.5s" transform="translate(190,187.6)"><path d="M0,-8.4 L5.2,3.9 L-5.2,3.9 Z" fill="var(--accent)"/></g>
+          <g class="a-in" style="--d:.5s" transform="translate(620,234)">
+            <rect x="-40" y="-24" width="80" height="48" rx="6" fill="var(--surface)" stroke="var(--line-strong)" stroke-width="1.4"/>
+            <line x1="-22" y1="-24" x2="-22" y2="24" stroke="var(--line)" stroke-width="1.2"/>
+            <line x1="22"  y1="-24" x2="22"  y2="24" stroke="var(--line)" stroke-width="1.2"/>
+            <line x1="-34" y1="-10" x2="-28" y2="-10" stroke="var(--line-strong)" stroke-width="1.3"/>
+            <line x1="-34" y1="-3"  x2="-28" y2="-3"  stroke="var(--line)" stroke-width="1.3"/>
+            <line x1="-34" y1="4"   x2="-28" y2="4"   stroke="var(--line)" stroke-width="1.3"/>
+            <line x1="-14" y1="-10" x2="14"  y2="-10" stroke="var(--line-strong)" stroke-width="1.3"/>
+            <line x1="-14" y1="-3"  x2="9"   y2="-3"  stroke="var(--line)" stroke-width="1.3"/>
+            <line x1="-14" y1="4"   x2="14"  y2="4"   stroke="var(--line)" stroke-width="1.3"/>
+            <line x1="28"  y1="-10" x2="34"  y2="-10" stroke="var(--line-strong)" stroke-width="1.3"/>
+            <line x1="28"  y1="-3"  x2="34"  y2="-3"  stroke="var(--line)" stroke-width="1.3"/>
+          </g>
+          <text class="ctr-k a-in" x="620" y="288" text-anchor="middle" style="--d:.55s">ONE SHELL</text>
+          <text class="ctr-n a-in" x="620" y="307" text-anchor="middle" style="--d:.55s">eight surfaces, one workspace</text>
+          <rect class="a-in" style="--d:.28s" x="184.5"  y="168.5" width="11" height="11" rx="1.5" fill="var(--accent)"/>
+          <rect class="a-in" style="--d:.36s" x="471.5"  y="168.5" width="11" height="11" rx="1.5" fill="var(--accent)"/>
+          <rect class="a-in" style="--d:.44s" x="758.5"  y="168.5" width="11" height="11" rx="1.5" fill="var(--accent)"/>
+          <rect class="a-in" style="--d:.52s" x="1045.5" y="168.5" width="11" height="11" rx="1.5" fill="var(--accent)"/>
+          <text class="num a-in" x="190" y="54" text-anchor="middle" style="--d:.28s">01</text>
+          <text class="name a-in" x="190" y="88" text-anchor="middle" style="--d:.28s">Capture</text>
+          <text class="thr a-in" x="190" y="116" text-anchor="middle" style="--d:.28s">Don&rsquo;t lose it, in one keystroke</text>
+          <text class="num a-in" x="477" y="54" text-anchor="middle" style="--d:.36s">02</text>
+          <text class="name a-in" x="477" y="88" text-anchor="middle" style="--d:.36s">Connect</text>
+          <text class="thr a-in" x="477" y="116" text-anchor="middle" style="--d:.36s">Link by meaning, not titles</text>
+          <text class="num a-in" x="764" y="54" text-anchor="middle" style="--d:.44s">03</text>
+          <text class="name a-in" x="764" y="88" text-anchor="middle" style="--d:.44s">Retrieve</text>
+          <text class="thr a-in" x="764" y="116" text-anchor="middle" style="--d:.44s">Find it in thirty seconds or less</text>
+          <text class="num a-in" x="1051" y="54" text-anchor="middle" style="--d:.52s">04</text>
+          <text class="name a-in" x="1051" y="88" text-anchor="middle" style="--d:.52s">Resurface</text>
+          <text class="thr a-in" x="1051" y="116" text-anchor="middle" style="--d:.52s">Right idea, right moment</text>
+        </svg>
+      </div>
+      <img class="dgm-webp" src="assets/loops-cycle.webp" alt="The four loops of knowledge work on one spine, closed into a cycle, not a funnel: 01 Capture (don't lose it, in one keystroke), 02 Connect (link by meaning, not titles), 03 Retrieve (find it in thirty seconds or less), and 04 Resurface (right idea, right moment). An ember return arc loops from Resurface back to Capture around a three-pane shell labelled one shell, eight surfaces, one workspace." width="2480" height="784" loading="lazy">
     </figure>
 
     <div class="surface-note rise">
@@ -724,7 +885,7 @@
 <section id="explain" aria-labelledby="explain-h">
   <div class="wrap grid12">
     <div class="eyebrow rise"><span class="num"><i>^</i>06</span> <span class="lbl">Explainable AI</span> <span class="rule"></span><span class="tag">The heart of it</span></div>
-    <h2 class="title s-head rise" id="explain-h">No suggestion is a black box.</h2>
+    <h2 class="title s-head rise" id="explain-h">Every suggestion shows its reason.</h2>
     <div class="lead-col rise"><p class="lead">Every suggestion starts from a real similarity match, not a hunch. It shows the basis in one line: the tags two notes share, a note they both touch, or a plain concept match. Open Details and it names the tag the link leans on. Turn on Transparency and the source notes appear as chips you can open. No confidence percentage, no black box, just the match, shown plainly.</p></div>
 
     <figure class="shot heart-shot narrow rise">
@@ -783,15 +944,15 @@
 <section id="graph" aria-labelledby="graph-h">
   <div class="wrap grid12">
     <div class="eyebrow rise"><span class="num"><i>^</i>08</span> <span class="lbl">The graph</span> <span class="rule"></span><span class="tag">For thinking, not decoration</span></div>
-    <h2 class="title s-head rise" id="graph-h">A graph you can actually stand in.</h2>
+    <h2 class="title s-head rise" id="graph-h">A graph that focuses instead of overwhelming.</h2>
     <div class="lead-col rise"><p class="lead">The graph is global, but it never throws the whole hairball at you. Click a node and it lights up with its neighbors while the rest dims; a Focused Node panel fills with the note, its connections, and a place to generate ideas. The full graph overwhelmed people in testing, so focus and a clear way out became the point.</p></div>
 
     <figure class="shot artifact rise">
       <div class="ph" style="--ar:2560/1600">
-        <img src="assets/graph-view.webp" alt="The global graph on a near-black canvas: many note nodes and edges, with one note selected so it and its neighbors glow orange while the rest dim. A Focused Node panel on the right shows the note title, when it was updated, a preview, Open and New-tab buttons, and its connections. A legend reads notes gray, tags orange, folders blue, with hints to click, drag, scroll, and press Esc." width="2560" height="1600" loading="lazy">
-        <span class="ph-spec"><span class="spec-res">2560 &times; 1600</span><span class="spec-lbl">The global graph with a node focused: neighbors lit, the rest dimmed, and the Focused Node rail</span></span>
+        <img src="assets/graph-view.webp" alt="The global graph on a near-black canvas: an organic, force-directed web of note nodes and thin edges with generous empty space. One note, Trust and evidence, is focused, so it and its four neighbors glow orange while the rest of the vault dims. Only the focused cluster is labeled. A small Obsidian-style controls panel sits top-left with Filters, Groups, Display, and Forces; a Back to notes button sits top-right; a status line reads 142 notes, 318 links, 24 tags." width="2560" height="1600" loading="lazy">
+        <span class="ph-spec"><span class="spec-res">2560 &times; 1600</span><span class="spec-lbl">The global graph with one note focused: it and its neighbors lit, the rest of the vault dimmed back</span></span>
       </div>
-      <figcaption><span class="fn-tag"><span class="u" aria-hidden="true"></span>The graph</span><b>Select a node and the graph focuses: it and its neighbors light up, the rest fades back.</b> The Focused Node rail turns the selection into a next step, its connections and a place to generate ideas. A legend, an onboarding card, and a Back-to-notes button keep you from getting lost. It is built for thinking, not for looking impressive.</figcaption>
+      <figcaption><span class="fn-tag"><span class="u" aria-hidden="true"></span>The graph</span><b>Select a node and the graph focuses: it and its neighbors light up, the rest fades back.</b> It opens on the note you came from instead of the whole hairball, and a Back to notes button keeps you from getting lost. Filters and forces tuck into one corner panel, the way Obsidian does it. It is built for thinking, not for looking impressive.</figcaption>
     </figure>
 
     <div class="surface-note rise">
@@ -851,7 +1012,7 @@
 <section id="system" aria-labelledby="system-h">
   <div class="wrap grid12">
     <div class="eyebrow rise"><span class="num"><i>^</i>10</span> <span class="lbl">Design system</span> <span class="rule"></span><span class="tag">A quiet interface for loud thinking</span></div>
-    <h2 class="title s-head rise" id="system-h">A quiet interface for loud thinking.</h2>
+    <h2 class="title s-head rise" id="system-h">A calm interface, so the words stand out.</h2>
     <div class="sys-lead rise"><p class="lead">Calm near-black surfaces so the words stand out. Two accents, and only two: Ember orange for the brand, selection, focus, and the live highlight, and a violet for the generative-AI moments. The reasons themselves, the because and its evidence, stay in neutral zinc, so a reason reads like a fact and not a pitch. I built the system alongside the UI, not after it, so every screen spoke the same language as it was drawn.</p></div>
 
     <div class="swatches rise">
@@ -936,6 +1097,9 @@
       }, {rootMargin:'0px 0px -8% 0px', threshold:0.06});
       els.forEach(function(e){io.observe(e)});
     }
+    // 1b) P5: swap each static diagram webp for its inline animated SVG, but ONLY when JS runs and
+    //     motion is allowed. No-JS and reduced-motion keep the committed webp untouched.
+    if(!matchMedia('(prefers-reduced-motion: reduce)').matches){ document.documentElement.classList.add('dgm-live'); }
     // 2) placeholder resolve: when a real asset loads, hide its spec label so the box becomes the image
     document.querySelectorAll('.ph img').forEach(function(img){
       function done(){ if(img.naturalWidth>0){ img.closest('.ph').classList.add('loaded'); } }
@@ -943,5 +1107,31 @@
     });
   })();
 </script>
+
+<!-- LENIS SMOOTH SCROLL — same lib + config as the neelmyno.in homepage (see homepage index.html).
+     Loaded site-absolute from /js/lenis_mini.js, exactly like the shared nav logo + favicon: the path
+     resolves on the deployed site and 404s only in isolated local preview, where it falls back cleanly
+     to native scroll. Skipped entirely under prefers-reduced-motion, matching the reveal-animation guard. -->
+<script src="/js/lenis_mini.js"></script>
+<script>
+  (function(){
+    if(!window.Lenis || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    var lenis = new Lenis({
+      lerp: .1,
+      wheelMultiplier: .7,
+      gestureOrientation: "vertical",
+      normalizeWheel: false,
+      smoothTouch: false,
+    });
+    function raf(time){ lenis.raf(time); requestAnimationFrame(raf); }
+    requestAnimationFrame(raf);
+  })();
+</script>
+<style>
+  html.lenis{height:auto}
+  .lenis.lenis-smooth{scroll-behavior:auto}
+  .lenis.lenis-smooth [data-lenis-prevent]{overscroll-behavior:contain}
+  .lenis.lenis-stopped{overflow:hidden}
+</style>
 </body>
 </html>

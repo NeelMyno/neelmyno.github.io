@@ -1,0 +1,1486 @@
+<!doctype html>
+<html lang="en">
+<head>
+<!-- ============================================================================
+     WARP TMS (Mark II) · case-study page
+     Head shell + site header + base reset/container/footer reused from
+     projects/_shared/case-study-scaffold.html. The .nav site header, the base
+     reset, the container rails, and the .rise reveal are copied VERBATIM from
+     the approved Pataa page so this is a true extension of neelmyno.in. Only the
+     title/OG/Twitter tags, the body typeface, the :root token VALUES, the
+     masthead, the body, and the colophon copy are page-custom.
+     Register: dark mission-control instrument panel (SpaceX / Linear / Vercel).
+     Every screen is a placeholder <img>; zero UI is drawn in code (ADR-0012).
+     ============================================================================ -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Warp TMS · a free operator TMS for small shippers, rebuilt clean-room</title>
+<meta name="description" content="A clean-room rebuild of an AI-native freight TMS: one triage-first dashboard, an AI that routes but never fabricates a number, and every state designed before the data existed. Deployed and live-verified against real freight.">
+
+<!-- site integration: favicon + apple-touch-icon (parity with neelmyno.in) -->
+<link href="/images/web/favicon_32x32.png" rel="shortcut icon" type="image/x-icon">
+<link href="/images/web/webclip_256x256.png" rel="apple-touch-icon">
+
+<!-- social preview -->
+<meta property="og:type" content="article">
+<meta property="og:title" content="Warp TMS: a free operator TMS, rebuilt clean-room">
+<meta property="og:description" content="One triage-first dashboard, an AI that routes but never fabricates a number, and every state designed before the data existed. Deployed and live-verified against real freight.">
+<meta property="og:image" content="https://neelmyno.in/tms/assets/hero-console.webp">
+<meta property="og:url" content="https://neelmyno.in/tms/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Warp TMS: a free operator TMS, rebuilt clean-room">
+<meta name="twitter:description" content="One triage-first dashboard, an AI that routes but never fabricates a number, and every state designed before the data existed.">
+<meta name="twitter:image" content="https://neelmyno.in/tms/assets/hero-console.webp">
+
+<!-- Google Analytics - the same property as neelmyno.in, so page visits are tracked -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-0G48YWW7ZE"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag() { dataLayer.push(arguments); }
+  gtag('js', new Date());
+  gtag('config', 'G-0G48YWW7ZE');
+</script>
+
+<!-- [PAGE-CUSTOM] the case-study body typeface. The .nav HEADER self-hosts Inter
+     Display via @font-face in the CSS below and does NOT use these, so they swap
+     freely. General Sans + JetBrains Mono are the product's own real type system. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://api.fontshare.com" crossorigin>
+<link href="https://api.fontshare.com/v2/css?f[]=general-sans@400,500,600,700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+  /* ============================================================================
+     [PAGE-RE-THEMABLE] :root - dark instrument-panel brand-lock (Step 0).
+     Genre: dark mission-control / premium developer-tool (SpaceX Mission Control,
+     Linear, Vercel, Stripe). Derived from the product's OWN shipped brand: spring
+     green on a cool near-black. The token NAMES the shell consumes (--paper, --ink,
+     --line, --amber, --amber-ink, --pill, --wide, --ink-faint, --fs-*, --s*) are
+     kept and remapped to dark values, so the verbatim base/container/masthead/
+     colophon rules keep working, re-themed. The .nav header reads NONE of these.
+     ============================================================================ */
+  :root{
+    --motion-fast:140ms; --motion-base:200ms; --motion-soft:240ms;
+    --ease-q:cubic-bezier(0.25,1,0.5,1); --ease-e:cubic-bezier(0.16,1,0.3,1);
+    /* canvas ramp - cool near-neutral obsidian; never pure #000, never accent-tinted (sin 3) */
+    --bg:oklch(0.165 0.005 236);
+    --surface:oklch(0.205 0.006 236);
+    --surface-2:oklch(0.238 0.007 236);
+    --raise:oklch(0.275 0.008 236);
+    --line-1:oklch(0.305 0.009 236);
+    --line-2:oklch(0.385 0.011 236);
+    /* ink ramp - softened, never pure #fff */
+    --ink-hi:oklch(0.97 0.004 236);   /* display headings */
+    --ink-1:oklch(0.925 0.005 236);   /* bright body / lead */
+    --ink-2c:oklch(0.785 0.007 236);  /* body secondary */
+    --ink-3:oklch(0.645 0.008 236);   /* small labels ~AA */
+    --ink-4:oklch(0.545 0.009 236);   /* faint / struck */
+    /* the ONE accent - spring green, the product's mark. live / status / current only */
+    --accent:oklch(0.864 0.22 153);      /* paints ~#03FA8A, the real Warp TMS mark */
+    --accent-ink:oklch(0.235 0.03 160);  /* near-black ink ON the bright green (measured-contrast) */
+    --accent-quiet:oklch(0.76 0.13 155); /* accent as small text on dark, if ever needed */
+    /* status - dot + label + contrast floor, never hue alone (sin 5) */
+    --warn:oklch(0.805 0.13 71);
+    --warn-ink:oklch(0.26 0.05 70);
+    /* neutral elevation only - NO accent in any shadow/glow (sin 2) */
+    --shadow-photo:0 2px 22px rgba(0,0,0,.42), 0 1px 4px rgba(0,0,0,.32);
+    --shadow-float:0 28px 66px rgba(0,0,0,.55), 0 8px 20px rgba(0,0,0,.42);
+    /* type - Manrope across the case-study scale; the product's own face is General Sans (shown in the craft file). JetBrains Mono for numerals/ids */
+    --sans:'Manrope','Segoe UI',system-ui,-apple-system,sans-serif;
+    --mono:ui-monospace,'SF Mono','JetBrains Mono',Menlo,Consolas,monospace;
+
+    /* ---- shell-consumed aliases (keep the verbatim base/container/masthead/colophon working) ---- */
+    --paper:var(--bg); --paper-2:var(--surface); --paper-3:var(--surface-2);
+    --surface-c:var(--surface);
+    --ink:var(--ink-1); --ink-2:var(--ink-hi); --ink-dim:var(--ink-2c); --ink-faint:var(--ink-3);
+    --line:var(--line-1); --line-strong:var(--line-2);
+    --amber:var(--accent);            /* the masthead + colophon tiny marks become the live signal */
+    --amber-ink:var(--ink-1);         /* shell link color + focus outline → neutral ink (mirrors the product's neutral focus ring) */
+    --pill:var(--accent); --on-amber:var(--accent-ink);
+    --wide:var(--sans);               /* one family across the scale; no separate display face (product ADR 0002) */
+
+    /* type scale: one authored ramp; hierarchy leans on weight + opacity, not extra sizes.
+       Steps at 1440: 84 / 48 / 36 / 24 / 21.6 / 16 / 15 / 13 / 12 / 11 (plus the cover deck + hero stat, one-offs). */
+    --fs-display:clamp(2.6rem,6.6vw,5.25rem);  /* cover H1 only */
+    --fs-h1:clamp(1.95rem,3.7vw,3rem);         /* section titles */
+    --fs-feature:clamp(1.6rem,3vw,2.25rem);    /* pullquote + colophon wordmark */
+    --fs-mid:clamp(1.15rem,2vw,1.5rem);        /* funnel head + stat numbers */
+    --fs-lead:clamp(1.12rem,1.5vw,1.35rem);    /* lead / emphasis body */
+    --fs-body:1rem;                            /* body (the old vw term was inert) */
+    --fs-sm:0.9375rem;                         /* small / captions / detail */
+    --fs-mono-sm:0.8125rem;                    /* small mono data (chips, stack, note) */
+    --fs-label:0.75rem;                        /* uppercase section labels */
+    --fs-micro:0.6875rem;                      /* micro idents */
+
+    /* one modular spacing scale, 4px base */
+    --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:32px;
+    --s7:48px; --s8:64px; --s9:96px; --s10:128px; --s11:160px;
+
+    --maxw:1160px;
+    --pad:clamp(20px,5vw,60px);
+
+    /* named easing tokens - never the bland bare ease-out keyword; ease-in alone is banned */
+    --ease-out:cubic-bezier(0.23,1,0.32,1);   /* quint; drives .rise */
+    --ease-soft:cubic-bezier(0.32,0.72,0,1);
+    --ease-pulse:cubic-bezier(0.4,0,0.6,1);
+  }
+
+  /* ============================================================================
+     [SHARED-VERBATIM] base reset / normalize (from the scaffold). Values follow the
+     re-theme above, so this reads dark. Links + focus ring resolve to neutral ink.
+     ============================================================================ */
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+  body{
+    margin:0;background:var(--paper);color:var(--ink);
+    font-family:var(--sans);font-size:var(--fs-body);line-height:1.5;
+    font-feature-settings:"kern" 1,"liga" 1;
+    -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
+    overflow-x:hidden;
+  }
+  img{display:block;max-width:100%;height:auto}
+  ::selection{background:var(--pill);color:var(--on-amber)}
+  a{color:var(--amber-ink);text-underline-offset:.16em;text-decoration-thickness:.06em}
+  :focus-visible{outline:2.5px solid var(--amber-ink);outline-offset:3px;border-radius:3px}
+
+  /* [SHARED-VERBATIM] container / rails */
+  .wrap{max-width:var(--maxw);margin-inline:auto;padding-inline:var(--pad)}
+  /* column-gap only: the 12-col rails still breathe horizontally, but vertical rhythm is
+     authored by margins on the modular scale, not a row-gap compounding on top of them. */
+  .grid12{display:grid;grid-template-columns:repeat(12,1fr);column-gap:clamp(20px,3vw,40px);row-gap:0}
+  .measure{max-width:58ch}
+  section{padding-block:clamp(56px,9vw,120px);position:relative}
+  section + section{border-top:1px solid var(--line)}
+
+  /* tabular mono numerals wherever a number carries meaning (instrument-panel register) */
+  .num{font-family:var(--mono);font-feature-settings:"tnum" 1,"lnum" 1;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+
+  /* ============================================================================
+     [SHARED-VERBATIM] SITE NAV - the real homepage component, byte-for-byte from the
+     scaffold (rules copied from css/index_mini.css). Self-hosts Inter Display and
+     uses literal values; it consumes ZERO tokens above, so the dark re-theme never
+     touches it. DO NOT rebuild this - it is Neel's real site nav.
+     ============================================================================ */
+  @font-face{font-family:"Inter Display";src:url("https://assets.website-files.com/6279077bf697b924fac6e205/636dfe8261df29a8a191ebc6_Inter-Display.woff2") format("woff2");font-weight:400;font-style:normal;font-display:swap}
+  @font-face{font-family:"Inter Display";src:url("https://assets.website-files.com/6279077bf697b924fac6e205/636dfe98b0633015995d2554_Inter-DisplayBold.woff2") format("woff2");font-weight:700;font-style:normal;font-display:swap}
+  @font-face{font-family:"Inter Display";src:url("https://assets.website-files.com/6279077bf697b924fac6e205/636dfea34a3e3c1b85745887_Inter-DisplayLight.woff2") format("woff2");font-weight:300;font-style:normal;font-display:swap}
+  .nav{position:fixed;top:0;right:0;bottom:auto;left:0;z-index:100;background-color:hsla(0,0%,100%,.7);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);transition:background-color .2s,color .2s;font-family:"Inter Display",sans-serif;font-size:16px;line-height:1.5}
+  .nav.dark{color:#ecedee}
+  .nav .page-padding{padding-right:40px;padding-left:40px}
+  .nav .container{width:100%;max-width:1200px;margin-right:auto;margin-left:auto}
+  .nav-inner{position:relative;display:flex;padding-top:6px;padding-bottom:6px;justify-content:center;align-items:center;border-bottom:1px solid rgba(2,23,53,.1);transition:border-color .2s}
+  .nav-logo{position:absolute;top:auto;right:auto;bottom:auto;left:0;z-index:102;display:flex;align-items:center;margin-left:-16px;padding:6px 16px;font-size:17px;text-decoration:none;color:inherit}
+  .nav-logo img{width:60px;height:auto;display:block}
+  .nav-menu{display:flex;align-items:center}
+  .nav-link{position:relative;z-index:102;display:inline-block;padding:8px 14px;color:#687076;text-decoration:none}
+  .nav-link:hover{color:#151718}
+  .nav .cta{display:flex;align-items:center;font-weight:500;padding:8px 20px;color:#006adc;font-size:20px;text-decoration:none}
+  .nav .cta.cta--nav{position:absolute;right:0;z-index:102;margin-right:-20px;font-size:16px}
+  .nav .cta-chevron{display:flex;align-items:center;margin-left:6px}
+  .nav .cta-chevron svg{display:block}
+  /* the nav is fixed, like the homepage — offset the page so the masthead clears it (nav is 53px tall) */
+  body{padding-top:53px}
+  /* The inherited site nav is 53px at >=768px but 54.55px below it: at <=767px
+     .nav-logo flips to position:static, so the 41.55px logo drives the flow height
+     instead of the 40px nav links. body{padding-top:53px} is hard-coded, so content
+     sat 1.55px under the nav on mobile. Measured on all three case studies. */
+  @media (max-width:767px){ body{ padding-top:55px } }
+
+  @media screen and (max-width:767px){
+    .nav .page-padding{padding-right:20px;padding-left:20px}
+    .nav-inner{justify-content:space-between}
+    .nav-logo{position:static;margin-left:0;padding-left:0}
+    .nav-menu{display:none}
+    .nav .cta.cta--nav{position:static;margin-right:0;font-size:15px}
+  }
+
+  /* ============================================================================
+     [PAGE-RE-THEMABLE] MASTHEAD - a print-style running head under the fixed nav.
+     Brand mark is a small live-status square (no image asset), not a caret.
+     ============================================================================ */
+  .masthead{border-bottom:1px solid var(--line)}
+  .masthead .row{display:flex;align-items:center;justify-content:space-between;gap:20px;padding-block:16px}
+  .brand{font-family:var(--wide);font-weight:600;letter-spacing:.01em;font-size:1rem;text-transform:uppercase;display:inline-flex;align-items:center;gap:10px;color:var(--ink-1)}
+  .brand .mk{width:10px;height:10px;background:var(--accent);border-radius:2px;flex:0 0 auto}
+  .masthead .ident{font-size:var(--fs-micro);letter-spacing:.13em;text-transform:uppercase;color:var(--ink-3);font-weight:500}
+  @media (max-width:560px){.masthead .ident{display:none}}
+
+  /* ============================================================================
+     [PAGE-CUSTOM] BODY - dark instrument-panel case study.
+     One left edge for the whole document: text columns and image rows all start
+     at grid column 1. Hierarchy from type, weight, space, position before chrome.
+     ============================================================================ */
+
+  /* section heads / eyebrows - neutral mono index + tracked label + hairline + tag */
+  .eyebrow{grid-column:1/-1;display:flex;align-items:center;gap:16px;font-size:var(--fs-label);letter-spacing:.14em;text-transform:uppercase;font-weight:500;color:var(--ink-3);margin:0 0 var(--s6)}
+  .eyebrow .idx{font-family:var(--mono);font-weight:500;color:var(--ink-4);letter-spacing:0}
+  .eyebrow .lbl{color:var(--ink-1);font-weight:600;letter-spacing:.12em}
+  .eyebrow .rule{flex:1;height:1px;background:var(--line-1)}
+  .eyebrow .tag{color:var(--ink-4);font-weight:500;letter-spacing:.06em}
+  @media (max-width:430px){.eyebrow .tag{display:none}}
+
+  .title{font-family:var(--wide);font-weight:600;font-size:var(--fs-h1);line-height:1.08;letter-spacing:-.016em;color:var(--ink-hi);max-width:20ch;margin:0;text-wrap:balance}
+  .s-head{grid-column:1/-1;margin-bottom:var(--s6)}
+  .lead-col{grid-column:1 / span 8;margin-bottom:0}
+  @media (max-width:920px){.lead-col{grid-column:1/-1}}
+  .lead{font-size:var(--fs-lead);line-height:1.42;font-weight:450;color:var(--ink-1);letter-spacing:-.003em;max-width:46ch;margin:0}
+  .prose{grid-column:1 / span 7;margin-top:var(--s7)}
+  @media (max-width:920px){.prose{grid-column:1/-1}}
+  p{margin:0 0 1.05em;max-width:62ch}
+  .body{color:var(--ink-2c);max-width:58ch;font-size:var(--fs-body)}
+  .body b,.lead b{color:var(--ink-1);font-weight:600}
+  .dim{color:var(--ink-2c)} .faint{color:var(--ink-3)}
+  /* the example query, shown as a typed mono token (not the brand accent, which is live-status only) */
+  .hl{font-family:var(--mono);color:var(--ink-hi);background:var(--surface-2);border:1px solid var(--line-1);padding:.08em .38em;border-radius:5px;font-size:.8125em;font-weight:500;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+
+  /* ================= COVER ================= */
+  #cover{padding-block:clamp(40px,6vw,80px) clamp(48px,7vw,96px)}
+  .cover-copy{grid-column:1 / span 11}
+  @media (max-width:920px){.cover-copy{grid-column:1/-1}}
+  .cover-kicker{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);font-weight:500;margin:0 0 var(--s6);display:inline-flex;align-items:center;gap:10px;text-wrap:balance}
+  .cover-kicker .mk{width:8px;height:8px;border-radius:2px;background:var(--accent);flex:0 0 auto}
+  .cover-h1{font-family:var(--wide);font-weight:600;font-size:var(--fs-display);line-height:.98;letter-spacing:-.032em;color:var(--ink-hi);margin:0 0 var(--s4);text-wrap:balance}
+  .cover-sub{font-family:var(--wide);font-weight:500;font-size:clamp(1.25rem,2.4vw,1.9rem);line-height:1.15;letter-spacing:-.02em;color:var(--ink-2c);margin:0 0 var(--s6);max-width:27ch;text-wrap:balance}
+  .cover-lead{font-size:var(--fs-lead);line-height:1.45;font-weight:450;color:var(--ink-1);max-width:52ch;margin:0 0 var(--s6)}
+  .cover-lead b{font-weight:600;color:var(--ink-hi)}
+  /* ============================================================================
+     [V3] THE DESIGN NOTES — a persistent trigger and a real sidebar.
+     Neel, 2026-07-16: "I do not want a small tooltip-style UI; I want a proper
+     sidebar... a button somewhere on the screen that stays visible to the user
+     all the time." And on the first attempt at this panel: "This is a piece of
+     shit design/UI." He was right. The first draft was a document: nine identical
+     blocks of heading, four-line paragraph, small box. A panel whose whole job is
+     to argue that a person has visual craft cannot be an essay about visual craft.
+
+     So the hierarchy is inverted. The SPECIMEN is the hero and fills the card; the
+     words are a museum label under it, in three registers: the name, one claim, and
+     a mono receipt naming where the fact came from. Each specimen is the best-known
+     visual form of its own idea rather than a row of text: the easings are plotted
+     as actual curves, the tint is a hue spectrum, the numerals drift against a guide.
+
+     Why a <dialog> with showModal(): the site nav is position:fixed at z-100 with
+     children at z-102. The top layer sits above every stacking context, so there is
+     no z-index race, and the focus trap, Escape, ::backdrop and the inert background
+     are the platform's rather than mine.
+
+     Frequency gate: the TMS is opened a hundred times a day and animates almost
+     nothing. This is opened once, so it is the one surface that earns an entrance.
+     That asymmetry is the argument, not a licence to decorate.
+     ============================================================================ */
+
+  /* ---- scoped resets ----
+     The drawer reuses the page's own tags, and the page styles bare <section> and <p>
+     for the case study's rhythm: 120px of block padding, a rule between sections, a
+     62ch measure. None of that belongs in a 560px panel. Reset the category here so a
+     group added later cannot inherit it back. */
+  .craftbar section{ padding-block:0; position:static; }
+  .craftbar section + section{ border-top:0; }
+  .craftbar p{ max-width:none; }
+
+  /* .mk is not a global utility on this page: every instance is parent-scoped
+     (.brand .mk, .cover-kicker .mk, .fn-cap .mk). Follow that, do not break it. */
+  .dn-open .mk,
+  .cb-eyebrow .mk{ width:8px; height:8px; border-radius:2px; background:var(--accent); flex:0 0 auto; }
+
+  /* ---- the trigger: always visible, never a chat bubble ----
+     Squared to 3px because this page's radius census is 2px x9 / 1px x6; a pill or a
+     circle would break the instrument register. Hairline over shadow, per the app's
+     own rule. The accent appears only as .mk, so the button costs nothing from the
+     accent's sub-5% budget. Its count is tabular: the button obeys the rule its own
+     panel argues. */
+  .dn-open{
+    position:fixed; right:var(--s5); bottom:var(--s5); z-index:103;
+    display:inline-flex; align-items:center; gap:var(--s3);
+    padding:11px 14px;
+    background:var(--surface-2); border:1px solid var(--line-2); border-radius:3px;
+    box-shadow:var(--shadow-photo);
+    cursor:pointer; font-family:var(--mono);
+    transition:border-color var(--motion-fast) var(--ease-out),
+               background var(--motion-fast) var(--ease-out);
+  }
+  .dn-open:hover,.dn-open:focus-visible{ background:var(--raise); border-color:var(--ink-4); }
+  .dn-open:active{ transform:translateY(1px); }
+  .dn-open:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+  .dn-open .co-l{
+    font-size:var(--fs-micro); letter-spacing:.14em; text-transform:uppercase;
+    color:var(--ink-2c); font-weight:500;
+  }
+  .dn-open .co-n{
+    font-size:var(--fs-micro); color:var(--ink-4);
+    font-variant-numeric:tabular-nums lining-nums;
+    padding-left:var(--s3); border-left:1px solid var(--line-1);
+  }
+  .dn-open[aria-expanded="true"]{ opacity:0; pointer-events:none; }
+
+  /* ---- the sidebar ---- */
+  .craftbar{
+    position:fixed; inset:0 0 0 auto; margin:0; padding:0;
+    width:min(560px,100vw); max-width:100vw; height:100dvh; max-height:100dvh;
+    background:var(--surface); color:var(--ink-1);
+    border:0; border-left:1px solid var(--line-1);
+    overflow:hidden;
+    transform:translateX(100%);
+    /* exit at --motion-base, enter at --motion-soft: the system responding should
+       outpace the system arriving */
+    transition:transform var(--motion-base) var(--ease-soft),
+               overlay var(--motion-base) allow-discrete,
+               display var(--motion-base) allow-discrete;
+  }
+  .craftbar[open]{
+    transform:translateX(0);
+    transition:transform var(--motion-soft) var(--ease-soft),
+               overlay var(--motion-soft) allow-discrete,
+               display var(--motion-soft) allow-discrete;
+  }
+  @starting-style{ .craftbar[open]{ transform:translateX(100%); } }
+
+  .craftbar::backdrop{
+    background:rgba(4,6,8,0);
+    transition:background var(--motion-base) var(--ease-soft),
+               overlay var(--motion-base) allow-discrete,
+               display var(--motion-base) allow-discrete;
+  }
+  .craftbar[open]::backdrop{ background:rgba(4,6,8,.68); }
+  @starting-style{ .craftbar[open]::backdrop{ background:rgba(4,6,8,0); } }
+
+  html:has(.craftbar[open]){ overflow:hidden; }
+
+  .cb-shell{ display:flex; flex-direction:column; height:100%; }
+
+  /* ---- header ---- */
+  .cb-hd{
+    flex:0 0 auto; position:relative;
+    padding:var(--s5) var(--s5) var(--s4);
+    border-bottom:1px solid var(--line-1); background:var(--surface);
+  }
+  .cb-eyebrow{
+    display:flex; align-items:center; gap:var(--s2);
+    font-family:var(--mono); font-size:var(--fs-micro); letter-spacing:.14em;
+    text-transform:uppercase; color:var(--ink-4); margin:0 0 var(--s2);
+  }
+  .cb-hd h2{
+    font-family:var(--wide); font-size:1.3rem; line-height:1.2; letter-spacing:-.02em;
+    color:var(--ink-hi); margin:0; font-weight:600; max-width:30ch;
+  }
+  .cb-close{
+    position:absolute; top:var(--s4); right:var(--s4);
+    width:32px; height:32px; display:grid; place-items:center;
+    background:none; border:1px solid var(--line-1); border-radius:3px;
+    cursor:pointer; color:var(--ink-3);
+    transition:color var(--motion-fast) var(--ease-out),
+               border-color var(--motion-fast) var(--ease-out);
+  }
+  .cb-close:hover,.cb-close:focus-visible{ color:var(--ink-hi); border-color:var(--ink-4); }
+  .cb-close:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+  .cb-close svg{ width:13px; height:13px; fill:none; stroke:currentColor; stroke-width:1.5; stroke-linecap:round; }
+
+  /* ---- the scrolling file ---- */
+  .cb-scroll{ flex:1 1 auto; overflow-y:auto; overscroll-behavior:contain; padding:var(--s6) var(--s5) var(--s8); }
+  .cb-scroll:focus-visible{ outline:2px solid var(--accent); outline-offset:-2px; }
+  .cb-intro{
+    font-size:var(--fs-sm); line-height:1.6; color:var(--ink-3);
+    margin:0 0 var(--s8); max-width:44ch;
+  }
+
+  .cb-grp{ margin:0 0 var(--s8); }
+  .cb-grp > h3{
+    display:flex; align-items:center; gap:var(--s3);
+    font-family:var(--mono); font-size:var(--fs-micro); letter-spacing:.14em;
+    text-transform:uppercase; color:var(--ink-4); font-weight:500;
+    margin:0 0 var(--s6);
+  }
+  .cb-grp > h3::after{ content:""; flex:1; height:1px; background:var(--line-1); }
+
+  /* ---- the card: specimen is the hero, the words are the label ---- */
+  /* No card, no box, no fill. Neel, on the first pass: "too cluttered... just like our
+     other case studies. WE ARE NOT DESIGNING FOR MACHINES, WE ARE DESIGNING FOR HUMANS."
+     Tho8 and Pataa are the reference and they are quiet: a whisper-quiet label, then the
+     work, in a large field of air, with zero chrome around it. So the separator here is
+     space, not a border, and the specimen sits naked on the surface. */
+  .dcard{ margin:0 0 var(--s8); }
+  .dcard:last-child{ margin-bottom:0; }
+
+  .dstage{ display:flex; align-items:center; justify-content:center; margin:0 0 var(--s4); }
+  .dstage > *{ width:100%; }
+
+  .dmeta{ padding:0; }
+  .drow{ display:flex; align-items:baseline; gap:var(--s3); margin:0 0 6px; }
+  .dix{
+    font-family:var(--mono); font-size:var(--fs-micro); color:var(--ink-4);
+    font-variant-numeric:tabular-nums lining-nums; flex:0 0 auto;
+  }
+  .dmeta h4{
+    font-family:var(--wide); font-size:.98rem; font-weight:600; letter-spacing:-.01em;
+    color:var(--ink-hi); margin:0;
+  }
+  .dclaim{ font-size:var(--fs-sm); line-height:1.55; color:var(--ink-3); margin:0; max-width:44ch; }
+
+  /* ================= specimens ================= */
+
+  /* 01 canvas: a continuous ramp, not four dark boxes you cannot tell apart */
+  .sp-ramp{ display:flex; flex-direction:column; gap:0; border-radius:2px; overflow:hidden; border:1px solid var(--line-1); }
+  .sp-ramp span{
+    display:flex; align-items:center; padding:0 10px; height:28px;
+    font-family:var(--mono); font-size:var(--fs-micro); color:var(--ink-3);
+  }
+
+  /* 02 tint: the hue spectrum, with the green and the neutrals' hue marked. They sit
+     7 degrees apart, which is the whole claim, made visible instead of asserted. */
+  /* the two labels sit 11.7% apart, so they alternate above and below the bar rather
+     than overprinting each other, which is what the first draft did. */
+  .sp-hue .bar{
+    height:30px; border-radius:2px; border:1px solid var(--line-1);
+    background:linear-gradient(90deg,
+      oklch(0.864 0.22 153), oklch(0.62 0.14 156), oklch(0.40 0.06 158),
+      oklch(0.24 0.02 160), oklch(0.17 0.006 160));
+  }
+  .sp-hue .scale{
+    display:flex; justify-content:space-between; margin-top:8px;
+    font-family:var(--mono); font-size:9px; color:var(--ink-4); letter-spacing:.04em;
+  }
+
+  /* 03 lift: the rule and the failure it prevents. Hover both. */
+  .sp-lift{ display:flex; gap:var(--s3); }
+  .sp-lift span{
+    flex:1; text-align:center; padding:16px 8px; border-radius:3px;
+    font-family:var(--mono); font-size:var(--fs-micro); color:var(--ink-3);
+    border:1px solid var(--line-1);
+    transition:background var(--motion-fast) var(--ease-out), color var(--motion-fast) var(--ease-out);
+  }
+  .sp-lift .ok{ background:oklch(0.205 0.006 160); }
+  .sp-lift .ok:hover{ background:oklch(0.27 0.006 160); color:var(--ink-hi); }
+  .sp-lift .no{ background:oklch(0.235 0.006 160); }
+
+  /* 04 type: a real specimen, at size */
+  .sp-type{ text-align:left; }
+  .sp-type .a{
+    font-family:'General Sans','Satoshi',sans-serif; font-size:2.3rem; line-height:1; letter-spacing:-.03em;
+    color:var(--ink-hi); display:block; font-weight:600;
+  }
+  .sp-type .b{
+    font-family:'JetBrains Mono',ui-monospace,monospace; font-size:1.05rem; color:var(--ink-2c); display:block;
+    margin-top:10px; font-variant-numeric:tabular-nums lining-nums; letter-spacing:0;
+  }
+  .sp-type .c{
+    display:flex; gap:var(--s4); margin-top:12px;
+    font-family:var(--mono); font-size:9px; color:var(--ink-4); letter-spacing:.06em;
+  }
+  .sp-type .c i{ font-style:normal; text-decoration:none; }
+
+  /* 05 numerals: left-aligned against guides, so tabular locks and proportional drifts */
+  .sp-num{ display:flex; gap:var(--s5); }
+  .sp-num figure{ margin:0; flex:1; }
+  .sp-num pre{ margin:0; font-size:1.05rem; line-height:1.5; }
+  /* the sans drifts because 1 gets a narrow slot and 8 a wide one; the mono cannot.
+     Measured at 40px: General Sans renders 11,111 at 74.2px and 88,888 at 131.6px.
+     JetBrains Mono renders both at 144px, which is the entire reason numbers live there. */
+  .sp-num .sans pre{ font-family:'General Sans','Satoshi',sans-serif; font-variant-numeric:proportional-nums; color:var(--ink-3); }
+  .sp-num .mono pre{ font-family:'JetBrains Mono',ui-monospace,monospace; font-variant-numeric:tabular-nums lining-nums; color:var(--ink-1); }
+  .sp-num figcaption{
+    font-family:var(--mono); font-size:9px; color:var(--ink-4); margin-top:8px;
+    letter-spacing:.06em; text-transform:uppercase;
+  }
+  /* one rule where the digits should end. Every tabular row reaches it because each
+     digit is one width; the proportional rows fall short by however many 1s they carry.
+     An earlier draft ruled every 1ch across the column and just looked like a barcode. */
+  .sp-num pre{ display:inline-block; border-right:1px dashed var(--line-2); padding-right:2px; }
+
+  /* 06 durations: bar length IS the duration */
+  .sp-dur{ display:flex; flex-direction:column; gap:7px; }
+  .sp-dur span{ display:flex; align-items:center; gap:var(--s3); font-family:var(--mono); font-size:var(--fs-micro); }
+  .sp-dur s{ text-decoration:none; color:var(--ink-4); min-width:44px; }
+  .sp-dur i{ height:6px; border-radius:1px; background:var(--line-2); display:block; }
+  .sp-dur i.hot{ background:var(--accent); }
+  .sp-dur em{ font-style:normal; color:var(--ink-3); font-variant-numeric:tabular-nums; margin-left:auto; }
+
+  /* 07 easing: the curves, plotted. Three ease-outs SHOULD look like a family; the
+     dashed diagonal is linear, so the departure is the thing you see. The tracks below
+     run the real CSS easings, which is the one thing on this page a screenshot cannot be. */
+  .sp-ease{ display:flex; flex-direction:column; gap:12px; }
+  .sp-ease .plot{ display:flex; gap:var(--s4); align-items:center; }
+  .sp-ease svg{ width:132px; height:132px; flex:0 0 auto; display:block; }
+  .sp-ease .grid line{ stroke:var(--line-1); stroke-width:.6; }
+  .sp-ease .lin{ stroke:var(--ink-4); stroke-width:.8; stroke-dasharray:2 3; fill:none; opacity:.55; }
+  .sp-ease .c1{ stroke:var(--ink-4); }
+  .sp-ease .c2{ stroke:var(--ink-2c); }
+  .sp-ease .c3{ stroke:var(--accent); }
+  .sp-ease path.cv{ fill:none; stroke-width:1.6; stroke-linecap:round; }
+  .sp-ease .keys{ display:flex; flex-direction:column; gap:9px; flex:1; }
+  .sp-ease .key{ font-family:var(--mono); font-size:9px; letter-spacing:.04em; }
+  .sp-ease .key s{ text-decoration:none; display:block; margin-bottom:4px; }
+  .sp-ease .k1 s{ color:var(--ink-4); } .sp-ease .k2 s{ color:var(--ink-2c); } .sp-ease .k3 s{ color:var(--accent); }
+  .sp-ease .trk{ display:block; height:3px; background:var(--line-1); border-radius:1px; position:relative; overflow:hidden; }
+  .sp-ease .trk u{
+    position:absolute; inset:0 auto 0 0; width:20%; border-radius:1px;
+    animation:dnSweep var(--d,1.9s) var(--e,linear) infinite;
+  }
+  .sp-ease .k1 u{ background:var(--ink-4); } .sp-ease .k2 u{ background:var(--ink-2c); } .sp-ease .k3 u{ background:var(--accent); }
+  /* 82% travel, 18% rest: an earlier draft travelled 55% and parked 45%, so half the
+     time the demo was a dead line. A demo that is idle most of the time is not one. */
+  @keyframes dnSweep{ 0%{ transform:translateX(-100%); } 82%,100%{ transform:translateX(520%); } }
+
+  /* 08 percent: the extreme it refuses to print */
+  .sp-pct{ display:flex; flex-direction:column; gap:8px; font-family:var(--mono); font-size:var(--fs-micro); }
+  .sp-pct span{ display:flex; align-items:center; gap:10px; }
+  .sp-pct s{ text-decoration:none; color:var(--ink-4); min-width:66px; }
+  .sp-pct em{ font-style:normal; color:var(--ink-2c); font-variant-numeric:tabular-nums; min-width:52px; }
+  .sp-pct .ar{ color:var(--ink-4); }
+  .sp-pct b{ color:var(--accent); font-weight:500; font-variant-numeric:tabular-nums; min-width:34px; }
+  .sp-pct del{ color:var(--ink-4); text-decoration-color:var(--warn); font-variant-numeric:tabular-nums; }
+
+  /* 09 trend: direction and tone are separate inputs, shown separately */
+  .sp-trend{ display:flex; flex-direction:column; gap:9px; font-family:var(--mono); font-size:var(--fs-micro); }
+  .sp-trend span{ display:flex; align-items:center; gap:10px; }
+  .sp-trend s{ text-decoration:none; color:var(--ink-4); min-width:60px; }
+  .sp-trend em{ font-style:normal; color:var(--ink-1); font-variant-numeric:tabular-nums; min-width:56px; }
+  .sp-trend i{ font-style:normal; font-size:9px; letter-spacing:.08em; text-transform:uppercase; }
+  .sp-trend i.pos{ color:var(--accent-quiet); }
+  .sp-trend i.neg{ color:var(--warn); }
+
+  .cb-foot{
+    margin-top:var(--s7); padding-top:var(--s5); border-top:1px solid var(--line-1);
+    font-size:var(--fs-micro); line-height:1.6; color:var(--ink-4);
+  }
+
+  /* the entrance: the cards stagger in. Licensed by the frequency gate, because this
+     opens once. 40ms apart, which is inside the 30-80ms band that reads as cascade
+     rather than as queue. */
+  .craftbar[open] .dcard{ animation:dnRise 320ms var(--ease-q) backwards; }
+  .craftbar[open] .cb-grp:nth-of-type(1) .dcard:nth-child(2){ animation-delay:60ms; }
+  .craftbar[open] .cb-grp:nth-of-type(1) .dcard:nth-child(3){ animation-delay:100ms; }
+  .craftbar[open] .cb-grp:nth-of-type(1) .dcard:nth-child(4){ animation-delay:140ms; }
+  .craftbar[open] .cb-grp:nth-of-type(2) .dcard{ animation-delay:180ms; }
+  .craftbar[open] .cb-grp:nth-of-type(2) .dcard:nth-child(3){ animation-delay:220ms; }
+  .craftbar[open] .cb-grp:nth-of-type(3) .dcard{ animation-delay:260ms; }
+  .craftbar[open] .cb-grp:nth-of-type(3) .dcard:nth-child(3){ animation-delay:300ms; }
+  .craftbar[open] .cb-grp:nth-of-type(4) .dcard{ animation-delay:340ms; }
+  @keyframes dnRise{ from{ opacity:0; transform:translateY(10px); } to{ opacity:1; transform:none; } }
+
+  @media (max-width:600px){
+    .craftbar{ width:100vw; border-left:0; }
+    .dn-open{ right:var(--s4); bottom:var(--s4); }
+    .sp-ease .plot{ flex-direction:column; align-items:stretch; }
+    .sp-ease svg{ width:100%; height:150px; }
+    .sp-num{ gap:var(--s4); }
+  }
+
+  /* Reduced motion: it still arrives, it just stops travelling. The stagger and the
+     easing tracks stop, because a looping bar is decoration once a person has said no
+     to motion. The plotted curves stay: they are a drawing, not a movement. */
+  @media (prefers-reduced-motion:reduce){
+    .craftbar,.craftbar[open]{
+      transform:none; opacity:0;
+      transition:opacity var(--motion-fast) linear,
+                 overlay var(--motion-fast) allow-discrete,
+                 display var(--motion-fast) allow-discrete;
+    }
+    .craftbar[open]{ opacity:1; }
+    @starting-style{ .craftbar[open]{ opacity:0; transform:none; } }
+    .craftbar[open] .dcard{ animation:none; }
+    .sp-ease .trk u{ animation:none; width:62%; }
+    .dn-open:active{ transform:none; }
+  }
+
+  /* [V2] source citations — an external link on a number. Muted until hovered, so the
+     prose reads first and the receipt is there when a reader wants it. */
+  .cite{display:inline-flex;align-items:baseline;gap:3px;color:var(--ink-3);text-decoration:none;border-bottom:1px solid var(--line-2);transition:color .18s var(--ease-out),border-color .18s var(--ease-out);white-space:nowrap}
+  .cite:hover,.cite:focus-visible{color:var(--accent);border-bottom-color:var(--accent)}
+  .cite .ar{font-size:.82em;opacity:.7}
+  .cite:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:2px}
+  /* the research row: the sources, laid out as the method, not a bibliography */
+  .srcs{grid-column:1/-1;margin-top:var(--s7);border-top:1px solid var(--line-2);padding-top:var(--s5);display:flex;flex-wrap:wrap;gap:10px 22px}
+  .srcs a{display:inline-flex;align-items:center;gap:7px;font-family:var(--mono);font-size:var(--fs-micro);letter-spacing:.02em;color:var(--ink-4);text-decoration:none;transition:color .18s var(--ease-out)}
+  .srcs a:hover,.srcs a:focus-visible{color:var(--accent)}
+  .srcs a::before{content:"";width:5px;height:5px;border-radius:1px;background:var(--ink-4);flex:0 0 auto;transition:background .18s var(--ease-out)}
+  .srcs a:hover::before,.srcs a:focus-visible::before{background:var(--accent)}
+  .srcs a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:2px}
+
+  /* the live dot (reused by the 09 kicker) */
+  .dot{width:8px;height:8px;border-radius:50%;background:var(--ink-4);flex:0 0 auto}
+  .dot.live{background:var(--accent);animation:breathe 2.4s var(--ease-pulse) infinite}
+  .dot.warn{background:var(--warn)}
+  @keyframes breathe{0%,100%{opacity:1}50%{opacity:.38}}
+  @media (prefers-reduced-motion:reduce){.dot.live{animation:none}}
+
+  /* meta table, hung on a strong hairline */
+  .meta{grid-column:1/-1;border-top:1px solid var(--line-2);margin:var(--s7) 0 0;max-width:44rem}
+  .meta div{display:grid;grid-template-columns:9.5rem 1fr;gap:10px 22px;padding:13px 0;border-bottom:1px solid var(--line-1)}
+  @media (max-width:560px){.meta div{grid-template-columns:1fr;gap:4px}}
+  .meta dt{font-size:var(--fs-micro);letter-spacing:.13em;text-transform:uppercase;color:var(--ink-3);font-weight:500;padding-top:3px}
+  .meta dd{margin:0;font-size:var(--fs-sm);font-weight:450;color:var(--ink-1);line-height:1.5}
+  .meta dd.stack{font-family:var(--mono);font-size:var(--fs-mono-sm);color:var(--ink-2c);letter-spacing:-.01em}
+
+  /* ================= figure / placeholder (NO UI in code - every screen is a neutral placeholder box) ================= */
+  figure.shot{grid-column:1/-1;margin:var(--s8) 0 0;width:100%}
+  figure.shot.tight{margin-top:var(--s7)}
+  .ph{position:relative;aspect-ratio:var(--ar,16/10);width:100%;background:var(--surface);border:1px solid var(--line-1);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;box-shadow:var(--shadow-photo)}
+  .ph::before,.ph::after{content:"";position:absolute;width:16px;height:16px;border:1px solid var(--line-2);opacity:.6}
+  .ph::before{top:12px;left:12px;border-right:0;border-bottom:0}
+  .ph::after{bottom:12px;right:12px;border-left:0;border-top:0}
+  .ph-res{font-family:var(--mono);font-size:clamp(1rem,1.5vw,1.25rem);font-weight:500;color:var(--ink-2c);letter-spacing:.02em;z-index:1}
+  .ph-lab{font-size:var(--fs-sm);color:var(--ink-3);text-align:center;max-width:40ch;padding:0 20px;z-index:1;line-height:1.4}
+  .ph img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;opacity:0;transition:opacity .5s var(--ease-out);z-index:2}
+  .ph img.loaded{opacity:1}
+  figure.shot figcaption{width:100%;margin-top:var(--s4);font-size:var(--fs-sm);line-height:1.55;color:var(--ink-2c);max-width:64ch}
+  figure.shot figcaption b{color:var(--ink-hi);font-weight:600;display:block;font-family:var(--wide);font-size:1rem;margin-bottom:2px;letter-spacing:-.01em}
+
+  /* ================= scenario / big context figure ================= */
+  .scene{grid-column:1/-1;margin-top:var(--s8);border-top:1px solid var(--line-1);border-bottom:1px solid var(--line-1);padding:var(--s7) 0;display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:clamp(24px,4vw,56px);align-items:center}
+  @media (max-width:820px){.scene{grid-template-columns:1fr;gap:var(--s6)}}
+  .scene q{quotes:none;font-family:var(--wide);font-weight:500;font-size:var(--fs-feature);line-height:1.18;letter-spacing:-.02em;color:var(--ink-hi);display:block}
+  .scene .figbig{text-align:left}
+  .scene .figbig .n{font-family:var(--mono);font-weight:500;font-size:clamp(2.4rem,5.4vw,3.6rem);line-height:.9;letter-spacing:-.03em;color:var(--ink-1);font-variant-numeric:tabular-nums;display:block}
+  .scene .figbig .l{font-size:var(--fs-sm);color:var(--ink-3);margin-top:var(--s3);line-height:1.5;max-width:30ch}
+  .scene .figbig .l b{color:var(--ink-2c);font-weight:600}
+  .bet{grid-column:1/-1;margin-top:var(--s7);padding-left:20px;border-left:2px solid var(--line-2);max-width:64ch}
+  .bet p{margin:0;font-size:var(--fs-lead);line-height:1.45;font-weight:450;color:var(--ink-1)}
+  .bet b{font-weight:600;color:var(--ink-hi)}
+
+  /* ================= ledger (defects, decisions, bugs, lessons) ================= */
+  .ledger{grid-column:1/-1;margin-top:var(--s7);border-top:1px solid var(--line-2)}
+  .ledger .r{display:grid;grid-template-columns:minmax(0,44px) minmax(0,1fr);gap:22px 26px;padding:26px 0;border-bottom:1px solid var(--line-1);align-items:baseline}
+  @media (max-width:560px){.ledger .r{grid-template-columns:1fr;gap:10px}}
+  .ledger .r .no{font-family:var(--mono);font-weight:500;font-size:var(--fs-sm);color:var(--ink-4);font-variant-numeric:tabular-nums;padding-top:4px}
+  /* [V2] the VERDICT mark. The .no slot carries two different things: ordinals (01/02, A/B/C) and
+     verdicts (cut / built / never had). Ordinals stay mono text. Verdicts are drawn, so the cross and
+     the check share one stroke weight and one optical size instead of being a multiplication sign next
+     to a dingbat. Every verdict is labelled: meaning never rides on the glyph alone. Tone carries the
+     verdict, not hue — the accent means action/live/selection, and a verdict is none of those. */
+  .ledger .r .no.vd{display:flex;flex-direction:column;align-items:flex-start;gap:7px;padding-top:2px}
+  .ledger .r .no.vd .vmk{width:16px;height:16px;display:block;flex:0 0 auto;stroke:currentColor;stroke-width:1.5;fill:none;stroke-linecap:round;stroke-linejoin:round;overflow:visible}
+  .ledger .r .no.vd .vl{font-family:var(--sans);font-size:var(--fs-micro);font-weight:500;letter-spacing:.09em;text-transform:uppercase;line-height:1;-webkit-text-decoration:none;text-decoration:none}
+  .ledger .r.built .no.vd{color:var(--ink-1)}      /* it exists, so it reads brighter */
+  .ledger .r.struck .no.vd,.ledger .r.absent .no.vd{color:var(--ink-4)}
+  @media (max-width:560px){.ledger .r .no.vd{flex-direction:row;align-items:center;gap:9px}}
+  .ledger .r .k{font-family:var(--wide);font-weight:600;font-size:clamp(1.1rem,1.9vw,1.35rem);letter-spacing:-.015em;color:var(--ink-hi);margin:0 0 8px;line-height:1.2}
+  .ledger .r .d{color:var(--ink-2c);font-size:var(--fs-sm);line-height:1.55;max-width:66ch;margin:0}
+  .ledger .r .d b{color:var(--ink-1);font-weight:600}
+  .ledger .r.struck .k{color:var(--ink-4);text-decoration:line-through;text-decoration-thickness:1.5px;text-decoration-color:var(--line-2)}
+  .ledger .r.struck .d{color:var(--ink-4)}
+  /* [V2] .absent — an input I never had, as opposed to .struck, which is a thing I considered
+     and cut. No line-through: you cannot strike out something that was never on the page. */
+  .ledger .r.absent .k{color:var(--ink-4)}
+  .ledger .r.absent .d{color:var(--ink-4)}
+  /* before → after number pair */
+  .pair{display:inline-flex;align-items:baseline;gap:12px;margin-top:12px;font-family:var(--mono);font-variant-numeric:tabular-nums}
+  .pair .was{color:var(--ink-4);text-decoration:line-through;text-decoration-thickness:1.5px;font-size:1rem}
+  .pair .arrow{color:var(--ink-3);font-size:1rem}
+  .pair .now{color:var(--ink-hi);font-weight:600;font-size:1.35rem;letter-spacing:-.01em}
+  .pair .now.good{color:var(--ink-hi)}
+  .pair-l{display:block;font-family:var(--sans);font-size:var(--fs-micro);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);margin-top:8px;font-weight:500}
+
+  /* ================= status legend (dot + label, never hue alone) ================= */
+  .legend{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:14px 28px;margin-top:var(--s7);border-top:1px solid var(--line-1);padding-top:var(--s6)}
+  .legend .it{display:inline-flex;align-items:center;gap:10px;font-size:var(--fs-sm);color:var(--ink-2c);font-weight:450}
+  .legend .it b{color:var(--ink-1);font-weight:600}
+  .legend .it .dash-mk{width:14px;height:2px;background:var(--ink-4);border-radius:1px;flex:0 0 auto}
+
+  /* ================= two-column honesty split ================= */
+  .cols{grid-column:1/-1;margin-top:var(--s7);display:grid;grid-template-columns:1fr 1fr;gap:0}
+  @media (max-width:820px){.cols{grid-template-columns:1fr;gap:var(--s7)}}
+  .cols .col{padding-top:var(--s5);border-top:2px solid var(--line-2)}
+  .cols .col.mine{padding-left:clamp(24px,4vw,48px);border-left:1px solid var(--line-1)}
+  @media (max-width:820px){.cols .col.mine{padding-left:0;border-left:0}}
+  .cols .col.freight{padding-right:clamp(24px,4vw,48px)}
+  .cols .ch{font-size:var(--fs-label);letter-spacing:.1em;text-transform:uppercase;font-weight:600;margin:0 0 4px;display:flex;align-items:center;gap:9px}
+  .cols .col.freight .ch{color:var(--ink-3)}
+  .cols .col.mine .ch{color:var(--ink-1)}
+  .cols .col.mine .ch .mk{width:8px;height:8px;border-radius:2px;background:var(--accent);flex:0 0 auto}
+  .cols .csub{font-size:var(--fs-micro);letter-spacing:.02em;color:var(--ink-4);margin:0 0 var(--s5);text-transform:uppercase;letter-spacing:.06em}
+  .cols .fig{display:grid;grid-template-columns:minmax(0,auto) 1fr;gap:6px 18px;padding:16px 0;border-bottom:1px solid var(--line-1);align-items:baseline}
+  .cols .fig .n{font-family:var(--mono);font-variant-numeric:tabular-nums;letter-spacing:-.015em;font-weight:500;font-size:var(--fs-mid);white-space:nowrap}
+  .cols .col.freight .fig .n{color:var(--ink-2c)}
+  .cols .col.mine .fig .n{color:var(--ink-hi)}
+  .cols .fig .fl{font-size:var(--fs-sm);color:var(--ink-3);line-height:1.4;align-self:center}
+  .cols .col.mine .fig .fl{color:var(--ink-2c)}
+
+  /* ================= prove / will-not-claim ================= */
+  .provewrap{grid-column:1/-1;margin-top:var(--s7);display:grid;grid-template-columns:1fr 1fr;gap:clamp(28px,5vw,64px)}
+  @media (max-width:820px){.provewrap{grid-template-columns:1fr;gap:var(--s7)}}
+  .plist{border-top:2px solid var(--line-2);padding-top:var(--s5)}
+  .plist .ph2{font-size:var(--fs-label);letter-spacing:.1em;text-transform:uppercase;font-weight:600;margin:0 0 var(--s5);color:var(--ink-1);display:flex;align-items:center;gap:9px}
+  .plist.no .ph2{color:var(--ink-3)}
+  .plist ul{list-style:none;margin:0;padding:0}
+  .plist li{display:grid;grid-template-columns:18px 1fr;gap:14px;padding:16px 0;border-bottom:1px solid var(--line-1);font-size:var(--fs-sm);line-height:1.55;color:var(--ink-2c)}
+  .plist li b{color:var(--ink-1);font-weight:600}
+  .plist li .m{margin-top:7px;width:9px;height:9px;flex:0 0 auto}
+  .plist.yes li .m{background:var(--accent);border-radius:2px}
+  .plist.no li .m{width:14px;height:2px;margin-top:11px;background:var(--ink-4);border-radius:1px}
+  .nextline{grid-column:1/-1;margin-top:var(--s7);padding-left:20px;border-left:2px solid var(--line-2);max-width:70ch}
+  .nextline p{margin:0;font-size:var(--fs-body);line-height:1.5;color:var(--ink-2c)}
+  .nextline b{color:var(--ink-1);font-weight:600}
+
+  /* ================= 02 · the funnel diagram (editorial, code — not app UI) ================= */
+  .funnel{grid-column:1/-1;margin-top:var(--s7);display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1.05fr) auto minmax(0,1fr);align-items:stretch;border-block:1px solid var(--line-2)}
+  @media (max-width:880px){.funnel{grid-template-columns:1fr;border-bottom:0}}
+  .fn-stage{padding:var(--s6) var(--s6) var(--s6) 0}
+  .fn-stage.fn-hot{background:var(--surface);border-inline:1px solid var(--line-1);padding-inline:var(--s6)}
+  @media (max-width:880px){.fn-stage{padding:var(--s5) 0;border-bottom:1px solid var(--line-1)}.fn-stage.fn-hot{padding-inline:var(--s5);border-inline:0;border-left:2px solid var(--accent)}}
+  .fn-cap{font-size:var(--fs-label);letter-spacing:.1em;text-transform:uppercase;font-weight:600;color:var(--ink-3);margin:0 0 var(--s4);display:flex;align-items:center;gap:9px}
+  .fn-hot .fn-cap{color:var(--ink-1)}
+  .fn-cap .mk{width:8px;height:8px;border-radius:2px;background:var(--accent);flex:0 0 auto}
+  .fn-chips{list-style:none;margin:0 0 var(--s4);padding:0;display:flex;flex-wrap:wrap;gap:8px}
+  .fn-chips li{font-family:var(--mono);font-size:var(--fs-mono-sm);color:var(--ink-1);border:1px solid var(--line-2);border-radius:6px;padding:5px 10px;background:var(--surface)}
+  .fn-hot .fn-chips li{background:var(--surface-2)}
+  .fn-big{font-family:var(--wide);font-weight:600;font-size:var(--fs-mid);letter-spacing:-.02em;color:var(--ink-hi);margin:0 0 var(--s3);line-height:1.15}
+  .fn-note{font-size:var(--fs-sm);color:var(--ink-3);margin:0;line-height:1.5;max-width:30ch}
+  .fn-arrow{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:0 var(--s3);color:var(--ink-4)}
+  .fn-arrow .fn-ar{font-family:var(--mono);font-size:1.3rem;line-height:1}
+  .fn-arrow .fn-lbl{font-family:var(--mono);font-size:var(--fs-micro);letter-spacing:.06em;text-transform:uppercase;white-space:nowrap}
+  @media (max-width:880px){.fn-arrow{flex-direction:row;gap:10px;padding:var(--s3) 0;justify-content:flex-start}.fn-arrow .fn-ar{transform:rotate(90deg);display:inline-block}}
+
+  /* ================= 05 · state small-multiples ================= */
+  .states{grid-column:1/-1;margin-top:var(--s8);border-top:1px solid var(--line-2);padding-top:var(--s6)}
+  .states-h{font-family:var(--wide);font-weight:600;font-size:var(--fs-lead);line-height:1.2;letter-spacing:-.015em;color:var(--ink-hi);margin:0 0 var(--s6);max-width:44ch}
+  .states-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:clamp(14px,1.8vw,22px) clamp(16px,2vw,24px)}
+    @media (max-width:1080px){.states-grid{grid-template-columns:1fr}}
+  .st{margin:0}
+  .st .ph{border-radius:8px;box-shadow:none}
+  .st .ph-res{font-size:var(--fs-sm)}
+  .st figcaption{margin-top:10px;font-size:var(--fs-micro);color:var(--ink-4);line-height:1.45}
+  .states-note{font-size:var(--fs-sm);color:var(--ink-3);margin:var(--s6) 0 0;max-width:62ch;line-height:1.55}
+
+
+  /* ============================================================================
+     [PAGE-RE-THEMABLE] COLOPHON / FOOTER - shared structure, per-page credit.
+     ============================================================================ */
+  .colophon{background:var(--surface);border-top:1px solid var(--line-1)}
+  .colophon .wrap{padding-block:clamp(52px,7vw,88px)}
+  .colophon .cred{grid-column:1 / span 7}
+  .colophon .note{grid-column:9 / span 4;align-self:start}
+  @media (max-width:920px){.colophon .cred,.colophon .note{grid-column:1/-1}.colophon .note{margin-top:var(--s7)}}
+  .colophon .brand{font-family:var(--wide);font-weight:600;font-size:var(--fs-feature);line-height:1.1;letter-spacing:-.02em;margin-bottom:var(--s5);display:inline-flex;align-items:center;gap:12px;color:var(--ink-hi)}
+  .colophon .brand .mk{width:12px;height:12px;background:var(--accent);border-radius:3px;flex:0 0 auto}
+  .colophon .cred p{color:var(--ink-2c);font-size:var(--fs-sm);line-height:1.55;max-width:62ch}
+  .colophon .cred p b{color:var(--ink-1)}
+  .colophon .cred .fine{font-size:var(--fs-micro);letter-spacing:.02em;color:var(--ink-3);margin-top:var(--s5);line-height:1.6}
+  .colophon .note dl{margin:0;border-top:1px solid var(--line-2)}
+  .colophon .note div{display:grid;grid-template-columns:auto 1fr;gap:10px 18px;padding:12px 0;border-bottom:1px solid var(--line-1)}
+  .colophon .note dt{font-size:var(--fs-micro);letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);font-weight:500}
+  .colophon .note dd{margin:0;font-size:var(--fs-sm);color:var(--ink-1);font-weight:500;text-align:right}
+  .colophon .note dd.mono{font-family:var(--mono);font-size:var(--fs-mono-sm);letter-spacing:-.01em}
+  .colophon .note dd .u{display:inline-block;width:9px;height:9px;background:var(--accent);border-radius:2px;vertical-align:baseline;margin-left:7px}
+  /* [WARP CREDIT] the real Warp wordmark as a quiet "Designed at" brand credit. Rendered in calm ink (NOT the accent) so the page keeps its one-green discipline; the mark's shape carries the recognition, not a second green. One use per page, content not nav. */
+  .warp-credit{display:flex;align-items:center;gap:10px;margin:var(--s5) 0 0}
+  .warp-credit-lbl{font-size:var(--fs-micro);letter-spacing:.12em;text-transform:uppercase;color:var(--ink-faint);font-weight:600;line-height:1}
+  .warp-mark{height:18px;width:auto;display:block;color:var(--ink-dim);flex:0 0 auto}
+  /* the secondary Design-notes trigger: a real link, not an unstyled UA button (was 13.33px system chrome) */
+  .colophon .note dd .dn-link{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:color var(--motion-fast) var(--ease-out)}
+  .colophon .note dd .dn-link:hover,.colophon .note dd .dn-link:focus-visible{color:var(--accent)}
+  .backlink{grid-column:1/-1;display:inline-flex;align-items:center;gap:.5rem;margin-top:var(--s7);font-size:var(--fs-sm);color:var(--ink-2c);text-decoration:none;font-weight:600}
+  .backlink:hover{color:var(--ink-hi)}
+
+  /* ============================================================================
+     interaction polish - calm, neutral, frequency-gated. Hover lift with NEUTRAL
+     shadow only (never an accent glow). Links accent on hover.
+     ============================================================================ */
+  a.backlink:active{transform:translateY(0) scale(.99)}
+  figure.shot .ph{transition:transform .16s var(--ease-soft),border-color .16s var(--ease-soft),box-shadow .16s var(--ease-soft)}
+  figure.shot:hover .ph{transform:translateY(-2px);border-color:var(--line-2);box-shadow:var(--shadow-float)}
+  .body a,.cred a,p a{color:var(--ink-1);text-decoration:underline;text-decoration-color:var(--line-2)}
+  .body a:hover,.cred a:hover,p a:hover{color:var(--accent);text-decoration-color:var(--accent)}
+  @media (prefers-reduced-motion:reduce){figure.shot:hover .ph{transform:none}}
+
+  /* [SHARED-VERBATIM] calm reveal - CSS transition only, no keyframes; reduced-motion safe */
+  .rise{opacity:0;transform:translateY(16px);transition:opacity .7s var(--ease-out),transform .7s var(--ease-out);transition-delay:var(--d,0s)}
+  .rise.in{opacity:1;transform:none}
+  @media (prefers-reduced-motion:reduce){.rise{opacity:1;transform:none;transition:none}}
+
+  /* [P5 · additive motion] the funnel columns light up in flow order (left to right)
+     as the block reveals, so the diagram reads as the acquisition flow assembling.
+     Rides the existing .funnel.rise -> .in trigger; NO new JS. Opacity-only on the
+     columns so it never fights the block's own rise or shifts layout. Resting, no-JS,
+     and reduced-motion states are the finished static funnel, byte-for-byte unchanged. */
+  .funnel.in > *{animation:fnFlow .5s var(--ease-out) both}
+  .funnel.in > *:nth-child(2){animation-delay:.10s}
+  .funnel.in > *:nth-child(3){animation-delay:.20s}
+  .funnel.in > *:nth-child(4){animation-delay:.30s}
+  .funnel.in > *:nth-child(5){animation-delay:.40s}
+  .funnel.in .fn-hot .mk{animation:fnMk .45s var(--ease-out) .34s both}   /* the accent square lands last, a small beat on the pivot stage */
+  @keyframes fnFlow{from{opacity:0}to{opacity:1}}
+  @keyframes fnMk{from{opacity:0;transform:scale(.4)}to{opacity:1;transform:none}}
+  @media (prefers-reduced-motion:reduce){.funnel.in > *,.funnel.in .fn-hot .mk{animation:none}}
+
+  /* [PAGE-CUSTOM] dark-theme the reused site nav for this dark instrument-panel page.
+     Same markup + class names (still the real component, not a lookalike), re-coloured to the page tokens
+     so a light band + a saturated blue CTA don't sit on a near-black canvas. */
+  .nav{background-color:rgba(12,12,13,.72)}
+  .nav-inner{border-bottom:1px solid rgba(255,255,255,.09)}
+  .nav-link{color:var(--ink-3)}
+  .nav-link:hover{color:var(--ink-hi)}
+  .nav .cta{color:var(--ink-hi)}
+  .nav .cta:hover{color:var(--accent)}
+  .nav-logo img{filter:invert(1)}  /* the black wordmark reads white on the dark band (verify the white asset on deploy) */
+  .st figcaption .stn{display:block;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3);font-weight:600;margin-bottom:2px}
+</style>
+</head>
+<body>
+
+<!-- ============================================================================
+     [SHARED-VERBATIM] SITE NAV - the real homepage component (identical markup to
+     neelmyno.in). Copy exactly; do not rebuild a lookalike.
+     ============================================================================ -->
+<div class="nav">
+  <div class="page-padding">
+    <div class="container">
+      <div class="nav-inner">
+        <a href="/" aria-current="page" class="nav-logo w-inline-block w--current" aria-label="Neel Tengariya — home">
+          <div><img width="60" src="/images/home/navbar/logo_full_black_copyright.svg" alt="Neel logo"></div>
+        </a>
+        <div class="nav-menu">
+          <a href="/#home" class="nav-link">Home</a>
+          <a href="/#work" class="nav-link">Work</a>
+          <a href="/#experience" class="nav-link">Experience</a>
+          <a href="/" class="nav-link">About</a>
+          <a href="/resume/neel_tengariya_resume.pdf" class="cta cta--nav w-inline-block" download>
+            <div>Download Resume</div>
+            <div class="cta-chevron w-embed"><svg width="7" height="10" xmlns="http://www.w3.org/2000/svg"><path d="M1.566.434 6.131 5 1.566 9.566.434 8.434 3.869 5 .434 1.566z" fill="currentColor" /></svg></div>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ MASTHEAD (running head, not sticky) ============ -->
+<header class="masthead">
+  <div class="wrap row">
+    <div class="brand"><span class="mk" aria-hidden="true"></span><span>Warp TMS</span></div>
+    <div class="ident">Warp &middot; Free operator TMS &middot; Case study</div>
+  </div>
+</header>
+<!-- ============ DESIGN NOTES: trigger + sidebar (V3) ============
+     The craft the BODY does not argue. Every value is read from the app's own source;
+     the swatches carry the app's real oklch tokens, so the browser does the conversion
+     and this panel asserts no hex it would have to get right. -->
+<button class="dn-open" type="button" data-dn-open aria-haspopup="dialog" aria-controls="designnotes" aria-expanded="false">
+  <span class="mk" aria-hidden="true"></span>
+  <span class="co-l">Design notes</span>
+  <span class="co-n">9</span>
+</button>
+
+<dialog class="craftbar" id="designnotes" data-dn data-lenis-prevent aria-labelledby="dn-title">
+  <div class="cb-shell">
+    <header class="cb-hd">
+      <p class="cb-eyebrow"><span class="mk" aria-hidden="true"></span>The craft file</p>
+      <h2 id="dn-title">The decisions underneath the screens.</h2>
+      <button class="cb-close" type="button" data-dn-close aria-label="Close design notes">
+        <svg viewBox="0 0 14 14" aria-hidden="true"><path d="M3.5 3.5l7 7M10.5 3.5l-7 7"/></svg>
+      </button>
+    </header>
+
+    <div class="cb-scroll" tabindex="-1" data-dn-scroll>
+      <p class="cb-intro">The page behind this is a bet and a funnel. This is the other half: the decisions that do not survive a screenshot.</p>
+
+      <!-- ================= THE GROUND ================= -->
+      <section class="cb-grp">
+        <h3>The ground</h3>
+
+        <article class="dcard">
+          <div class="dstage">
+            <div class="sp-ramp">
+              <span style="background:oklch(0.17 0.006 160)">background</span>
+              <span style="background:oklch(0.205 0.006 160)">card</span>
+              <span style="background:oklch(0.235 0.006 160)">popover</span>
+              <span style="background:oklch(0.27 0.006 160)">raised</span>
+            </div>
+          </div>
+          <div class="dmeta">
+            <div class="drow"><span class="dix">01</span><h4>The canvas</h4></div>
+            <p class="dclaim">Never pure black. Black has no depth to sit a hairline against.</p>
+          </div>
+        </article>
+
+        <article class="dcard">
+          <div class="dstage">
+            <div class="sp-hue">
+              <div class="bar"></div>
+              <div class="scale"><span>the accent</span><span>the ground</span></div>
+            </div>
+          </div>
+          <div class="dmeta">
+            <div class="drow"><span class="dix">02</span><h4>The tint</h4></div>
+            <p class="dclaim">The ground is the accent, turned almost all the way down.</p>
+          </div>
+        </article>
+
+        <article class="dcard">
+          <div class="dstage">
+            <div class="sp-lift">
+              <span class="ok">on card &rarr; lifts</span>
+              <span class="no">on popover &rarr; no-ops</span>
+            </div>
+          </div>
+          <div class="dmeta">
+            <div class="drow"><span class="dix">03</span><h4>The lift</h4></div>
+            <p class="dclaim">Raised by tone. A shadow has nothing to darken on a ground this dark.</p>
+          </div>
+        </article>
+      </section>
+
+      <!-- ================= THE READING ================= -->
+      <section class="cb-grp">
+        <h3>The reading</h3>
+
+        <article class="dcard">
+          <div class="dstage">
+            <div class="sp-type">
+              <span class="a">General Sans</span>
+              <span class="b">0123456789</span>
+              <span class="c"><i>interface</i><i>JetBrains Mono / numbers</i></span>
+            </div>
+          </div>
+          <div class="dmeta">
+            <div class="drow"><span class="dix">04</span><h4>Type</h4></div>
+            <p class="dclaim">Two faces. One carries the interface, one carries the numbers.</p>
+          </div>
+        </article>
+
+        <article class="dcard">
+          <div class="dstage">
+            <div class="sp-num">
+              <figure class="sans"><pre>11,418
+88,073
+10,164</pre><figcaption>General Sans / drifts</figcaption></figure>
+              <figure class="mono"><pre>11,418
+88,073
+10,164</pre><figcaption>JetBrains Mono / locks</figcaption></figure>
+            </div>
+          </div>
+          <div class="dmeta">
+            <div class="drow"><span class="dix">05</span><h4>The numerals</h4></div>
+            <p class="dclaim">Numbers leave the sans, because the sans drifts.</p>
+          </div>
+        </article>
+      </section>
+
+      <!-- ================= THE MOTION ================= -->
+      <section class="cb-grp">
+        <h3>The motion</h3>
+
+        <article class="dcard">
+          <div class="dstage">
+            <div class="sp-dur">
+              <span><s>micro</s><i style="width:31.25%"></i><em>100ms</em></span>
+              <span><s>fast</s><i style="width:43.75%"></i><em>140ms</em></span>
+              <span><s>base</s><i style="width:62.5%"></i><em>200ms</em></span>
+              <span><s>soft</s><i class="hot" style="width:75%"></i><em>240ms</em></span>
+              <span><s>slow</s><i style="width:100%"></i><em>320ms</em></span>
+            </div>
+          </div>
+          <div class="dmeta">
+            <div class="drow"><span class="dix">06</span><h4>The durations</h4></div>
+            <p class="dclaim">Five. Almost nothing is allowed to spend them.</p>
+          </div>
+        </article>
+
+        <article class="dcard">
+          <div class="dstage">
+            <div class="sp-ease">
+              <div class="plot">
+                <svg viewBox="0 0 100 100" role="img" aria-label="The three ease-out curves plotted against a linear diagonal.">
+                  <g class="grid" aria-hidden="true">
+                    <line x1="0" y1="0" x2="100" y2="0"/><line x1="0" y1="50" x2="100" y2="50"/>
+                    <line x1="0" y1="100" x2="100" y2="100"/><line x1="0" y1="0" x2="0" y2="100"/>
+                    <line x1="50" y1="0" x2="50" y2="100"/><line x1="100" y1="0" x2="100" y2="100"/>
+                  </g>
+                  <path class="lin" d="M0,100 L100,0"/>
+                  <path class="cv c1" d="M0,100 C25,0 50,0 100,0"/>
+                  <path class="cv c2" d="M0,100 C22,0 36,0 100,0"/>
+                  <path class="cv c3" d="M0,100 C16,0 30,0 100,0"/>
+                </svg>
+                <div class="keys">
+                  <div class="key k1"><s>out-quart</s><span class="trk"><u style="--d:1.9s;--e:cubic-bezier(0.25,1,0.5,1)"></u></span></div>
+                  <div class="key k2"><s>out-quint</s><span class="trk"><u style="--d:1.9s;--e:cubic-bezier(0.22,1,0.36,1)"></u></span></div>
+                  <div class="key k3"><s>out-expo</s><span class="trk"><u style="--d:1.9s;--e:cubic-bezier(0.16,1,0.3,1)"></u></span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="dmeta">
+            <div class="drow"><span class="dix">07</span><h4>The easing</h4></div>
+            <p class="dclaim">All ease-out. Ease-in feels slow at the same speed.</p>
+          </div>
+        </article>
+      </section>
+
+      <!-- ================= THE CARE ================= -->
+      <section class="cb-grp">
+        <h3>The care</h3>
+
+        <article class="dcard">
+          <div class="dstage">
+            <div class="sp-pct">
+              <span><s>199 / 200</s><em>99.5%</em><i class="ar">&rarr;</i><b>99</b><del>100</del></span>
+              <span><s>1 / 300</s><em>0.33%</em><i class="ar">&rarr;</i><b>1</b><del>0</del></span>
+              <span><s>200 / 200</s><em>100%</em><i class="ar">&rarr;</i><b>100</b></span>
+            </div>
+          </div>
+          <div class="dmeta">
+            <div class="drow"><span class="dix">08</span><h4>The percent</h4></div>
+            <p class="dclaim">99.5% renders 99. A month with a late delivery is not perfect.</p>
+          </div>
+        </article>
+
+        <article class="dcard">
+          <div class="dstage">
+            <div class="sp-trend">
+              <span><s>spend</s><em>&uarr; 14%</em><i class="neg">negative</i></span>
+              <span><s>on-time</s><em>&darr; 2%</em><i class="neg">negative</i></span>
+              <span><s>loads</s><em>&uarr; 9%</em><i class="pos">positive</i></span>
+            </div>
+          </div>
+          <div class="dmeta">
+            <div class="drow"><span class="dix">09</span><h4>The trend</h4></div>
+            <p class="dclaim">Up is not good news.</p>
+          </div>
+        </article>
+      </section>
+
+      <p class="cb-foot">None of this is a guideline. Twenty-one tests fail the build on a regression.</p>
+    </div>
+  </div>
+</dialog>
+
+<main>
+
+<!-- ============ COVER ============ -->
+<section id="cover" aria-label="Cover">
+  <div class="wrap grid12">
+    <div class="cover-copy">
+      <p class="cover-kicker rise"><span class="mk" aria-hidden="true"></span>Warp &middot; The acquisition wedge, shipped as free software</p>
+      <h1 class="cover-h1 rise" style="--d:.05s">A free TMS, built to move the freight underneath it.</h1>
+      <p class="cover-sub rise" style="--d:.1s">Warp gives small shippers the software for nothing. The loads they book run on Warp's freight network, and that network is the business.</p>
+      <p class="cover-lead rise" style="--d:.15s">I designed the TMS and built its surfaces by directing AI coding agents: the operator console, the shipments working set, the quote-to-book path, and every state behind them. The funnel that feeds it, the Slack app that graduates a shipper into the TMS and the onboarding that reads a new shipper's freight history back to them the moment they sign up, I co-created with Warp's co-founder and CRO, Troy Lester. <b>The TMS design was mine. The funnel I co-created with Troy.</b></p>
+    </div>
+    <dl class="meta rise">
+      <div><dt>What I did</dt><dd>The TMS design, solo: every screen and state, the data model, the honesty rules, and the build I directed through AI agents. The funnel that feeds it, co-created with Troy Lester. I verified each surface in a real browser.</dd></div>
+      <div><dt>Team</dt><dd>TMS design solo, its surfaces built by directing AI coding agents. The funnel co-created with Warp's co-founder and CRO, Troy Lester. Product scope and the go-to-market bet set with Warp's leadership.</dd></div>
+      <div><dt>Context</dt><dd>Product Design Engineer at Warp, an AI-native freight company that runs lean and ships daily.</dd></div>
+      <div><dt>Stack</dt><dd class="stack">Next.js 16 &middot; React 19 &middot; TypeScript &middot; Tailwind v4 &middot; shadcn &middot; OKLCH tokens &middot; Supabase &middot; Warp BFF &middot; Claude, server-side</dd></div>
+    </dl>
+
+    <figure class="shot rise" style="margin-top:var(--s9)">
+      <div class="ph" style="--ar:2880/1800">
+        <img src="assets/hero-console.webp" alt="The Warp TMS operator console: a headline reading that four loads need attention, a ranked feed of exceptions and overdue pickups and deliveries, a throughput band of in-motion and arriving and delivered counts, and an all-time band of created and completed shipment totals." width="2880" height="1800" loading="eager">
+        <span class="ph-res num">2880 &times; 1800</span>
+        <span class="ph-lab">Operator console &middot; the command center</span>
+      </div>
+      <figcaption><b>The command center, not a wall of cards.</b> One honest headline, then the loads that need the operator, ranked. The calm reads sit below, and the only green is New shipment and the pulse on live data.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ============ 01 · THE BET ============ -->
+<section id="bet" aria-labelledby="bet-h">
+  <div class="wrap grid12">
+    <div class="eyebrow rise"><span class="idx">01</span> <span class="lbl">The bet</span> <span class="rule"></span><span class="tag">Free, on purpose</span></div>
+    <h2 class="title s-head rise" id="bet-h">The software is free; the freight is the business.</h2>
+    <div class="lead-col rise"><p class="lead">It started as a demo. A transportation management system, the software a shipping team lives inside all day to quote, book, track, and reconcile freight, built for one customer who wanted one. Someone in the room said: give it to every small shipper, for nothing. Thirty seconds later the argument started.</p></div>
+    <div class="prose rise">
+      <p class="body">Free was the part nobody agreed on. Why would you give away the thing you just built? The counter-proposal was the sensible one: charge for it, modularize it, sell it like everyone else sells software. That argument is the reason this is a case study and not a feature.</p>
+      <p class="body">The case for free is arithmetic. Oracle publishes its price list, which almost nobody reads: <a class="cite" href="https://www.oracle.com/a/ocom/docs/corporate/pricing/oracle-fusion-cloud-global-price-list.pdf" target="_blank" rel="noopener noreferrer">$450 a month per million dollars of freight<span class="ar">&#8599;</span></a> you move, billed on a twenty-million minimum whether you ship that much or not. That is <b>$108,000 a year at list</b>, on a three-year term. Migrating onto one takes <a class="cite" href="https://logisticsviewpoints.com/2022/07/05/what-does-it-cost-to-implement-a-transportation-management-system-how-long-do-the-projects-take/" target="_blank" rel="noopener noreferrer">nine to twelve months<span class="ar">&#8599;</span></a>, and the subscription behind it runs long. Manhattan tells its own investors its cloud contracts run <a class="cite" href="https://www.sec.gov/Archives/edgar/data/1056696/000119312526037138/manh-20251231.htm" target="_blank" rel="noopener noreferrer">five years or more<span class="ar">&#8599;</span></a>, and calls that a predictable revenue stream.</p>
+      <p class="body">Warp's move runs the other way. Hand the small shipper a <b>free-forever TMS</b> good enough to live in, and let the loads they book ride Warp's own freight network. The software earns nothing, on purpose. The freight underneath it is the business, and that network is the part no competitor copies by cutting a price. Chris Dixon named the pattern in <a class="cite" href="https://cdixon.org/2015/01/31/come-for-the-tool-stay-for-the-network/" target="_blank" rel="noopener noreferrer">2015<span class="ar">&#8599;</span></a>: <b>come for the tool, stay for the network.</b></p>
+    </div>
+
+    <div class="scene rise">
+      <q>The shipper this was built for moves a few dozen loads a week, runs a lean team, and was never going to clear that minimum.</q>
+      <div class="figbig">
+        <span class="n">$108,000</span>
+        <span class="l"><b>a year</b> is Oracle's floor at list, and the floor is a minimum, not a price. A shipper moving a few dozen loads a week pays the same as one moving twenty times the freight. That asymmetry is the opening.</span>
+      </div>
+    </div>
+
+    <div class="bet rise">
+      <p>The bet was the founders', and the room fought about it before I ever touched it. What I did was design the free TMS end to end, and, with Warp's CRO Troy Lester, build the funnel that carries a shipper into it.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 02 · WHAT I HAD TO GO ON ============ -->
+<section id="research" aria-labelledby="research-h">
+  <div class="wrap grid12">
+    <div class="eyebrow rise"><span class="idx">02</span> <span class="lbl">What I had to go on</span> <span class="rule"></span><span class="tag">No users to talk to</span></div>
+    <h2 class="title s-head rise" id="research-h">I was handed a category I did not know.</h2>
+    <div class="lead-col rise"><p class="lead">I had never built freight software. There was no research budget, no panel of shippers to interview, and no time to run a study. What I had was a room full of people who talked to shippers every day, a competitor already winning the segment, and whatever the analysts would say for free.</p></div>
+    <div class="prose rise">
+      <p class="body">So the method was borrowed knowledge, and I want to be plain that it was. The domain came out of Warp's own salespeople, because they were the ones on the phone with the shippers I would never meet. The instruction I got was to go extract everything I could from them and learn the business. That is not user research. It is the next best thing available, and treating it as equivalent would be the lie.</p>
+      <p class="body">The competitor did the rest. A free SMB TMS was already serving this exact shipper, and it was thorough and looked its age. I pulled it apart feature by feature, and that teardown became the information architecture: the shell collapsed, and the app reorganised around the three questions a shipper actually opens a TMS to answer.</p>
+    </div>
+
+    <div class="ledger rise">
+      <div class="r"><span class="no">01</span><div><p class="k">The salespeople</p><p class="d">Warp's own sellers were the only people in the building with the shipper's problem already in their heads. Every requirement I designed against came out of them, and out of one seller in particular. Secondhand knowledge, held honestly as secondhand.</p></div></div>
+      <div class="r"><span class="no">02</span><div><p class="k">The teardown</p><p class="d">A free TMS already owned this segment. Capable, unloved, visually a decade old. I mapped its feature set to find what the shipper genuinely needs, and what the incumbent had left on the table.</p></div></div>
+      <div class="r"><span class="no">03</span><div><p class="k">The published record</p><p class="d">Oracle's list price, an analyst's implementation timings, and Manhattan's own annual report. <b>Every number on this page that is not mine links to where it came from.</b> The ones I could not source are not here.</p></div></div>
+      <div class="r absent"><span class="no vd"><svg class="vmk" viewBox="0 0 16 16" aria-hidden="true"><path d="M4.5 4.5l7 7M11.5 4.5l-7 7"/></svg><span class="vl">None</span></span><div><p class="k">A single conversation with a shipper</p><p class="d">No usability session, no diary study, no survey. The design rests on stakeholder vision and secondary reading. That is the hole in the method, and the states in section 06 are what the hole made me build.</p></div></div>
+    </div>
+
+    <div class="scene rise">
+      <q>A TMS answers three questions. How did my carriers perform, what is coming and is it covered, and am I paying too much. Everything else is decoration.</q>
+      <div class="figbig">
+        <span class="n">Three</span>
+        <span class="l"><b>questions</b> survived the teardown, and they became the shape of the app. A shipper should feel what they feel opening their bank account: this is fine, or this is not.</span>
+      </div>
+    </div>
+
+    <div class="srcs rise">
+      <a href="https://www.oracle.com/a/ocom/docs/corporate/pricing/oracle-fusion-cloud-global-price-list.pdf" target="_blank" rel="noopener noreferrer">Oracle Fusion Cloud global price list, May 2026</a>
+      <a href="https://logisticsviewpoints.com/2022/07/05/what-does-it-cost-to-implement-a-transportation-management-system-how-long-do-the-projects-take/" target="_blank" rel="noopener noreferrer">ARC Advisory on TMS implementation timing</a>
+      <a href="https://www.sec.gov/Archives/edgar/data/1056696/000119312526037138/manh-20251231.htm" target="_blank" rel="noopener noreferrer">Manhattan Associates FY2025 annual report</a>
+      <a href="https://cdixon.org/2015/01/31/come-for-the-tool-stay-for-the-network/" target="_blank" rel="noopener noreferrer">Chris Dixon, come for the tool, stay for the network</a>
+      <a href="https://www.wearewarp.com/" target="_blank" rel="noopener noreferrer">Warp's published network figures</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 02 · THE FUNNEL ============ -->
+<section id="funnel" aria-labelledby="funnel-h">
+  <div class="wrap grid12">
+    <div class="eyebrow rise"><span class="idx">03</span> <span class="lbl">The funnel</span> <span class="rule"></span><span class="tag">The acquisition machine</span></div>
+    <h2 class="title s-head rise" id="funnel-h">Turning a free user into freight.</h2>
+    <div class="lead-col rise"><p class="lead">Giving the software away is the easy half. The hard half is turning a free user into freight on the network, and doing it without a sales team. That is a funnel, and I built it with Warp's CRO, Troy Lester.</p></div>
+    <div class="prose rise">
+      <p class="body">Warp put the free tool everywhere a small shipper already works. A Slack app, a Shopify plugin, a Chrome extension, the web. Each one is a door, and each door leads back to the same freight network. The one this story follows is <b>Slack</b>: a shipper quoting a load inside their own workspace, then one tap from a real TMS.</p>
+    </div>
+
+    <!-- editorial funnel diagram (code; every app screen on this page is a real capture) -->
+    <div class="funnel rise" role="img" aria-label="The acquisition funnel: a small shipper meets Warp's free tools on Slack, Shopify, a Chrome extension, or the web; the graduation hook carries them into the free TMS, which becomes their daily surface; the loads they book ride Warp's freight network, which is the business.">
+      <div class="fn-stage">
+        <p class="fn-cap">Where a shipper already works</p>
+        <ul class="fn-chips"><li>Slack</li><li>Shopify</li><li>Chrome extension</li><li>The web</li></ul>
+        <p class="fn-note">Free tools, each a door back to one network.</p>
+      </div>
+      <div class="fn-arrow"><span class="fn-ar" aria-hidden="true">&#8594;</span><span class="fn-lbl">the hook</span></div>
+      <div class="fn-stage fn-hot">
+        <p class="fn-cap"><span class="mk" aria-hidden="true"></span>The free TMS</p>
+        <p class="fn-big">Their daily surface</p>
+        <p class="fn-note">Quote, book, and track every load here.</p>
+      </div>
+      <div class="fn-arrow"><span class="fn-ar" aria-hidden="true">&#8594;</span><span class="fn-lbl">book</span></div>
+      <div class="fn-stage">
+        <p class="fn-cap">Warp's freight network</p>
+        <p class="fn-big">The business</p>
+        <p class="fn-note">The part no rival copies by cutting a price.</p>
+      </div>
+    </div>
+
+    <div class="prose rise" style="margin-top:var(--s8)">
+      <p class="body">The hook only earns the graduation if the first minute pays off. So the onboarding does not ask a new shipper to configure anything. It asks for their freight history, reads the file, and hands their own numbers straight back: what they spent, on which carriers, across which lanes. The Warp benchmark, what those loads would have cost on the network, sits right beside it and fills in from their first booked lane. The call to action is not "sign up." It is <b>Open my TMS.</b></p>
+    </div>
+
+    <figure class="shot rise">
+      <div class="ph" style="--ar:2880/2000">
+        <img src="assets/onboarding-payoff.webp" alt="The onboarding payoff screen: after a new shipper uploads their freight history, the TMS reads it back as a summary of total spend across their shipments, an average cost per shipment, and their top carriers, with a prominent green Open my TMS button." width="2880" height="2000" loading="lazy">
+        <span class="ph-res num">2880 &times; 2000</span>
+        <span class="ph-lab">Onboarding &middot; the payoff, before any setup</span>
+      </div>
+      <figcaption><b>The conversion moment.</b> Upload your freight history, and the tool reads your own numbers back before you have configured a thing. The only green on the screen is the door into the product.</figcaption>
+    </figure>
+
+    <div class="bet rise">
+      <p>This is the honest edge of the story. The wedge was leadership's call and I helped shape the go-to-market, but the funnel that turns a signup into a booked load, the Slack hook and this onboarding, is a thing I built with Warp's CRO, Troy Lester.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 03 · THE PRODUCT ============ -->
+<section id="product" aria-labelledby="product-h">
+  <div class="wrap grid12">
+    <div class="eyebrow rise"><span class="idx">04</span> <span class="lbl">The product</span> <span class="rule"></span><span class="tag">One order, for everyone</span></div>
+    <h2 class="title s-head rise" id="product-h">The tool has to be worth living in.</h2>
+    <div class="lead-col rise"><p class="lead">A free tool a shipper abandons on day two acquires nothing. So the product had to be good enough to become the one they open all day, which is a craft problem, not a pricing one. It is a transportation management system: the screen an operations team lives inside all day to quote, book, track, and reconcile freight.</p></div>
+    <div class="prose rise">
+      <p class="body">The dashboard opens with one honest sentence, then a ranked feed of the loads that actually need the operator, and it tapers to the calm reads below. The incumbent tool answers with a wall of red nobody can trust and a three-click hunt to learn what "overdue" even means. The donor build I inherited offered a three-way "pick your worry" preset on the first run. I cut it. A confident tool shows you the one right thing instead of asking you to configure your worry at the exact moment a load has gone wrong.</p>
+    </div>
+
+    <div class="ledger rise">
+      <div class="r"><span class="no">A</span><div><p class="k">The accent has exactly one job</p><p class="d">Spring green means action, live, or selection, and nothing else. The only green in the whole shell is <b>New shipment</b> and the pulse on live data. The active nav item is a raised neutral surface, never a second green.</p></div></div>
+      <div class="r"><span class="no">B</span><div><p class="k">An unknown renders a dash, never a fake zero</p><p class="d">A missing cost shows an em-dash, never a fabricated 0 that would read as "free" or "nothing to do." A failed data read renders an error, never a false "you're all clear." <b>The tests fail the build if either rule breaks.</b></p></div></div>
+      <div class="r"><span class="no">C</span><div><p class="k">Only true exceptions carry color</p><p class="d">A permanent wall of red trains an operator to panic-switch carriers, so only real exceptions and overdue loads carry a warm status, each with a dot and a word, never color alone. The table stays quiet so the one row that matters can shout.</p></div></div>
+    </div>
+
+    <figure class="shot rise">
+      <div class="ph" style="--ar:2880/1900">
+        <img src="assets/shipments-table.webp" alt="The shipments working-set table: a dense table of loads with columns for id, lane, carrier, mode, status, pickup and delivery dates, and cost. Status is carried by a small dot and a word, most rows neutral with a couple flagged as exceptions, and the numeric columns are right-aligned in tabular figures." width="2880" height="1900" loading="lazy">
+        <span class="ph-res num">2880 &times; 1900</span>
+        <span class="ph-lab">Shipments &middot; the working set</span>
+      </div>
+      <figcaption><b>The working set.</b> The filter and sort held in the URL so any view is shareable, and status carried by a dot and a word. Only real exceptions take color, so the color still means something.</figcaption>
+    </figure>
+
+    <figure class="shot rise tight">
+      <div class="ph" style="--ar:2880/2000">
+        <img src="assets/book-quote.webp" alt="The quote-to-book sheet: a right-side slide-over with the lane and freight details at the top and a ranked list of live carrier rates below, each row a carrier with its price and transit time, one selected and ready to book." width="2880" height="2000" loading="lazy">
+        <span class="ph-res num">2880 &times; 2000</span>
+        <span class="ph-lab">Quote to book &middot; the revenue path</span>
+      </div>
+      <figcaption><b>Quote to book.</b> The path from a lane to a booked load, and the moment a free-tool user becomes freight on the network. It is the one flow I would not let get slow or clever.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ============ 04 · THE AI, HONEST BY CONSTRUCTION ============ -->
+<section id="ai" aria-labelledby="ai-h">
+  <div class="wrap grid12">
+    <div class="eyebrow rise"><span class="idx">05</span> <span class="lbl">The AI</span> <span class="rule"></span><span class="tag">It cannot make up a number</span></div>
+    <h2 class="title s-head rise" id="ai-h">The model builds the query; the database answers.</h2>
+    <div class="lead-col rise"><p class="lead">This is the part I am proudest of, and it is the smallest. The command bar has a natural-language Ask, and it runs on one rule that makes it structurally incapable of inventing a number.</p></div>
+    <div class="prose rise">
+      <p class="body">The model emits only a typed filter over the shipment vocabulary: status, mode, carrier, cities, date, sort. It can never emit prose, a shipment id, a cost, or a verdict, because the schema has no field for one. The answer is always real rows and a working link. Type <span class="hl">exception LTL Dallas this week</span> and it becomes a filter instantly, free, with no key and no model call at all. The model is consulted only when the plain parse comes back empty.</p>
+    </div>
+
+    <div class="ledger rise">
+      <div class="r struck"><span class="no vd"><svg class="vmk" viewBox="0 0 16 16" aria-hidden="true"><path d="M4.5 4.5l7 7M11.5 4.5l-7 7"/></svg><span class="vl">Cut</span></span><div><p class="k">A chat surface that types answers back</p><p class="d">The "agentic TMS" framing invites a chat box that narrates freight status in sentences. A model narrating status in prose invites a fabricated answer, and a fake status is a dangerous lie inside a tool where people book real loads. So it was never built.</p></div></div>
+      <div class="r built"><span class="no vd"><svg class="vmk" viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 8.6l3.1 3.1 6-7"/></svg><span class="vl">Built</span></span><div><p class="k">A brain that reads your spreadsheet</p><p class="d">Drop a messy lanes-and-weights file and an AI mapping brain proposes how your columns map onto the real fields, then parses your actual rows into a preview you check before anything imports. Every mapping stays visible and editable, and a booking re-validates the full real schema before it commits.</p></div></div>
+    </div>
+
+    <figure class="shot rise">
+      <div class="ph" style="--ar:2880/1990">
+        <img src="assets/ai-mapping.webp" alt="The AI import mapping screen: a messy uploaded spreadsheet's columns each mapped onto a real field through an editable dropdown, a What we read preview of the actual parsed rows below, and everything still editable before the import commits." width="2880" height="1990" loading="lazy">
+        <span class="ph-res num">2880 &times; 1990</span>
+        <span class="ph-lab">Import &middot; the mapping brain</span>
+      </div>
+      <figcaption><b>The mapping brain.</b> It proposes how your columns map, parses your rows into a preview, and lays all of it out to edit before anything imports. You see what it proposed and can change any of it, and a deterministic parse is never dressed up as intelligence.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ============ 05 · THE REBUILD ============ -->
+<section id="rebuild" aria-labelledby="rebuild-h">
+  <div class="wrap grid12">
+    <div class="eyebrow rise"><span class="idx">06</span> <span class="lbl">The rebuild</span> <span class="rule"></span><span class="tag">A clean-room rebuild</span></div>
+    <h2 class="title s-head rise" id="rebuild-h">What made it feel cheap was a missing layer.</h2>
+    <div class="lead-col rise"><p class="lead">The first generation reached genuine Linear-grade polish through nine screen rebuilds and six dedicated passes. The uncomfortable finding in its post-mortem was that the reason it had ever felt cheap was not the theme and not the color. It was a missing layer.</p></div>
+    <div class="prose rise">
+      <p class="body">Between the raw tokens and the screens there was no shared vocabulary of components. No one canonical header, heading, table, or stat card. So every new screen became a fresh styling decision, and the codebase quietly forked apart. Polishing screen by screen only ever treats the symptom.</p>
+    </div>
+
+    <div class="ledger rise">
+      <div class="r"><span class="no">01</span><div><p class="k">What the missing layer cost</p><p class="d"><b>Five divergent KPI-card implementations</b>, none canonical. <b>Seven padding conventions</b> competing across screens. <b>Twenty-six pages</b> grown under a nav built for seven.</p></div></div>
+      <div class="r"><span class="no">02</span><div><p class="k">Build the layer first, then lint it</p><p class="d">I rebuilt from scratch, clean-room, with the semantic component layer and its checks present from the first commit. One primitive layer every screen reads from, never raw tokens. Eight destinations re-derived from the operator's real jobs, not the old code's taxonomy. Executable checks that fail the build on drift, so the product cannot rot back into the state I had just climbed out of.</p></div></div>
+      <div class="r"><span class="no">03</span><div><p class="k">Designed disconnected, then wired live</p><p class="d">Live credentials arrive last, so I built the whole product to a designed disconnected state over typed fixtures first. Every one of those states existed on paper before a single row of real data did, so the empty, loading, error, and disconnected reads got the same care as the happy path. One rule holds that production can never render a fixture, and a test enforces it.</p></div></div>
+      <div class="r"><span class="no">04</span><div><p class="k">One focus ring, always neutral</p><p class="d">Three drifted focus recipes became one outline-based ring, neutral even on destructive controls, because focus is not selection. An outline survives Windows High-Contrast Mode where a box-shadow is dropped. Unified across roughly 35 files and locked by two tests, so re-fragmentation is a build failure.</p></div></div>
+    </div>
+
+    <div class="states rise" aria-label="The dashboard's four non-default states">
+      <p class="states-h">You saw the default above. These are the other four states, each designed before the data existed.</p>
+      <div class="states-grid">
+        <figure class="st"><div class="ph" style="--ar:2880/920"><img src="assets/state-empty.webp" alt="The dashboard empty state: a calm first-run prompt instead of an empty grid." width="2880" height="920" loading="lazy"><span class="ph-res num">Empty</span></div><figcaption><b class="stn">Empty</b>A calm all-clear</figcaption></figure>
+        <figure class="st"><div class="ph" style="--ar:2880/920"><img src="assets/state-loading.webp" alt="The dashboard loading state: a skeleton that mirrors the final layout instead of a spinner." width="2880" height="920" loading="lazy"><span class="ph-res num">Loading</span></div><figcaption><b class="stn">Loading</b>Skeleton of the real layout</figcaption></figure>
+        <figure class="st"><div class="ph" style="--ar:2880/920"><img src="assets/state-error.webp" alt="The dashboard error state: an explicit error, never a false all-clear." width="2880" height="920" loading="lazy"><span class="ph-res num">Error</span></div><figcaption><b class="stn">Error</b>Says the read failed</figcaption></figure>
+        <figure class="st"><div class="ph" style="--ar:2880/920"><img src="assets/state-disconnected.webp" alt="The dashboard disconnected state: a clear disconnected read, never stale data shown as live." width="2880" height="920" loading="lazy"><span class="ph-res num">Disconnected</span></div><figcaption><b class="stn">Disconnected</b>No live data yet</figcaption></figure>
+      </div>
+      <p class="states-note">The skeleton mirrors the final layout instead of spinning at you, and an error says so instead of showing a hopeful blank.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 06 · WHAT REAL FREIGHT FOUND ============ -->
+<section id="bugs" aria-labelledby="bugs-h">
+  <div class="wrap grid12">
+    <div class="eyebrow rise"><span class="idx">07</span> <span class="lbl">Real freight</span> <span class="rule"></span><span class="tag">Live in my browser</span></div>
+    <h2 class="title s-head rise" id="bugs-h">The bugs only real freight finds.</h2>
+    <div class="lead-col rise"><p class="lead">From about the halfway mark, the app was pointed at the real freight of Warp's actual enterprise customers, and I drove the visual audits live in my own browser. Surviving real enterprise data is a stronger signal than any demo, and it surfaced bugs a fixture never would.</p></div>
+
+    <div class="ledger rise">
+      <div class="r"><span class="no">01</span><div><p class="k">The map that showed only circles</p><p class="d">On real lane data, short in-state lanes drawn as straight great-circle arcs collapsed into angular stubs, and lanes between coincident zips each drew as a hollow ring stacked on itself. The map became a pile of circles with landcover bleeding through the transparent centers. The literal ask was "fix the carets." The live audit proved the rings were the real eyesore, so I went past the ask: distance-bowed arcs, and filled volume-nodes instead of hollow rings.</p></div></div>
+      <div class="r"><span class="no">02</span><div><p class="k">A query that crossed tenants</p><p class="d">A go-live audit of auth, money, and tenant isolation surfaced one real issue. A customer filter matched on a substring, so a search for one tenant over-matched another whose name was embedded in a longer string. I fixed it to match the whole delimited element the same session.</p>
+        <span class="pair"><span class="was num">28,414</span><span class="arrow" aria-hidden="true">&#8594;</span><span class="now num good">16,754</span></span>
+        <span class="pair-l">A carrier board, over-counted rows &#8594; correct. The other tenant's count stayed exactly the same, which is how I knew the fix was right.</span>
+      </div></div>
+      <div class="r"><span class="no">03</span><div><p class="k">A 227-second read</p><p class="d">The quote-history read was scanning a 500,000-row collection on an unindexed sort. Measured, it took 227 seconds. Sorting by the indexed creation id with an eight-second cap fixed it. Slowness is a design defect on a surface an operator opens dozens of times a day.</p>
+        <span class="pair"><span class="was num">227s</span><span class="arrow" aria-hidden="true">&#8594;</span><span class="now num good">~120ms</span></span>
+        <span class="pair-l">Quote-history read, before &#8594; after</span>
+      </div></div>
+      <div class="r"><span class="no">04</span><div><p class="k">The agent that faked a pass</p><p class="d">I fanned an audit out to several AI subagents. One reported that it had completed an authenticated walk-through and everything passed. I ran one independent check of a load-bearing claim, and the agent had fabricated the result. The auth path was still bouncing. Now I sample one load-bearing claim and verify it with my own tools, because the summary an agent hands back is just text, and text can describe outcomes the real side effects do not support.</p></div></div>
+    </div>
+
+    <figure class="shot rise">
+      <div class="ph" style="--ar:2880/2200">
+        <img src="assets/lane-map.webp" alt="The lane-corridor map after the fix: a dark map of the United States with lane arcs bowed by distance so short in-state lanes read as gentle curves rather than stubs, and filled circular nodes marking lanes that begin and end in the same zip." width="2880" height="2200" loading="lazy">
+        <span class="ph-res num">2880 &times; 2200</span>
+        <span class="ph-lab">Lanes &middot; the corridor map, after the fix</span>
+      </div>
+      <figcaption><b>The lane map, after the fix.</b> Distance-bowed arcs so short in-state lanes read as curves instead of stubs, and filled volume-nodes where a lane starts and ends in the same zip.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ============ 07 · THE NUMBERS, KEPT HONEST ============ -->
+<section id="numbers" aria-labelledby="numbers-h">
+  <div class="wrap grid12">
+    <div class="eyebrow rise"><span class="idx">08</span> <span class="lbl">The numbers</span> <span class="rule"></span><span class="tag">Two columns, kept apart</span></div>
+    <h2 class="title s-head rise" id="numbers-h">The big numbers are the network's, not mine.</h2>
+    <div class="lead-col rise"><p class="lead">This product renders serious freight. Those numbers describe the scale of the network it displays, not revenue I drove. Here they are, the network's numbers and mine, kept in their own columns.</p></div>
+
+    <div class="cols rise">
+      <div class="col freight">
+        <p class="ch">The freight network it rides on</p>
+        <p class="csub">Warp's public scale, not my impact</p>
+        <div class="fig"><span class="n">98.2%</span><span class="fl">on-time, measured across <a class="cite" href="https://www.wearewarp.com/" target="_blank" rel="noopener noreferrer">790,899 audited shipments&#8599;</a>, 2021 to 2026. Warp's own published figure, checked 16 July 2026.</span></div>
+          <div class="fig"><span class="n">38,000+</span><span class="fl">carriers, across <a class="cite" href="https://www.wearewarp.com/" target="_blank" rel="noopener noreferrer">50+ cross-docks&#8599;</a></span></div>
+        <div class="fig"><span class="n">$108,000</span><span class="fl">a year, <a class="cite" href="https://www.oracle.com/a/ocom/docs/corporate/pricing/oracle-fusion-cloud-global-price-list.pdf" target="_blank" rel="noopener noreferrer">Oracle's published floor at list&#8599;</a></span></div>
+      </div>
+      <div class="col mine">
+        <p class="ch"><span class="mk" aria-hidden="true"></span>What is actually mine</p>
+        <p class="csub">The work I directed and reviewed</p>
+        <div class="fig"><span class="n">1,011</span><span class="fl">commits, all directed and reviewed</span></div>
+        <div class="fig"><span class="n">119</span><span class="fl">recorded design decisions</span></div>
+        <div class="fig"><span class="n">359</span><span class="fl">test files, across 43 routes</span></div>
+        <div class="fig"><span class="n">227s&#8594;120ms</span><span class="fl">a read cut, plus axe-clean WCAG A and AA</span></div>
+      </div>
+    </div>
+
+    <div class="provewrap rise">
+      <div class="plist yes">
+        <p class="ph2"><span class="dot live" aria-hidden="true" style="border-radius:2px"></span>What I can prove</p>
+        <ul>
+          <li><span class="m" aria-hidden="true"></span><span>The TMS, <b>designed and built end to end</b> with the AI doing the typing under my direction: 1,011 commits, 119 recorded decisions, 359 test files, 43 routes.</span></li>
+          <li><span class="m" aria-hidden="true"></span><span>It went <b>live against real enterprise freight,</b> and I fixed real-data bugs a fixture never surfaces, including a cross-tenant query caught in the go-live audit.</span></li>
+          <li><span class="m" aria-hidden="true"></span><span>Verified craft. <b>Axe-clean</b> with a dedicated WCAG A and AA sweep, one unified focus ring locked by tests, a 44px touch floor, and a read cut from <b>227s to about 120ms.</b></span></li>
+          <li><span class="m" aria-hidden="true"></span><span>The honesty rules are executable. A failed read never renders "all clear," an unknown never renders a fake zero, and the build fails if either breaks.</span></li>
+        </ul>
+      </div>
+      <div class="plist no">
+        <p class="ph2">What I will not claim</p>
+        <ul>
+          <li><span class="m" aria-hidden="true"></span><span><b>Adoption or active users.</b> The first real production booking is a supervised operator step, so no user count exists yet.</span></li>
+          <li><span class="m" aria-hidden="true"></span><span><b>Revenue.</b> Every dollar figure here is freight the network renders, never a business outcome I drove.</span></li>
+          <li><span class="m" aria-hidden="true"></span><span><b>A conversion or task-time study.</b> The research behind the design is external synthesis used as rationale, not a measured result of this product.</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="nextline rise">
+      <p>The honest measurement I do not have yet is the point of the next phase. <b>The supervised go-live,</b> then time-to-first-value from signup, exception-recovery rate, and whether the operator comes back the next day. Those are operator steps and real usage, not missing product. The alpha has gone well so far, and it is rolling out slowly to Warp's most active small shippers.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 08 · REFLECTION ============ -->
+<section id="reflection" aria-labelledby="reflection-h">
+  <div class="wrap grid12">
+    <div class="eyebrow rise"><span class="idx">09</span> <span class="lbl">Reflection</span> <span class="rule"></span><span class="tag">What it taught me</span></div>
+    <h2 class="title s-head rise" id="reflection-h">What building it taught me.</h2>
+
+    <div class="ledger rise">
+      <div class="r"><span class="no">01</span><div><p class="k">Strategy is a thing you build</p><p class="d">The bet was free software and a paid network, and that sentence is easy. The work was the funnel underneath it: the Slack hook, an onboarding that pays off in the first minute, a product good enough to keep someone. The part that counts is the machine that runs it.</p></div></div>
+      <div class="r"><span class="no">02</span><div><p class="k">Diagnose the real defect</p><p class="d">The most senior move here was not a screen. It was diagnosing that the defect was architectural, paying to rebuild the foundation, then compiling every correction into a token, a rule, or a check the build runs on its own, so the same rot cannot come back.</p></div></div>
+      <div class="r"><span class="no">03</span><div><p class="k">The one rule I would not bend</p><p class="d">These came from one rule I would not bend: never let the tool lie to an operator. That is why the AI cannot narrate a status it could fabricate, and why an unknown renders a dash where a lazier tool shows a confident zero. When people book real freight on a screen, a made-up number costs you their trust the first time they catch it.</p></div></div>
+      <div class="r"><span class="no">04</span><div><p class="k">Where the agents stop</p><p class="d">The agents give me speed. The judgment, and the last check in a real browser, stay mine. Once, one of them handed me a passing audit it had made up, and I only caught it because I stopped to verify a single claim with my own tools. Catching that, and turning it into a real fix, is the job.</p></div></div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+
+<!-- ============ COLOPHON ============ -->
+<footer class="colophon">
+  <div class="wrap grid12">
+    <div class="cred rise">
+      <div class="brand"><span class="mk" aria-hidden="true"></span>Warp TMS</div>
+      <p><b>Warp TMS.</b> I designed the TMS and directed its build, and I co-created the funnel that feeds it with Warp’s co-founder and CRO, Troy Lester. I recorded 119 decisions, wrote the honesty rules the build enforces, set the QA bar, and helped shape the go-to-market with Warp’s leadership. The AI coding agents did the typing; I made the calls and ran the last check in a real browser.</p>
+      <p class="fine">Product screens are captured from the live build over sample fixtures, so no customer data is shown.</p>
+      <p class="warp-credit"><span class="warp-credit-lbl">Designed at</span><svg class="warp-mark" viewBox="0 0 660 186" role="img" aria-label="Warp" focusable="false" xmlns="http://www.w3.org/2000/svg"><path d="M660 185.035H0V0H660V185.035ZM14.0597 171.327H646.141V13.9593H14.0597V171.327Z" fill="currentColor" aria-hidden="true"/><path d="M300.976 53.2756L332.509 131.608H351.239L319.705 53.2756H300.976Z" fill="currentColor" aria-hidden="true"/><path d="M215.919 131.608H234.648L266.182 53.2756H247.453L215.919 131.608Z" fill="currentColor" aria-hidden="true"/><path d="M150.892 107.405L136.431 71.3523H115.593L101.131 107.405L78.2342 53.2756H60.0068L93.047 131.608H109.517L125.987 90.5839L142.457 131.608H158.927L192.017 53.2756H173.739L150.892 107.405Z" fill="currentColor" aria-hidden="true"/><path d="M471.856 82.8511C471.816 75.0646 468.691 67.6113 463.166 62.1242C457.642 56.6371 450.167 53.5636 442.381 53.5769H388.502V131.608H405.323V112.125H440.021L447.854 131.608H465.981L456.691 108.41C461.258 105.886 465.065 102.183 467.715 97.6881C470.364 93.1928 471.759 88.0691 471.755 82.8511H471.856ZM405.323 70.3481H442.381C445.71 70.3481 448.903 71.6706 451.257 74.0248C453.611 76.379 454.934 79.572 454.934 82.9013C454.934 86.2307 453.611 89.4236 451.257 91.7778C448.903 94.132 445.71 95.4546 442.381 95.4546H405.323V70.3481Z" fill="currentColor" aria-hidden="true"/><path d="M570.768 53.5769H516.939V131.608H533.711V112.125H570.768C574.612 112.125 578.419 111.368 581.971 109.897C585.522 108.426 588.749 106.269 591.468 103.551C594.186 100.833 596.342 97.6055 597.814 94.0538C599.285 90.5021 600.042 86.6954 600.042 82.8511C600.042 79.0067 599.285 75.2 597.814 71.6483C596.342 68.0966 594.186 64.8695 591.468 62.1511C588.749 59.4327 585.522 57.2764 581.971 55.8053C578.419 54.3341 574.612 53.5769 570.768 53.5769ZM570.768 95.4043H533.711V70.2978H570.768C574.097 70.2978 577.29 71.6204 579.644 73.9746C581.998 76.3288 583.321 79.5217 583.321 82.8511C583.321 86.1804 581.998 89.3734 579.644 91.7276C577.29 94.0818 574.097 95.4043 570.768 95.4043Z" fill="currentColor" aria-hidden="true"/><path d="M292.04 76.1794H275.219V94.1557H292.04V76.1794Z" fill="currentColor" aria-hidden="true"/><path d="M275.219 131.615H292.04V113.84H275.219V131.615Z" fill="currentColor" aria-hidden="true"/></svg></p>
+      <a class="backlink" href="/">&larr; Back to portfolio</a>
+    </div>
+    <div class="note rise">
+      <dl>
+        <div><dt>Craft</dt><dd><button class="dn-link" type="button" data-dn-open aria-haspopup="dialog" aria-controls="designnotes">Design notes <span aria-hidden="true">&rarr;</span></button></dd></div>
+        <div><dt>Status</dt><dd>Deployed, launch-gated</dd></div>
+        <div><dt>Case study</dt><dd>Neel Tengariya, 2026</dd></div>
+      </dl>
+    </div>
+  </div>
+</footer>
+
+<!-- calm reveal + placeholder image fade-in only; NO app UI is drawn in code -->
+<script>
+  // [SHARED-VERBATIM] calm scroll reveal, one-time per element, reduced-motion safe
+  (function(){
+    var els = document.querySelectorAll('.rise');
+    if(!('IntersectionObserver' in window) || matchMedia('(prefers-reduced-motion: reduce)').matches){
+      els.forEach(function(e){e.classList.add('in')}); return;
+    }
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(en){ if(en.isIntersecting){ en.target.classList.add('in'); io.unobserve(en.target);} });
+    }, {rootMargin:'0px 0px -8% 0px', threshold:0.06});
+    els.forEach(function(e){io.observe(e)});
+  })();
+
+  // placeholder handling: fade a real screen in over its labeled box once the .webp exists.
+  // Until the asset is dropped in, the neutral box + its resolution label stays shown. No UI is drawn here.
+  (function(){
+    document.querySelectorAll('.ph img').forEach(function(img){
+      var show = function(){ if(img.naturalWidth > 1){ img.classList.add('loaded'); } };
+      if(img.complete){ show(); } else { img.addEventListener('load', show); }
+    });
+  })();
+
+
+  // The design notes. A persistent trigger and a real sidebar (Neel, 2026-07-16).
+  // showModal() puts it in the top layer, above the fixed site nav (z-100/102), and
+  // hands us the focus trap, Escape and the inert background for free.
+  (function(){
+    var dlg=document.querySelector('[data-dn]');
+    if(!dlg) return;
+    var opens=[].slice.call(document.querySelectorAll('[data-dn-open]')),
+        closeBtn=dlg.querySelector('[data-dn-close]'),
+        scroll=dlg.querySelector('[data-dn-scroll]'),
+        fixedBtn=document.querySelector('button.dn-open');
+    if(!opens.length||!closeBtn) return;
+
+    function open(){
+      if(dlg.open) return;
+      dlg.showModal();
+      if(fixedBtn) fixedBtn.setAttribute('aria-expanded','true');
+      // focus the file itself, not the close button: the dialog is labelled, so the
+      // name is announced anyway, and the reader can scroll it from the keyboard at once
+      if(scroll) scroll.focus({preventScroll:true});
+    }
+    function close(){ if(dlg.open) dlg.close(); }
+
+    opens.forEach(function(b){ b.addEventListener('click', open); });
+    closeBtn.addEventListener('click', close);
+    // a click that lands on the dialog element itself is a click on the backdrop
+    dlg.addEventListener('click', function(e){ if(e.target===dlg) close(); });
+    // native Escape fires 'close'; keep the trigger's state honest either way
+    dlg.addEventListener('close', function(){
+      if(fixedBtn) fixedBtn.setAttribute('aria-expanded','false');
+    });
+  })();
+</script>
+
+<!-- LENIS SMOOTH SCROLL — same lib + config as the neelmyno.in homepage (see homepage index.html).
+     Loaded site-absolute from /js/lenis_mini.js, exactly like the shared nav logo + favicon: the path
+     resolves on the deployed site and 404s only in isolated local preview, where it falls back cleanly
+     to native scroll. Skipped entirely under prefers-reduced-motion, matching the reveal-animation guard.
+     The design-notes <dialog> carries data-lenis-prevent so wheeling inside its scroll body scrolls the
+     panel, not the page behind it. -->
+<script src="/js/lenis_mini.js"></script>
+<script>
+  (function(){
+    if(!window.Lenis || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    var lenis = new Lenis({
+      lerp: .1,
+      wheelMultiplier: .7,
+      gestureOrientation: "vertical",
+      normalizeWheel: false,
+      smoothTouch: false,
+    });
+    function raf(time){ lenis.raf(time); requestAnimationFrame(raf); }
+    requestAnimationFrame(raf);
+  })();
+</script>
+<style>
+  html.lenis{height:auto}
+  .lenis.lenis-smooth{scroll-behavior:auto}
+  .lenis.lenis-smooth [data-lenis-prevent]{overscroll-behavior:contain}
+  .lenis.lenis-stopped{overflow:hidden}
+</style>
+</body>
+</html>
