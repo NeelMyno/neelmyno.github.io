@@ -365,7 +365,12 @@
       aspect-ratio:auto !important;height:auto;display:block;overflow-x:auto;overflow-y:hidden;
       -webkit-overflow-scrolling:touch;scrollbar-width:thin;scrollbar-color:var(--line-strong) transparent}
     figure.shot.wide.montage .ph img{
-      position:relative;inset:auto;width:auto;height:auto;min-width:660px;object-fit:unset;border-radius:0}
+      /* left-align the over-wide image at the scroll origin. Without this, the base .ph
+         place-items:center leaks justify-items:center onto this display:block child (modern
+         Chromium honors box-alignment on block-level boxes), centering the image so its left
+         23-29% lands at a negative offset that scrollLeft:0 can never reach. */
+      position:relative;inset:auto;width:auto;height:auto;min-width:660px;object-fit:unset;border-radius:0;
+      justify-self:start}
     figure.shot.wide.montage .ph::-webkit-scrollbar{height:6px}
     figure.shot.wide.montage .ph::-webkit-scrollbar-thumb{background:var(--line-strong);border-radius:3px}
     /* the states grid is the densest; give it a touch more room to read */
@@ -449,7 +454,7 @@
     <div class="counts rise" role="group" aria-label="What is real, counted">
       <div class="ci hot"><div class="n">19</div><div class="lab"><b>shipment states</b> designed from one data model, including every failure and terminal state. The backend knew nineteen; the old headline showed four.</div></div>
       <div class="ci"><div class="n">12</div><div class="lab">priority <b>rules</b> that compute the true status locally, so the headline can never contradict the shipment. Verified in the shipped code.</div></div>
-      <div class="ci hot"><div class="n">0</div><div class="lab"><b>percentages</b> on the page. No fake progress bar, no invented ETA confidence, no soft number to make the wait feel shorter.</div></div>
+      <div class="ci hot"><div class="n">0</div><div class="lab"><b>percentages</b> on the page. Nothing here inches a fake bar toward full, dresses an ETA up as confidence, or softens the wait with a number I never measured.</div></div>
       <div class="ci"><div class="n">0</div><div class="lab"><b>backend changes</b>, proven by a live network audit of a real shipment. Everything the redesign shows was already on the wire.</div></div>
       <div class="ci"><div class="n">88&#8202;<span class="u">to</span>&#8202;56<span class="u">px</span></div><div class="lab">header chrome, trimmed. When fixed chrome competes with content, I shrank the chrome, not the content.</div></div>
       <div class="ci"><div class="n">9.72<span class="u">:1</span></div><div class="lab">error-text contrast on the alerts field, <b>AAA</b>. Accessibility is part of care being total, not a thing bolted on at the end.</div></div>
@@ -704,7 +709,7 @@
       </div>
     </div>
 
-    <p class="closer rise">The AI wrote most of the code. What I brought was the refusal to let it print a comforting number that was not real, on a surface where that would have been the easiest thing in the world to do.</p>
+    <p class="closer rise">The AI wrote most of the code. What I brought was the refusal to let it print a comforting number that was not real, on a surface where faking one would have taken a single line of code.</p>
   </div>
 </section>
 

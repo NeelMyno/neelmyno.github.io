@@ -148,6 +148,21 @@
                 transition-timing-function: linear;
             }
         }
+
+        /* Experience Snapshot stat tiles: 3 equal columns on desktop and tablet,
+           stacked to 1 full-width column on phones so nothing is cramped.
+           .w-layout-grid.stats-grid outranks Webflow's base .w-layout-grid
+           (2 columns) on specificity, so no !important is needed. */
+        .w-layout-grid.stats-grid {
+            grid-template-columns: 1fr 1fr 1fr;
+            grid-template-rows: auto;
+        }
+
+        @media screen and (max-width: 600px) {
+            .w-layout-grid.stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 </head>
 
@@ -696,7 +711,7 @@
                         </div>
                         <div class="home-hero-subheading">
                             <p class="text-color-sec">Hey, I&#x27;m <span
-                                    style="font-weight: 400; color: #000;">Neel</span>, a product designer and design engineer. I design software and direct AI agents to ship it, from a 9-platform design system to a freight tool that books real shipments.</p>
+                                    style="font-weight: 400; color: #000;">Neel</span>, a product designer and design engineer. I design software and direct AI agents to ship it, from a 10-platform design system to a freight tool that books real shipments.</p>
                         </div>
                         <a cursor-ix="true" href="#work" class="cta w-inline-block">
                             <div class="text-block">See the work</div>
@@ -895,9 +910,9 @@
                                                         </div>
                                                     </div>
                                                     <div class="section-paragraph section-paragraph--intro">
-                                                        <p class="text-color-sec">Welcome to my UX design world, where I
-                                                            blend creativity & empathy to craft digital experiences that
-                                                            delight & inspire users.</p>
+                                                        <p class="text-color-sec">I design the product and direct AI
+                                                            agents to build the front end. When they cut a corner, the
+                                                            checks I write catch it.</p>
                                                     </div>
                                                 </div>
                                                 <div id="w-node-_2d70da8c-79e3-8960-3a4a-b94998683ec0-025ecb27"
@@ -981,7 +996,7 @@
                                                                     </g>
                                                                 </g>
                                                                 <!-- Meta line -->
-                                                                <text x="0" y="490" font-family="Manrope, sans-serif" font-weight="600" font-size="22" fill="#4A3420" letter-spacing="2">HCDE 590 / 591 CAPSTONE · 2025–26</text>
+                                                                <text x="0" y="490" font-family="Manrope, sans-serif" font-weight="600" font-size="22" fill="#4A3420" letter-spacing="2">HCDE 590 / 591 CAPSTONE · 2025-26</text>
                                                             </g>
 
                                                             <!-- RIGHT: Tilted dark-theme screen mockups -->
@@ -1170,7 +1185,7 @@
                                                                 <g transform="translate(20,360)">
                                                                     <text x="0" y="0" font-family="Manrope, sans-serif" font-weight="700" font-size="11" fill="#6B6B6B" letter-spacing="2.4">TYPE · SATOSHI</text>
                                                                     <text x="0" y="50" font-family="Manrope, sans-serif" font-weight="900" font-size="44" fill="#E6E6E6" letter-spacing="-1.4">Aa Bb Cc 123</text>
-                                                                    <text x="0" y="90" font-family="ui-monospace, JetBrains Mono, monospace" font-weight="500" font-size="14" fill="#9A9A9A" letter-spacing="0.6">300 · 400 · 500 · 700 · 900 — OpenType</text>
+                                                                    <text x="0" y="90" font-family="ui-monospace, JetBrains Mono, monospace" font-weight="500" font-size="14" fill="#9A9A9A" letter-spacing="0.6">300 · 400 · 500 · 700 · 900 · OpenType</text>
                                                                 </g>
 
                                                                 <!-- Right column: button + Live -->
@@ -1189,15 +1204,15 @@
                                                                  deterministic and avoid the inheritance pitfall entirely. -->
                                                             <g transform="translate(110,820)">
                                                                 <text x="0" y="0" font-family="ui-monospace, JetBrains Mono, monospace" font-weight="700" font-size="13" fill="#5C5C5C" letter-spacing="3">v0.15.0 · OBSIDIAN · SPRING GREEN · SATOSHI · 8-POINT SOFT GRID · WCAG 2.2 AA</text>
-                                                                <!-- 887 TOKENS -->
-                                                                <text x="0" y="100" font-family="Manrope, sans-serif" font-weight="900" font-size="60" fill="#E6E6E6" letter-spacing="-2.5">887</text>
+                                                                <!-- 1070 TOKENS -->
+                                                                <text x="0" y="100" font-family="Manrope, sans-serif" font-weight="900" font-size="60" fill="#E6E6E6" letter-spacing="-2.5">1070</text>
                                                                 <text x="220" y="100" font-family="ui-monospace, JetBrains Mono, monospace" font-weight="700" font-size="14" fill="#6B6B6B" letter-spacing="2">TOKENS</text>
                                                                 <!-- 98 COMPONENTS -->
                                                                 <text x="420" y="100" font-family="Manrope, sans-serif" font-weight="900" font-size="60" fill="#E6E6E6" letter-spacing="-2.5">98</text>
                                                                 <text x="540" y="100" font-family="ui-monospace, JetBrains Mono, monospace" font-weight="700" font-size="14" fill="#6B6B6B" letter-spacing="2">COMPONENTS</text>
-                                                                <!-- 9 PLATFORMS -->
-                                                                <text x="820" y="100" font-family="Manrope, sans-serif" font-weight="900" font-size="60" fill="#E6E6E6" letter-spacing="-2.5">9</text>
-                                                                <text x="880" y="100" font-family="ui-monospace, JetBrains Mono, monospace" font-weight="700" font-size="14" fill="#6B6B6B" letter-spacing="2">PLATFORMS</text>
+                                                                <!-- 10 PLATFORMS -->
+                                                                <text x="820" y="100" font-family="Manrope, sans-serif" font-weight="900" font-size="60" fill="#E6E6E6" letter-spacing="-2.5">10</text>
+                                                                <text x="915" y="100" font-family="ui-monospace, JetBrains Mono, monospace" font-weight="700" font-size="14" fill="#6B6B6B" letter-spacing="2">PLATFORMS</text>
                                                                 <!-- 35 ADRs (the accent — Spring Green) -->
                                                                 <text x="1140" y="100" font-family="Manrope, sans-serif" font-weight="900" font-size="60" fill="#00FA8A" letter-spacing="-2.5">35</text>
                                                                 <text x="1240" y="100" font-family="ui-monospace, JetBrains Mono, monospace" font-weight="700" font-size="14" fill="#6B6B6B" letter-spacing="2">ADRs</text>
@@ -1340,7 +1355,7 @@
                                                         <div class="project-list-item-bg" style="background: #0D0D0D;"></div>
                                                     </div>
                                                     <div class="project-list-img-inner">
-                                                        <svg class="projects-list-img" viewBox="0 0 1920 1000" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Warp TMS Builder operator instrument: a dark freight dashboard showing a needs-attention feed of exceptions and overdue loads, live shipment counts, a bowed lane-corridor map with volume nodes, and a carrier on-time chart, on an obsidian canvas with a single spring-green accent." xmlns="http://www.w3.org/2000/svg">
+                                                        <svg class="projects-list-img" viewBox="0 0 1920 1000" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Warp TMS operator instrument: a dark freight dashboard showing a needs-attention feed of exceptions and overdue loads, live shipment counts, a bowed lane-corridor map with volume nodes, and a carrier on-time chart, on an obsidian canvas with a single spring-green accent." xmlns="http://www.w3.org/2000/svg">
   <defs>
     <radialGradient id="tGlow" cx="18%" cy="-10%" r="90%">
       <stop offset="0%" stop-color="#ffffff" stop-opacity="0.055"/>
@@ -1473,7 +1488,7 @@
   </g>
 
   <!-- bottom wordmark -->
-  <text x="120" y="936" fill="#5C5C5C" font-size="20" letter-spacing="2" font-family="'JetBrains Mono',monospace">WARP TMS BUILDER · MARK II · <tspan fill="#00FA8A">LIVE ON REAL DATA</tspan></text>
+  <text x="120" y="936" fill="#5C5C5C" font-size="20" letter-spacing="2" font-family="'JetBrains Mono',monospace">WARP TMS · MARK II</text>
 </svg>
                                                     </div>
                                                 </div>
@@ -1568,12 +1583,10 @@
     <!-- BOTTOM strip: eyebrow + scope stats -->
     <g transform="translate(110,812)">
         <text x="0" y="0" font-family="ui-monospace, 'JetBrains Mono', monospace" font-weight="700" font-size="13" fill="#5C5C5C" letter-spacing="2.6">SHOPIFY EMBEDDED APP · REMIX · POLARIS · CARRIER SERVICE API · REVIEWED IN UNDER 3 HRS · VERIFIED ON A PLUS DEV STORE</text>
-        <text x="0" y="104" font-family="Manrope, sans-serif" font-weight="900" font-size="60" fill="#E6E6E6" letter-spacing="-2.5">479</text>
-        <text x="200" y="104" font-family="ui-monospace, 'JetBrains Mono', monospace" font-weight="700" font-size="14" fill="#6B6B6B" letter-spacing="2">COMMITS<tspan x="200" dy="20" fill="#4A4A4A" font-size="12" letter-spacing="1.4">100% NEEL</tspan></text>
-        <text x="470" y="104" font-family="Manrope, sans-serif" font-weight="900" font-size="60" fill="#E6E6E6" letter-spacing="-2.5">1,493</text>
-        <text x="700" y="104" font-family="ui-monospace, 'JetBrains Mono', monospace" font-weight="700" font-size="14" fill="#6B6B6B" letter-spacing="2">TESTS<tspan x="700" dy="20" fill="#4A4A4A" font-size="12" letter-spacing="1.4">0 FAILING</tspan></text>
-        <text x="1010" y="104" font-family="Manrope, sans-serif" font-weight="900" font-size="60" fill="#E6E6E6" letter-spacing="-2.5">3</text>
-        <text x="1072" y="104" font-family="ui-monospace, 'JetBrains Mono', monospace" font-weight="700" font-size="14" fill="#6B6B6B" letter-spacing="2">CHECKOUT<tspan x="1072" dy="20" fill="#4A4A4A" font-size="12" letter-spacing="1.4">EXTENSIONS</tspan></text>
+        <text x="0" y="104" font-family="Manrope, sans-serif" font-weight="900" font-size="60" fill="#E6E6E6" letter-spacing="-2.5">1,493</text>
+        <text x="230" y="104" font-family="ui-monospace, 'JetBrains Mono', monospace" font-weight="700" font-size="14" fill="#6B6B6B" letter-spacing="2">TESTS<tspan x="230" dy="20" fill="#4A4A4A" font-size="12" letter-spacing="1.4">0 FAILING</tspan></text>
+        <text x="710" y="104" font-family="Manrope, sans-serif" font-weight="900" font-size="60" fill="#E6E6E6" letter-spacing="-2.5">3</text>
+        <text x="772" y="104" font-family="ui-monospace, 'JetBrains Mono', monospace" font-weight="700" font-size="14" fill="#6B6B6B" letter-spacing="2">CHECKOUT<tspan x="772" dy="20" fill="#4A4A4A" font-size="12" letter-spacing="1.4">EXTENSIONS</tspan></text>
         <text x="1420" y="104" font-family="Manrope, sans-serif" font-weight="900" font-size="60" fill="#E6E6E6" letter-spacing="-2.5">&lt;3<tspan font-size="34" fill="#6B6B6B">h</tspan></text>
         <text x="1560" y="104" font-family="ui-monospace, 'JetBrains Mono', monospace" font-weight="700" font-size="14" fill="#6B6B6B" letter-spacing="2">REVIEW<tspan x="1560" dy="20" fill="#4A4A4A" font-size="12" letter-spacing="1.4">CLEARED</tspan></text>
     </g>
@@ -3434,10 +3447,9 @@
                                 <div id="w-node-_90643fb6-e52b-50c2-a687-8495cce6f579-025ecb27"
                                     class="card intro-card--stats-cell">
                                     <div class="stats-figure-wrap">
-                                        <div class="intro-stats-figure">20</div>
-                                        <div class="intro-stats-symbol intro-stats-symbol--plus">+</div>
+                                        <div class="intro-stats-figure">4</div>
                                     </div>
-                                    <div class="stats-description">Happy Clients</div>
+                                    <div class="stats-description">Years designing</div>
                                 </div>
                                 <div class="card-bg"></div>
                                 <div class="card-highlight"></div>
@@ -3445,10 +3457,9 @@
                             <div id="w-node-_8b1706f9-ef87-6c52-a6ff-41b8ec2e5ea6-025ecb27" class="card-wrap">
                                 <div class="card intro-card--stats-cell">
                                     <div class="stats-figure-wrap">
-                                        <div class="intro-stats-figure">4</div>
-                                        <div class="intro-stats-symbol intro-stats-symbol--plus">+</div>
+                                        <div class="intro-stats-figure">6</div>
                                     </div>
-                                    <div class="stats-description">Years of Experience</div>
+                                    <div class="stats-description">Case studies</div>
                                 </div>
                                 <div class="card-bg"></div>
                                 <div class="card-highlight"></div>
@@ -3457,36 +3468,24 @@
                                 <div class="card-bg"></div>
                                 <div class="card intro-card--stats-cell">
                                     <div class="stats-figure-wrap">
-                                        <div class="intro-stats-figure">43</div>
-                                        <!-- <div class="intro-stats-symbol intro-stats-symbol--plus">+</div> -->
+                                        <div class="intro-stats-figure">10</div>
                                     </div>
-                                    <div class="stats-description">Design Projects</div>
+                                    <div class="stats-description">Platform design system</div>
                                 </div>
-                                <div class="card-highlight"></div>
-                            </div>
-                            <div id="w-node-_8646a365-9565-ef27-e4ee-4d8fe656c573-025ecb27" class="card-wrap">
-                                <div class="card intro-card--stats-cell">
-                                    <div class="stats-figure-wrap">
-                                        <div class="intro-stats-figure">100</div>
-                                        <div class="intro-stats-symbol intro-stats-symbol--prozent">%</div>
-                                    </div>
-                                    <div class="stats-description">passion</div>
-                                </div>
-                                <div class="card-bg"></div>
                                 <div class="card-highlight"></div>
                             </div>
                         </div>
                         <div class="card-wrap">
                             <div class="card-bg"></div>
                             <div id="w-node-_90643fb6-e52b-50c2-a687-8495cce6f56c-025ecb27" class="card">
-                                <h3 class="intro-card-heading">Working at the intersection of aesthetics and usability.
+                                <h3 class="intro-card-heading">I design the product, then direct AI to build it.
                                 </h3>
-                                <p class="intro-card-description">With years of experience in web & app design, I live
-                                    & breathe good design & value the details that matter. I believe that every element
-                                    has the potential to make a significant impact, whether it's crafting wireframes,
-                                    designing visual systems, or prototyping interactions. I enjoy working with diverse
-                                    teams to bring ideas to life. Let's work together to create something extraordinary
-                                    with the power of collaboration.</p>
+                                <p class="intro-card-description">I started as a computer science graduate in India, but
+                                    I cared more about why the code existed than the code itself, and that pulled me into
+                                    design. Four years later I design the front end, direct AI agents to build it, and
+                                    write the checks that catch them when they fake done. I have worked across video, 3D,
+                                    and product interfaces, and the part I will not hand off is the judgment about what
+                                    good looks like.</p>
                             </div>
                             <div class="card-highlight"></div>
                         </div>
@@ -3496,13 +3495,8 @@
                                 class="card intro-grid-cell--animation">
                                 <div>
                                     <h4 class="intro-card-heading">Tools of the trade</h4>
-                                    <p class="intro-card-description intro-card-description--animations">Mastering
-                                        design
-                                        software is not just about using them as tools to bring ideas to life. It's
-                                        about
-                                        leveraging them to their fullest potential to create &quot;WOW&quot; designs.
-                                        Here are
-                                        some of the software I have mastered.
+                                    <p class="intro-card-description intro-card-description--animations">The software I
+                                        work in most days, from first sketch to shipped front end.
                                     </p>
                                 </div>
                                 <div class="anim-video-wrap">

@@ -292,7 +292,7 @@
   .emit-head{display:flex;align-items:baseline;justify-content:space-between;gap:16px;padding:var(--s5) 0 var(--s2)}
   .emit-head .t{font-family:var(--wide);font-weight:700;font-size:1.15rem;letter-spacing:-.01em;color:var(--ink-2)}
   .emit-head .c{font-size:var(--fs-micro);letter-spacing:.14em;text-transform:uppercase;color:var(--ink-faint);font-weight:700}
-  .emit-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border-top:1px solid var(--line)}
+  .emit-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
   @media (max-width:720px){.emit-grid{grid-template-columns:1fr 1fr}}
   @media (max-width:460px){.emit-grid{grid-template-columns:1fr}}
   .emit-grid .e{display:flex;align-items:baseline;gap:12px;padding:15px 18px 15px 0;border-bottom:1px solid var(--line)}
@@ -1060,7 +1060,7 @@
         <div class="col">
           <div class="k"><span class="dot" aria-hidden="true"></span> A boundary, not a hope</div>
           <div class="kt">Docs say what exists. A lint says what is banned.</div>
-          <p>Documentation can list the tokens. It cannot stop an agent reaching for one that was retired, or hardcoding a hex. For that you need a check that fails the build. An agent-first system needs both, and both run in CI.</p>
+          <p>Documentation can list the tokens. It cannot stop an agent reaching for one that was retired, or hardcoding a hex. For that you need a check that fails when someone does. An agent-first system needs both, and both live in the repo the agent already has open.</p>
         </div>
       </div>
 
@@ -1071,7 +1071,6 @@
         <div class="unit"><div class="n">~18</div><div class="u">Days to first ship</div></div>
         <div class="unit"><div class="n">73</div><div class="u">Research sources</div></div>
         <div class="unit"><div class="n">35</div><div class="u">Decision records</div></div>
-        <div class="unit"><div class="n">82</div><div class="u">Commits</div></div>
       </div>
       <p class="scale-note rise"><span class="dot" aria-hidden="true"></span> I built and shipped the whole system on my own in about eighteen days: the tokens, the contracts, the enforcement, the distribution, and the docs an agent reads first. When I built it, most of the public work on agent-readable design systems was essays and talks. This is the version that compiles, installs with one command, and fails the build when someone breaks it.</p>
     </div>
@@ -1223,9 +1222,9 @@
       <div class="lead-col rise"><p class="lead">Most systems drift because they lean on people remembering the rules. I replaced that with checks the build runs on its own. Each round added a new kind of measurement, and a new kind of measurement is what kept surfacing a new class of bug. What survived is twelve lint rules across five tiers: semantic tokens only, no hardcoded hex, no raw px, no accent in a shadow, and no retired token left behind in prose or code. The build fails on off-system code, so the vocabulary stays bounded on its own.</p></div>
 
       <div class="ladder rise">
-        <div class="row"><div class="p">R1&ndash;R3</div><div class="txt"><b>Static, interaction, contract</b><span>Sticky-header bleed, product-page pickers failing the first click, hardcoded calendar offsets. Per-route audits.</span></div></div>
+        <div class="row"><div class="p">R1 to R3</div><div class="txt"><b>Static, interaction, contract</b><span>Sticky-header bleed, product-page pickers failing the first click, hardcoded calendar offsets. Per-route audits.</span></div></div>
         <div class="row"><div class="p">R4</div><div class="txt"><b>Meta-contract integrity</b><span>Version chips drifting across llms.txt, the using guide, and the readme. A release step rewrites them in lockstep.</span></div></div>
-        <div class="row"><div class="p">R5&ndash;R6</div><div class="txt"><b>Mobile metrics and single-source docs</b><span>Audits at 320 and 375, catching layout inflation, then a catalog that disagreed with itself on how many components existed.</span></div></div>
+        <div class="row"><div class="p">R5 to R6</div><div class="txt"><b>Mobile metrics and single-source docs</b><span>Audits at 320 and 375, catching layout inflation, then a catalog that disagreed with itself on how many components existed.</span></div></div>
         <div class="row hot"><div class="p">R11</div><div class="txt"><b>Green retired from every shadow</b><span>Brand identity is a green fill, never a green light. A lint walks the token JSON and fails the build on any accent in a shadow.</span></div></div>
         <div class="row hot"><div class="p">R14</div><div class="txt"><b>Docs-to-tokens drift</b><span>The token check could not read prose. A second lint walks every doc and fails the build on any prescriptive use of a retired token, off a list, so the next retirement is one line, not two hundred find-and-replaces.</span></div></div>
         <div class="row hot"><div class="p">R16</div><div class="txt"><b>A contrast bug becomes a guard</b><span>A TMS operator console I built on Lumen rendered text at 1.66:1 on green across 11 or more of its pages, because an agent reached for a token name that did not exist and it fell through quietly. I added the token, a defensive component, a build-failing check, and a doc. On its first run the new check caught the same bug hiding in Lumen's own example code.</span></div></div>

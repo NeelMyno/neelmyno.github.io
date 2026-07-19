@@ -681,7 +681,13 @@
   /* ================= two-column honesty split ================= */
   .cols{grid-column:1/-1;margin-top:var(--s7);display:grid;grid-template-columns:1fr 1fr;gap:0}
   @media (max-width:820px){.cols{grid-template-columns:1fr;gap:var(--s7)}}
-  .cols .col{padding-top:var(--s5);border-top:2px solid var(--line-2)}
+  /* [FIX] one shared numeral spine per column-group (mirrors the Pataa P1 stats): the .col
+     owns a max-content figure track + a fluid label track, and each .fig below is a subgrid
+     spanning both, so every label starts at one clean left edge instead of staircasing per
+     row. Figures stay left-aligned; the heads span full width; align-content:start keeps the
+     shorter (freight) group's rows packed to the top when the row-track is stretched. */
+  .cols .col{padding-top:var(--s5);border-top:2px solid var(--line-2);display:grid;grid-template-columns:max-content minmax(0,1fr);column-gap:18px;align-content:start}
+  .cols .col > .ch,.cols .col > .csub{grid-column:1/-1}
   .cols .col.mine{padding-left:clamp(24px,4vw,48px);border-left:1px solid var(--line-1)}
   @media (max-width:820px){.cols .col.mine{padding-left:0;border-left:0}}
   .cols .col.freight{padding-right:clamp(24px,4vw,48px)}
@@ -690,7 +696,7 @@
   .cols .col.mine .ch{color:var(--ink-1)}
   .cols .col.mine .ch .mk{width:8px;height:8px;border-radius:2px;background:var(--accent);flex:0 0 auto}
   .cols .csub{font-size:var(--fs-micro);letter-spacing:.02em;color:var(--ink-4);margin:0 0 var(--s5);text-transform:uppercase;letter-spacing:.06em}
-  .cols .fig{display:grid;grid-template-columns:minmax(0,auto) 1fr;gap:6px 18px;padding:16px 0;border-bottom:1px solid var(--line-1);align-items:baseline}
+  .cols .fig{display:grid;grid-template-columns:subgrid;grid-column:1/-1;gap:6px 18px;padding:16px 0;border-bottom:1px solid var(--line-1);align-items:baseline}
   .cols .fig .n{font-family:var(--mono);font-variant-numeric:tabular-nums;letter-spacing:-.015em;font-weight:500;font-size:var(--fs-mid);white-space:nowrap}
   .cols .col.freight .fig .n{color:var(--ink-2c)}
   .cols .col.mine .fig .n{color:var(--ink-hi)}
@@ -768,9 +774,9 @@
   .warp-credit-lbl{font-size:var(--fs-micro);letter-spacing:.12em;text-transform:uppercase;color:var(--ink-faint);font-weight:600;line-height:1}
   .warp-mark{height:18px;width:auto;display:block;color:var(--ink-dim);flex:0 0 auto}
   /* the secondary Design-notes trigger: a real link, not an unstyled UA button (was 13.33px system chrome) */
-  .colophon .note dd .dn-link{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:color var(--motion-fast) var(--ease-out)}
+  .colophon .note dd .dn-link{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer;display:inline-flex;align-items:center;gap:6px;min-height:24px;transition:color var(--motion-fast) var(--ease-out)}
   .colophon .note dd .dn-link:hover,.colophon .note dd .dn-link:focus-visible{color:var(--accent)}
-  .backlink{grid-column:1/-1;display:inline-flex;align-items:center;gap:.5rem;margin-top:var(--s7);font-size:var(--fs-sm);color:var(--ink-2c);text-decoration:none;font-weight:600}
+  .backlink{grid-column:1/-1;display:inline-flex;align-items:center;gap:.5rem;min-height:24px;margin-top:var(--s7);font-size:var(--fs-sm);color:var(--ink-2c);text-decoration:none;font-weight:600}
   .backlink:hover{color:var(--ink-hi)}
 
   /* ============================================================================
@@ -1327,7 +1333,6 @@
       <div class="col mine">
         <p class="ch"><span class="mk" aria-hidden="true"></span>What is actually mine</p>
         <p class="csub">The work I directed and reviewed</p>
-        <div class="fig"><span class="n">1,011</span><span class="fl">commits, all directed and reviewed</span></div>
         <div class="fig"><span class="n">119</span><span class="fl">recorded design decisions</span></div>
         <div class="fig"><span class="n">359</span><span class="fl">test files, across 43 routes</span></div>
         <div class="fig"><span class="n">227s&#8594;120ms</span><span class="fl">a read cut, plus axe-clean WCAG A and AA</span></div>
@@ -1338,7 +1343,7 @@
       <div class="plist yes">
         <p class="ph2"><span class="dot live" aria-hidden="true" style="border-radius:2px"></span>What I can prove</p>
         <ul>
-          <li><span class="m" aria-hidden="true"></span><span>The TMS, <b>designed and built end to end</b> with the AI doing the typing under my direction: 1,011 commits, 119 recorded decisions, 359 test files, 43 routes.</span></li>
+          <li><span class="m" aria-hidden="true"></span><span>The TMS, <b>designed and built end to end</b> with the AI doing the typing under my direction: 119 recorded decisions, 359 test files, 43 routes.</span></li>
           <li><span class="m" aria-hidden="true"></span><span>It went <b>live against real enterprise freight,</b> and I fixed real-data bugs a fixture never surfaces, including a cross-tenant query caught in the go-live audit.</span></li>
           <li><span class="m" aria-hidden="true"></span><span>Verified craft. <b>Axe-clean</b> with a dedicated WCAG A and AA sweep, one unified focus ring locked by tests, a 44px touch floor, and a read cut from <b>227s to about 120ms.</b></span></li>
           <li><span class="m" aria-hidden="true"></span><span>The honesty rules are executable. A failed read never renders "all clear," an unknown never renders a fake zero, and the build fails if either breaks.</span></li>
