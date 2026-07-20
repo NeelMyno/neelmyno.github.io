@@ -698,8 +698,16 @@
      of its permitted roles, so no new color enters. Cover, the short version,
      and the colophon live outside the tabs and are shared by both.
      ============================================================ */
-  .tabsbar{border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:var(--paper)}
+  /* The bar is sticky under the fixed 53px site nav: once a reader scrolls past it, the two
+     ways to read the page stay one click away for the whole scroll (Neel, 2026-07-20). It is
+     in normal flow until then, so nothing changes above the fold. z-index sits below the nav's
+     100. When stuck, the bar compacts (subtitles fold away, padding tightens) — instantly, no
+     layout animation: the crossing happens on every scroll, so care is speed here. */
+  .tabsbar{position:-webkit-sticky;position:sticky;top:53px;z-index:90;border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:var(--paper)}
   .tabsbar .wrap{padding-block:0}
+  .tabsbar.is-stuck .tab{padding-block:13px 11px}
+  .tabsbar.is-stuck .tab .tab-s{display:none}
+  .tabsbar.is-stuck .tab .tab-t{font-size:clamp(.95rem,2vw,1.08rem)}
   .tablist{display:grid;grid-template-columns:1fr 1fr}
   .tab{appearance:none;-webkit-appearance:none;background:none;border:0;border-bottom:2px solid transparent;margin-bottom:-1px;cursor:pointer;text-align:left;font-family:var(--sans);color:var(--ink-faint);display:flex;flex-direction:column;gap:5px;padding:clamp(18px,2.4vw,26px) clamp(14px,2vw,26px) clamp(16px,2.2vw,24px);min-height:44px;transition:color .2s var(--ease-out),border-color .2s var(--ease-out)}
   .tab + .tab{border-left:1px solid var(--line)}
@@ -822,6 +830,9 @@
 
   
   <!-- ============ TABS ============ -->
+  <!-- 1px sentinel: the IntersectionObserver watches it to know when the bar below is pinned
+       under the fixed nav, which drives the .is-stuck compaction. Zero-height, inert. -->
+  <div class="tabsbar-sentinel" aria-hidden="true" style="height:1px;margin-top:-1px"></div>
   <div class="tabsbar">
     <div class="wrap">
       <div class="tablist" role="tablist" aria-label="Two ways to read this case study">
@@ -1501,9 +1512,23 @@
       }
       if(moveFocus) tab.focus();
       if(updateHash && history.replaceState){ history.replaceState(null, '', '#' + HASH[tab.id]); }
-      // if the bar has scrolled up under the fixed nav (a switch from deep in a panel), bring it back into view
-      var top = tablist.getBoundingClientRect().top;
-      if(top < NAV){ window.scrollTo({ top: window.scrollY + top - NAV - 10, behavior: reduce ? 'auto' : 'smooth' }); }
+      // the bar is sticky, so neither its rect.top (pins at NAV) nor its offsetTop (Chrome
+      // reports the sticky-DISPLACED position while stuck) can signal "deep in a panel".
+      // The 1px sentinel above the bar is static, so ITS offsetTop is the bar's true in-flow
+      // position: if the reader has scrolled past it, a tab switch snaps back to the top of
+      // the new panel so they never land mid-way through content they haven't started reading.
+      var sent = document.querySelector('.tabsbar-sentinel');
+      var flowTop = (sent ? sent.offsetTop + 1 : tablist.offsetTop);
+      if(window.scrollY > flowTop - NAV){ window.scrollTo({ top: flowTop - NAV, behavior: reduce ? 'auto' : 'smooth' }); }
+    }
+    // compact the sticky bar once it pins under the fixed nav (sentinel leaves through the top)
+    var stickyBar = document.querySelector('.tabsbar');
+    var sentinel = document.querySelector('.tabsbar-sentinel');
+    if(stickyBar && sentinel && 'IntersectionObserver' in window){
+      new IntersectionObserver(function(entries){
+        var e = entries[0];
+        stickyBar.classList.toggle('is-stuck', !e.isIntersecting && e.boundingClientRect.top < NAV);
+      }, { rootMargin: (-NAV - 1) + 'px 0px 0px 0px' }).observe(sentinel);
     }
     tabs.forEach(function(tab, i){
       tab.addEventListener('click', function(){ select(tab, false, true); });
