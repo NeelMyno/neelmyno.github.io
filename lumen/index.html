@@ -1559,14 +1559,23 @@
       var flowTop = (sent ? sent.offsetTop + 1 : tablist.offsetTop);
       if(window.scrollY > flowTop - NAV){ window.scrollTo({ top: flowTop - NAV, behavior: reduce ? 'auto' : 'smooth' }); }
     }
-    // compact the sticky bar once it pins under the fixed nav (sentinel leaves through the top)
+    // compact the sticky bar once it pins under the fixed nav. Deliberately NOT an
+    // IntersectionObserver: with Lenis driving the scroll on the deployed site, IO
+    // callbacks never re-fired (verified live 2026-07-20 — the class simply never
+    // applied in a real browser), while native scroll events keep firing under Lenis.
+    // One rAF-throttled 1px-sentinel read per scroll frame is cheap and Lenis-proof.
     var stickyBar = document.querySelector('.tabsbar');
     var sentinel = document.querySelector('.tabsbar-sentinel');
-    if(stickyBar && sentinel && 'IntersectionObserver' in window){
-      new IntersectionObserver(function(entries){
-        var e = entries[0];
-        stickyBar.classList.toggle('is-stuck', !e.isIntersecting && e.boundingClientRect.top < NAV);
-      }, { rootMargin: (-NAV - 1) + 'px 0px 0px 0px' }).observe(sentinel);
+    if(stickyBar && sentinel){
+      var stuckTick = false;
+      var updStuck = function(){
+        stuckTick = false;
+        stickyBar.classList.toggle('is-stuck', sentinel.getBoundingClientRect().top < NAV);
+      };
+      window.addEventListener('scroll', function(){
+        if(!stuckTick){ stuckTick = true; requestAnimationFrame(updStuck); }
+      }, { passive: true });
+      updStuck();
     }
     tabs.forEach(function(tab, i){
       tab.addEventListener('click', function(){ select(tab, false, true); });
