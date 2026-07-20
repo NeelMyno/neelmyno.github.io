@@ -7,7 +7,7 @@
 
 <!-- [PAGE-CUSTOM] title + description -->
 <title>Lumen, Warp's design system built to be read by AI · Neel Tengariya</title>
-<meta name="description" content="Lumen is Warp's LLM-first design system: one Obsidian canvas, one Spring Green accent, one typeface, and rules that fail the build when they break. Sole architect, directing the AI that wrote most of the code.">
+<meta name="description" content="Lumen is Warp's LLM-first design system: one Obsidian canvas, one Spring Green accent, one typeface, and lints that fail when a rule breaks. Sole architect, directing the AI that wrote most of the code.">
 
 <!-- [SHARED-VERBATIM] site integration: favicon + apple-touch-icon (parity with neelmyno.in) -->
 <link href="/images/web/favicon_32x32.png" rel="shortcut icon" type="image/x-icon">
@@ -16,7 +16,7 @@
 <!-- [PAGE-CUSTOM] social preview (OG + Twitter) -->
 <meta property="og:type" content="article">
 <meta property="og:title" content="Lumen, Warp's design system, built to be read by AI">
-<meta property="og:description" content="One Obsidian canvas, one Spring Green accent, one typeface, and rules that fail the build when they break. The green-shadow fix-the-class story, told in the system's own language.">
+<meta property="og:description" content="One Obsidian canvas, one Spring Green accent, one typeface, and lints that fail when a rule breaks. The green-shadow fix-the-class story, told in the system's own language.">
 <meta property="og:image" content="https://neelmyno.in/lumen/assets/hero-system-montage.jpg">
 <meta property="og:url" content="https://neelmyno.in/lumen/">
 <meta name="twitter:card" content="summary_large_image">
@@ -1164,7 +1164,7 @@
         <div class="unit"><div class="n">73</div><div class="u">Research sources</div></div>
         <div class="unit"><div class="n">35</div><div class="u">Decision records</div></div>
       </div>
-      <p class="scale-note rise"><span class="dot" aria-hidden="true"></span> I built and shipped the whole system on my own in about eighteen days: the tokens, the contracts, the enforcement, the distribution, and the docs an agent reads first. When I built it, most of the public work on agent-readable design systems was essays and talks. This is the version that compiles, installs with one command, and fails the build when someone breaks it.</p>
+      <p class="scale-note rise"><span class="dot" aria-hidden="true"></span> I built and shipped the whole system on my own in about eighteen days: the tokens, the contracts, the enforcement, the distribution, and the docs an agent reads first. When I built it, most of the public work on agent-readable design systems was essays and talks. This is the version that compiles, installs with one command, and fails its lints when someone breaks it.</p>
     </div>
   </section>
 
@@ -1202,7 +1202,7 @@
                 <div class="tl-n">1,070</div>
               </div>
             </div>
-            <p class="spec-cap">Components read the semantic layer only. They never import a primitive, and a lint fails the build if one slips through, so a value can be retuned once and every surface follows. These are the real leaf-token counts on disk, not a round number for a slide.</p>
+            <p class="spec-cap">Components read the semantic layer only. They never import a primitive, and a lint fails if one slips through, so a value can be retuned once and every surface follows. These are the real leaf-token counts on disk, not a round number for a slide.</p>
           </div>
         </div>
         <figcaption><span class="plate-tag">Token architecture</span><b>Primitive, semantic, component-bound.</b> Three layers, 1,070 values, one place to change any of them.</figcaption>
@@ -1293,7 +1293,7 @@
               <span class="arrow">&rarr;</span>
               <span class="chip src">one source, lint-enforced</span>
             </div>
-            <p class="spec-cap">The <b>.md</b> is what a designer reads; the <b>.json</b> is what the shadcn registry installs from. Every AI tool gets the same rules in the format it reads natively, and a lint fails the build when the prose and the schema drift apart. Both panels are abbreviated from the real <b>button/component.json</b> and <b>.md</b>, in their own field shape.</p>
+            <p class="spec-cap">The <b>.md</b> is what a designer reads; the <b>.json</b> is what the shadcn registry installs from. Every AI tool gets the same rules in the format it reads natively, and a lint fails when the prose and the schema drift apart. Both panels are abbreviated from the real <b>button/component.json</b> and <b>.md</b>, in their own field shape.</p>
           </div>
         </div>
         <figcaption><span class="plate-tag">The contract</span><b>Readable by a machine first.</b> On a team where the agent usually holds the keyboard, the spec an agent can follow is the spec that actually ships.</figcaption>
@@ -1317,8 +1317,8 @@
         <div class="row"><div class="p">R1 to R3</div><div class="txt"><b>Static, interaction, contract</b><span>Sticky-header bleed, product-page pickers failing the first click, hardcoded calendar offsets. Per-route audits.</span></div></div>
         <div class="row"><div class="p">R4</div><div class="txt"><b>Meta-contract integrity</b><span>Version chips drifting across llms.txt, the using guide, and the readme. A release step rewrites them in lockstep.</span></div></div>
         <div class="row"><div class="p">R5 to R6</div><div class="txt"><b>Mobile metrics and single-source docs</b><span>Audits at 320 and 375, catching layout inflation, then a catalog that disagreed with itself on how many components existed.</span></div></div>
-        <div class="row hot"><div class="p">R11</div><div class="txt"><b>Green retired from every shadow</b><span>Brand identity is a green fill, never a green light. A lint walks the token JSON and fails the build on any accent in a shadow.</span></div></div>
-        <div class="row hot"><div class="p">R14</div><div class="txt"><b>Docs-to-tokens drift</b><span>The token check could not read prose. A second lint walks every doc and fails the build on any prescriptive use of a retired token, off a list, so the next retirement is one line, not two hundred find-and-replaces.</span></div></div>
+        <div class="row hot"><div class="p">R11</div><div class="txt"><b>Green retired from every shadow</b><span>Brand identity is a green fill, never a green light. A lint walks the token JSON and fails on any accent in a shadow.</span></div></div>
+        <div class="row hot"><div class="p">R14</div><div class="txt"><b>Docs-to-tokens drift</b><span>The token check could not read prose. A second lint walks every doc and fails on any prescriptive use of a retired token, off a list, so the next retirement is one line, not two hundred find-and-replaces.</span></div></div>
         <div class="row hot"><div class="p">R16</div><div class="txt"><b>A contrast bug becomes a guard</b><span>A TMS operator console I built on Lumen rendered text at 1.66:1 on green across 11 or more of its pages, because an agent reached for a token name that did not exist and it fell through quietly. I added the token, a defensive component, a build-failing check, and a doc. On its first run the new check caught the same bug hiding in Lumen's own example code.</span></div></div>
       </div>
 
@@ -1358,10 +1358,10 @@
                 <span class="gsub">flat surface, neutral shadow</span>
               </div>
             </div>
-            <p class="spec-cap">I had built an internally consistent rule that allowed green in a button's halo, then reviewed it against the live product and decided colored light reads cheaper than a clean surface. So I overruled my own system, broadened the lint to fail the build on <b>any</b> green shadow, and shipped the code, the docs, and the amended rule in one commit. <b>The whole page you are reading obeys it.</b></p>
+            <p class="spec-cap">I had built an internally consistent rule that allowed green in a button's halo, then reviewed it against the live product and decided colored light reads cheaper than a clean surface. So I overruled my own system, broadened the lint to fail on <b>any</b> green shadow, and shipped the code, the docs, and the amended rule in one commit. <b>The whole page you are reading obeys it.</b></p>
           </div>
         </div>
-        <figcaption><span class="plate-tag">Guard &middot; Elevation</span><b>The accent left the light.</b> Colored glow reads cheaper than a clean surface, so I retired green from every shadow and made the check fail the build on any that return.</figcaption>
+        <figcaption><span class="plate-tag">Guard &middot; Elevation</span><b>The accent left the light.</b> Colored glow reads cheaper than a clean surface, so I retired green from every shadow and made the check fail on any that return.</figcaption>
       </figure>
 
       <blockquote class="pull rise">
