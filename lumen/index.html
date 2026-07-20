@@ -1567,20 +1567,17 @@
     var stickyBar = document.querySelector('.tabsbar');
     var sentinel = document.querySelector('.tabsbar-sentinel');
     if(stickyBar && sentinel){
-      var stuckTick = false;
-      var updStuck = function(){
-        stuckTick = false;
-        stickyBar.classList.toggle('is-stuck', sentinel.getBoundingClientRect().top < NAV);
-      };
-      // capture-phase on document, not window: on the deployed site the BODY is the
-      // scrolling element (element scroll events do not bubble, so a window listener
-      // hears nothing — measured 0 events across a full programmatic scroll). Capture
-      // sees the scroll wherever it happens, viewport or element, Lenis or native.
-      document.addEventListener('scroll', function(){
-        if(!stuckTick){ stuckTick = true; requestAnimationFrame(updStuck); }
-      }, { capture: true, passive: true });
-      window.addEventListener('resize', updStuck, { passive: true });
-      updStuck();
+      // Event-free by design. Two live-caught failures proved scroll events unreliable
+      // here: IO callbacks never re-fired under Lenis, and even capture-phase document
+      // listeners measured ZERO events while lenis_mini drove scrollTop directly. A
+      // per-frame check cannot be starved: one 1px-sentinel rect read per frame, class
+      // written only on change. rAF pauses in background tabs, so it costs nothing idle.
+      var wasStuck = null;
+      (function stuckLoop(){
+        var on = sentinel.getBoundingClientRect().top < NAV;
+        if(on !== wasStuck){ wasStuck = on; stickyBar.classList.toggle('is-stuck', on); }
+        requestAnimationFrame(stuckLoop);
+      })();
     }
     tabs.forEach(function(tab, i){
       tab.addEventListener('click', function(){ select(tab, false, true); });
