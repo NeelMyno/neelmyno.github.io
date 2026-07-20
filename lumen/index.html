@@ -1572,9 +1572,14 @@
         stuckTick = false;
         stickyBar.classList.toggle('is-stuck', sentinel.getBoundingClientRect().top < NAV);
       };
-      window.addEventListener('scroll', function(){
+      // capture-phase on document, not window: on the deployed site the BODY is the
+      // scrolling element (element scroll events do not bubble, so a window listener
+      // hears nothing — measured 0 events across a full programmatic scroll). Capture
+      // sees the scroll wherever it happens, viewport or element, Lenis or native.
+      document.addEventListener('scroll', function(){
         if(!stuckTick){ stuckTick = true; requestAnimationFrame(updStuck); }
-      }, { passive: true });
+      }, { capture: true, passive: true });
+      window.addEventListener('resize', updStuck, { passive: true });
       updStuck();
     }
     tabs.forEach(function(tab, i){
