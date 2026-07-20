@@ -296,6 +296,12 @@
   @media (max-width:720px){.emit-grid{grid-template-columns:1fr 1fr}}
   @media (max-width:460px){.emit-grid{grid-template-columns:1fr}}
   .emit-grid .e{display:flex;align-items:baseline;gap:12px;padding:15px 18px 15px 0;border-bottom:1px solid var(--line)}
+  /* The grid's closing hairline is the container's own border-bottom. A cell sitting on the
+     last row stacks its border-bottom against it and paints 2px where a cell is and 1px where
+     the row is empty, which reads as a stepped bottom edge. So the last row's cells drop
+     theirs. Ten cells: the last row is one cell at 3 and at 1 columns, two cells at 2. */
+  .emit-grid .e:last-child{border-bottom:0}
+  @media (max-width:720px) and (min-width:461px){.emit-grid .e:nth-last-child(2){border-bottom:0}}
   .emit-grid .e .en{font-family:var(--wide);font-weight:900;font-size:.82rem;color:var(--ink-faint);font-feature-settings:"tnum" 1;min-width:1.6rem}
   .emit-grid .e .et{font-size:var(--fs-sm);font-weight:500;color:var(--ink)}
   .emit-note{grid-column:1/-1;margin-top:var(--s5);padding-left:20px;border-left:3px solid var(--accent);font-size:var(--fs-sm);color:var(--ink-dim);max-width:64ch}
@@ -603,6 +609,60 @@
   .plate .ph.real{display:block}
   .plate .ph.real img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:top}
 
+  /* ---- [PAGE-CUSTOM] phone: pan the wide desktop artwork instead of shrinking it ----
+     Single-column phone layout puts these renders in a ~348px column, which is 0.15 to 0.21
+     of their natural width: a 15px label in the dashboard lands at 3px and the evidence stops
+     being evidence. Below 620px, the point at which .collage .duo and .pair have both gone
+     single-column, each of these figures becomes a horizontal scroller with a min-width tuned
+     to the smallest label that figure has to make readable. The 6px scrollbar is the
+     affordance, not decoration: without it nobody learns the figure pans.
+
+     justify-self:start is load-bearing on the .ph plates, and measured to be so: .ph sets
+     place-items:center, so justify-items:center reaches the image even though .ph.real
+     computes to display:block, and box alignment centres a 1250px image inside a 348px
+     containing block. Left edge lands at -450px with maxScrollLeft halved to 451, so the
+     left half of the artwork can never be scrolled to. It is defensive on .collage .frame,
+     which is a plain block with justify-items:normal and showed no offset either way.
+
+     Deliberately NOT included: .collage .duo .frame.phone (hero-mobile, a portrait 810x1495
+     phone screenshot already drawn at ~0.43, which is roughly life size) and .sheet .st (the
+     eight contact-sheet tiles, an index of the surfaces rather than a reading surface, each
+     with its full-size counterpart in the template plates below). */
+  @media (max-width:620px){
+    .collage .frame.band,
+    .collage .duo .frame:not(.phone),
+    figure.plate .ph.real{
+      aspect-ratio:auto !important;height:auto;
+      overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;
+      scrollbar-width:thin;scrollbar-color:var(--line-strong) transparent}
+    .collage .frame.band > img,
+    .collage .duo .frame:not(.phone) > img,
+    figure.plate .ph.real > img{
+      position:relative;inset:auto;width:auto;height:auto;
+      object-fit:unset;justify-self:start}
+    .collage .frame.band::-webkit-scrollbar,
+    .collage .duo .frame:not(.phone)::-webkit-scrollbar,
+    figure.plate .ph.real::-webkit-scrollbar{height:6px}
+    .collage .frame.band::-webkit-scrollbar-thumb,
+    .collage .duo .frame:not(.phone)::-webkit-scrollbar-thumb,
+    figure.plate .ph.real::-webkit-scrollbar-thumb{
+      background:var(--line-strong);border-radius:3px}
+    /* .pair is one 1fr track down here, and a grid item spanning a single track takes an
+       automatic minimum size of its own min-content, which is now the image's min-width.
+       Without this the track inflates to 1250px and the whole page scrolls sideways.
+       (.grid12 is unaffected: figure.plate.full spans all twelve tracks, and Chromium skips
+       the automatic minimum for an item spanning flexible tracks.) */
+    .pair > figure.plate{min-width:0}
+
+    /* Pan width per figure, set by the smallest label a reader has to read in it.
+       Effective size = native size x (min-width / natural width); target ~11px. */
+    .collage .frame.band > img{min-width:1000px}              /* 1700w, 19px labels -> 11.2px */
+    .collage .duo .frame:not(.phone) > img{min-width:1250px}  /* 1700w, 15px labels -> 11.0px */
+    figure.plate .ph.real > img[src$="template-saas.webp"]{min-width:1250px}      /* 2400w, 21px -> 10.9px */
+    figure.plate .ph.real > img[src$="template-commerce.webp"]{min-width:1250px}  /* 2400w, 20px -> 10.4px */
+    figure.plate .ph.real > img[src$="template-mobile.webp"]{min-width:1050px}    /* 2000w, two phones at ~0.53, near life size */
+  }
+
   /* ============================================================
      [PAGE-CUSTOM] THE TWO TABS — an accessible tablist that swaps the body.
      Tab 1 (the design system) is the default; Tab 2 (built to be read by AI)
@@ -642,6 +702,10 @@
   .tok-layers .tl.total .tl-bar{background:none;border:0}
   .mono{font-family:ui-monospace,'SF Mono',Menlo,monospace;font-size:.9em;color:var(--ink);letter-spacing:-.01em}
 </style>
+  <!-- Progressive enhancement: the .rise reveal is JS-driven (IntersectionObserver adds .in).
+       Without JS every .rise element would stay at opacity:0 and the page would render blank.
+       This restores the content as static, unanimated markup. -->
+  <noscript><style>.rise{opacity:1;transform:none;transition:none}</style></noscript>
 </head>
 <body>
 

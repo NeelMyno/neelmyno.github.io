@@ -254,6 +254,31 @@
   /* ============ UI-SHOWCASE MONTAGE (real composited app screens, full grid width, true aspect ratio) ============ */
   .montage{grid-column:1/-1;width:100%;margin:var(--s7) 0 0}
   .montage img{width:100%;height:auto;display:block}
+  /* On a phone the landscape montage collapses into the ~350px content column: a 1660px
+     surface at 21% of native, where every screen label is a smudge. This figure IS the
+     evidence of the work, so it gets the house pan-to-read treatment (ported from
+     tracking-page.html) — the figure becomes a horizontal scroller and the image holds a
+     legible floor. 900px is derived, not copied from that page's 660: at 350px the montage
+     renders at 21% and nothing reads; 900px is the smallest width at which the real screen
+     labels ("Select Accurate Block", "Create Pataa", the address lines) were legible in a
+     dpr2 phone render, and it is also the sharp point — at dpr2 a 900px box asks 1800 device
+     px of a 1660px source, essentially 1:1, where 1040px+ upsamples for no added legibility.
+     It lands 658px tall, so the figure and its scrollbar stay on one 844px screen.
+     Scoped to .pan: the TALL montage (showcase2, 1:3.2) is deliberately untouched, since
+     panning it would render it 2882px tall and swallow the page.
+     Two details are load-bearing. justify-self:start keeps the image's left edge reachable
+     at scrollLeft 0 if this figure is ever made a grid/flex container (a centred child sits
+     at a negative offset that scrollLeft can never reach). The 6px scrollbar is the
+     affordance that tells a thumb the figure pans — not decoration. */
+  @media (max-width:640px){
+    figure.montage.pan{
+      overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;
+      scrollbar-width:thin;scrollbar-color:var(--line-strong) transparent}
+    figure.montage.pan img{
+      width:auto;height:auto;max-width:100%;min-width:900px;justify-self:start}
+    figure.montage.pan::-webkit-scrollbar{height:6px}
+    figure.montage.pan::-webkit-scrollbar-thumb{background:var(--line-strong);border-radius:3px}
+  }
 
   /* ============ SNAPSHOT (at a glance) - typographic, no images ============ */
   .snap-head{grid-column:1/-1;display:flex;align-items:baseline;gap:16px;font-size:var(--fs-label);letter-spacing:.16em;text-transform:uppercase;color:var(--ink-dim);font-weight:800;margin-bottom:var(--s6)}
@@ -528,6 +553,10 @@
   /* very narrow phones: drop the secondary eyebrow tag so the section marker never crowds */
   @media (max-width:430px){.eyebrow .tag,.snap-head .tag{display:none}}
 </style>
+  <!-- Progressive enhancement: the .rise reveal is JS-driven (IntersectionObserver adds .in).
+       Without JS every .rise element would stay at opacity:0 and the page would render blank.
+       This restores the content as static, unanimated markup. -->
+  <noscript><style>.rise{opacity:1;transform:none;transition:none}</style></noscript>
 </head>
 <body>
 
@@ -675,7 +704,7 @@
 <section aria-label="The whole app surface">
   <div class="wrap grid12">
     <div class="show-head rise" style="margin-bottom:0"><span>The whole surface</span><span class="rule"></span></div>
-    <figure class="montage rise">
+    <figure class="montage pan rise">
       <img src="assets/showcase/showcase1.jpg" alt="A montage of Pataa app screens and components: the create-a-code flow, voice-direction cards, the ShortCode cards, the maroon live-location state, the QR scanner, maps, and notifications.">
     </figure>
   </div>
@@ -717,8 +746,8 @@
 
     <div class="data rise" role="group" aria-label="Why the gap is expensive">
       <div class="di hot"><div class="fig">30%</div><div class="lab">of delivery cost in India is spent on the <b>last mile</b>, the final hop to the door.</div></div>
-      <div class="di"><div class="fig">10&ndash;12%</div><div class="lab">what the same leg costs in countries with <b>structured addresses</b>.</div></div>
-      <div class="di"><div class="fig">$10&ndash;14B</div><div class="lab">estimated yearly drag on the economy from the <b>addressing gap</b>.</div></div>
+      <div class="di"><div class="fig">10 to 12%</div><div class="lab">what the same leg costs in countries with <b>structured addresses</b>.</div></div>
+      <div class="di"><div class="fig">$10 to 14B</div><div class="lab">estimated yearly drag on the economy from the <b>addressing gap</b>.</div></div>
     </div>
     <div class="srcnote rise"><span class="caret" aria-hidden="true">^</span> Figures: MIT Emerging World and Delhivery. This is the reason the product exists.</div>
 

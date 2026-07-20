@@ -99,7 +99,7 @@
   @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
   body{
     margin:0;background:var(--paper);color:var(--ink);
-    font-family:var(--sans);font-size:var(--fs-body);line-height:1.62;
+    font-family:var(--sans);font-size:var(--fs-body);line-height:1.6;
     font-feature-settings:"kern" 1,"liga" 1;
     -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
     overflow-x:hidden;
@@ -528,6 +528,58 @@
   .backlink{grid-column:1/-1;display:inline-flex;align-items:center;gap:.5rem;margin-top:var(--s6);font-size:var(--fs-sm);color:var(--ink-dim);text-decoration:none;font-weight:700}
   .backlink:hover{color:var(--ink)}
 
+  /* ============ [P17 · phone] pan the wide artwork instead of shrinking it ============
+     A 2880px workspace shot and a 1240px-wide diagram both collapse into the ~348px phone
+     column, where the diagram's smallest label lands at 3px and the evidence stops being
+     evidence. On phones these figures keep a readable size and the reader pans them sideways.
+     The 6px scrollbar is the affordance that teaches the gesture, so it stays visible — a
+     figure that pans with no visible track is a figure nobody knows to pan.
+     Ported from tracking-page.html's graded `figure.shot.wide.montage` pattern. Desktop and
+     tablet are untouched: everything here lives inside the 640px query. */
+  @media (max-width:640px){
+    /* --- wide shots inside the carded .ph (the workspace hero, the benchmark grid) --- */
+    /* !important defeats the per-figure inline aspect-ratio, so the box is full-height
+       (height:auto) and the image scrolls inside it instead of being cropped to the
+       desktop ratio. */
+    figure.shot.pan .ph{
+      aspect-ratio:auto !important;height:auto;display:block;overflow-x:auto;overflow-y:hidden;
+      -webkit-overflow-scrolling:touch;scrollbar-width:thin;
+      scrollbar-color:var(--line-strong) transparent}
+    figure.shot.pan .ph img{
+      /* left-align the over-wide image at the scroll origin. justify-self:start is
+         load-bearing, not decorative: without it an inherited justify-items:center can leak
+         onto this display:block child (modern Chromium honors box-alignment on block-level
+         boxes) and park the image's left edge at a negative offset that scrollLeft:0 can
+         never reach. width:auto + the global img{max-width:100%} + min-width resolves to
+         exactly the min-width, because min-width beats max-width. */
+      position:relative;inset:auto;width:auto;height:auto;min-width:1100px;object-fit:unset;
+      border-radius:0;justify-self:start}
+    /* a tapped card keeps :hover on touch; a lifted, shadowed scroll box reads as broken. */
+    figure.shot.pan:hover .ph{transform:none;box-shadow:var(--shadow-photo)}
+
+    /* --- editorial diagrams --- authored on a 1240x392 viewBox and rendered at 350px, which
+       put all 59 labels under 9px. One wrapper carries the scroll so the inline SVG and its
+       webp fallback (the no-JS and prefers-reduced-motion path) pan identically and neither
+       path shifts the figure's height. 1300px is the width at which the smallest tier
+       (.ctr-k, 10.5px in viewBox units) crosses 11px. */
+    figure.diagram > .pan{
+      overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;scrollbar-width:thin;
+      scrollbar-color:var(--line-strong) transparent}
+    figure.diagram > .pan > .dgm{width:1300px;min-width:1300px;justify-self:start}
+    figure.diagram > .pan > .dgm svg{width:1300px;min-width:1300px;height:auto}
+    /* width is stated outright, not left to width:auto — `max-width:none` is needed to escape
+       the global img{max-width:100%}, and with both auto the 2480px asset would render at its
+       full natural width (a 2130px pan). Explicit 1300 keeps the webp path pixel-identical to
+       the SVG path above. */
+    figure.diagram > .pan > img{
+      width:1300px;min-width:1300px;max-width:none;height:auto;justify-self:start}
+
+    figure.shot.pan .ph::-webkit-scrollbar,
+    figure.diagram > .pan::-webkit-scrollbar{height:6px}
+    figure.shot.pan .ph::-webkit-scrollbar-thumb,
+    figure.diagram > .pan::-webkit-scrollbar-thumb{background:var(--line-strong);border-radius:3px}
+  }
+
   /* calm reveal — CSS transition only, no keyframes; reduced-motion safe */
   .rise{opacity:0;transform:translateY(14px);transition:opacity .6s var(--ease-out-quint),transform .6s var(--ease-out-quint)}
   .rise.in{opacity:1;transform:none}
@@ -537,6 +589,10 @@
   /* very narrow phones: drop the secondary eyebrow tag so the marker never crowds */
   @media (max-width:430px){.eyebrow .tag,.snap-head .tag{display:none}}
 </style>
+  <!-- Progressive enhancement: the .rise reveal is JS-driven (IntersectionObserver adds .in).
+       Without JS every .rise element would stay at opacity:0 and the page would render blank.
+       This restores the content as static, unanimated markup. -->
+  <noscript><style>.rise{opacity:1;transform:none;transition:none}</style></noscript>
 </head>
 <body>
 
@@ -596,7 +652,7 @@
       </ul>
     </div>
 
-    <figure class="shot hero-shot rise">
+    <figure class="shot hero-shot pan rise">
       <div class="ph" style="--ar:2880/1620">
         <img src="assets/workspace-hero.webp" alt="The Tho8 three-pane workspace on a near-black canvas: a note library and folders on the left, a note open in the center rich-text editor, and the Insights rail on the right with Outline, Backlinks, Link suggestions, Resurface, and Comments. The link suggestions and resurfaced notes each carry a one-line reason in neutral text." width="2880" height="1620" loading="eager">
         <span class="ph-spec"><span class="spec-res">2880 &times; 1620</span><span class="spec-lbl">The three-pane workspace: library, note editor, and the Insights rail</span></span>
@@ -628,6 +684,7 @@
     <div class="lead-col rise"><p class="lead">Across every interview the same loop kept breaking. People wrote the idea down, then couldn&rsquo;t find it, couldn&rsquo;t link it, or couldn&rsquo;t trust the AI that tried to help them with it.</p></div>
 
     <figure class="diagram rise">
+      <div class="pan">
       <div class="dgm dgm-problem" role="img" aria-label="The lifecycle of an idea, broken on the return. 01 Capture is alive, two taps in the lightest tool. Then the rail snaps at the handoff between a team system and a private vault, with Slack and email in between, and the later stages stay ghosted and never reached: 02 Connect breaks on title recall, 03 Retrieve takes twenty to thirty seconds then people recreate the note, and 04 Resurface is the gap nobody fills.">
         <svg viewBox="0 0 1240 392" aria-hidden="true">
           <rect class="bg" x="0" y="0" width="1240" height="392" fill="var(--paper)"/>
@@ -657,6 +714,7 @@
         </svg>
       </div>
       <img class="dgm-webp" src="assets/problem-lifecycle.webp" alt="The lifecycle of an idea, broken on the return. 01 Capture is alive, two taps in the lightest tool. Then the rail snaps at the handoff between a team system and a private vault, with Slack and email in between, and the later stages stay ghosted and never reached: 02 Connect breaks on title recall, 03 Retrieve takes twenty to thirty seconds then people recreate the note, and 04 Resurface is the gap nobody fills." width="2480" height="784" loading="lazy">
+      </div>
     </figure>
 
     <blockquote class="pull rise">
@@ -674,6 +732,7 @@
     <div class="lead-col rise"><p class="lead">Every decision had to trace back to an observation, a quote, or a measured friction point. A finding only reached the requirements if it showed up in at least two of three independent sources.</p></div>
 
     <figure class="diagram rise">
+      <div class="pan">
       <div class="dgm dgm-method" role="img" aria-label="The research method as a five-phase spine, problem discovery first and solutions last. The four discovery phases: 01 Literature Review, foundations and prior art; 02 Benchmarking, six tools across five dimensions; 03 User Interviews, six people at sixty minutes each; 04 Synthesis, ten findings and ten requirements. Then, past a divider, the lone solutions phase: 05 Design and Test, lo-fi to hi-fi across two rounds.">
         <svg viewBox="0 0 1240 392" aria-hidden="true">
           <rect class="bg" x="0" y="0" width="1240" height="392" fill="var(--paper)"/>
@@ -704,10 +763,13 @@
         </svg>
       </div>
       <img class="dgm-webp" src="assets/research-method.webp" alt="The research method as a five-phase spine, problem discovery first and solutions last. The four discovery phases: 01 Literature Review, foundations and prior art; 02 Benchmarking, six tools across five dimensions; 03 User Interviews, six people at sixty minutes each; 04 Synthesis, ten findings and ten requirements. Then, past a divider, the lone solutions phase: 05 Design and Test, lo-fi to hi-fi across two rounds." width="2480" height="784" loading="lazy">
+      </div>
     </figure>
 
     <figure class="diagram rise">
+      <div class="pan">
       <img src="assets/triangulation.webp" alt="A triangulation matrix of the six core findings against three independent sources: literature, the tool benchmark, and the interviews. Every finding surfaced in the interviews and the benchmark; the literature backed all but one, so each holds across at least two of the three sources." width="2480" height="996" loading="lazy">
+      </div>
       <figcaption><b>Six core findings, each triangulated.</b> Every one surfaced in the interviews and the benchmark; the literature backed all but one. The one-line <em>because</em>, the reason people come to trust, held across all three.</figcaption>
     </figure>
 
@@ -723,7 +785,7 @@
         <span class="t"><span class="d"></span>Resurface: the gap nobody fills</span>
         <span class="t"><span class="d"></span>Trust: evidence, or it is ignored</span>
       </div>
-      <figure class="shot artifact">
+      <figure class="shot artifact pan">
         <div class="ph" style="--ar:2560/1300">
           <img src="assets/benchmark-grid.webp" alt="The competitive benchmark grid: six networked-note tools, Obsidian, Notion, Logseq, Tana, Mem, and Readwise, assessed across five dimensions, capture, connection, retrieval, resurfacing, and trust, with a short verdict on each." width="2560" height="1300" loading="lazy">
           <span class="ph-spec"><span class="spec-res">2560 &times; 1600</span><span class="spec-lbl">Six tools assessed across five dimensions, with a verdict per cell</span></span>
@@ -746,7 +808,9 @@
     <div class="lead-col rise"><p class="lead">Sixty minutes each, screen-sharing their real vaults, thinking aloud through four task probes in the tools they already use: make two notes relate, find a note they could not name, judge what else on the page they would trust, and explain why two things belonged together. No hypotheticals. Every observation traces to a real moment of friction.</p></div>
 
     <figure class="diagram rise">
+      <div class="pan">
       <img src="assets/people-roster.webp" alt="Six anonymized research participants with six different setups, all converging on one shared finding. 01 Doctoral student, deep research vault; 02 Master's student, local Markdown vault; 03 Master's student, Logseq and journals first; 04 Product Manager, meeting to memory; 05 Strategy Consultant, careful with sources; 06 Senior UX Researcher, evidence over recall. The one friction all six shared: linking by title recall." width="2480" height="784" loading="lazy">
+      </div>
     </figure>
 
     <figure class="shot artifact rise">
@@ -776,6 +840,7 @@
     <div class="lead-col rise"><p class="lead">When we asked what would make you trust this suggestion, participants ranked evidence types in a strikingly consistent order. I turned that order into the design of every AI surface in Tho8.</p></div>
 
     <figure class="diagram rise">
+      <div class="pan">
       <div class="dgm dgm-trust" role="img" aria-label="The trust ladder, four evidence types ranked by what earns a click. Three earn a click: 01 A shared source, both notes cite the same paper; 02 A two-hop path, A to B to C, a route you can follow; 03 A specific term, a non-generic phrase they share. Then a cut-line, and past it 04 Tags or recency, weak and easy to distrust, is dismissed.">
         <svg viewBox="0 0 1240 392" aria-hidden="true">
           <rect class="bg" x="0" y="0" width="1240" height="392" fill="var(--paper)"/>
@@ -802,6 +867,7 @@
         </svg>
       </div>
       <img class="dgm-webp" src="assets/trust-ladder.webp" alt="The trust ladder, four evidence types ranked by what earns a click. Three earn a click: 01 A shared source, both notes cite the same paper; 02 A two-hop path, A to B to C, a route you can follow; 03 A specific term, a non-generic phrase they share. Then a cut-line, and past it 04 Tags or recency, weak and easy to distrust, is dismissed." width="2480" height="784" loading="lazy">
+      </div>
     </figure>
 
     <div class="because rise">
@@ -823,6 +889,7 @@
     <div class="lead-col rise"><p class="lead">Knowledge work isn&rsquo;t a funnel. It is four nested loops that reinforce each other, and each one has an effort threshold people walk away from the moment you cross it. If any loop breaks, the whole thing feels broken.</p></div>
 
     <figure class="diagram rise">
+      <div class="pan">
       <div class="dgm dgm-loops" role="img" aria-label="The four loops of knowledge work on one spine, closed into a cycle, not a funnel: 01 Capture (don't lose it, in one keystroke), 02 Connect (link by meaning, not titles), 03 Retrieve (find it in thirty seconds or less), and 04 Resurface (right idea, right moment). An ember return arc loops from Resurface back to Capture around a three-pane shell labelled one shell, eight surfaces, one workspace.">
         <svg viewBox="0 0 1240 392" aria-hidden="true">
           <rect class="bg" x="0" y="0" width="1240" height="392" fill="var(--paper)"/>
@@ -863,6 +930,7 @@
         </svg>
       </div>
       <img class="dgm-webp" src="assets/loops-cycle.webp" alt="The four loops of knowledge work on one spine, closed into a cycle, not a funnel: 01 Capture (don't lose it, in one keystroke), 02 Connect (link by meaning, not titles), 03 Retrieve (find it in thirty seconds or less), and 04 Resurface (right idea, right moment). An ember return arc loops from Resurface back to Capture around a three-pane shell labelled one shell, eight surfaces, one workspace." width="2480" height="784" loading="lazy">
+      </div>
     </figure>
 
     <div class="surface-note rise">
@@ -997,7 +1065,9 @@
     </div>
 
     <figure class="diagram rise">
+      <div class="pan">
       <img src="assets/honesty-ledger.webp" alt="A two-sided honesty ledger. What I can prove: designed and coded it solo, React and Supabase end to end; ran the research, six interviews, a six-tool benchmark, two test rounds; audited my own build, 6.5 out of 10, my own score. What I won't claim: that anyone used it, no adoption and no active users; any before-and-after number, six people find confusion, not a lift." width="2480" height="784" loading="lazy">
+      </div>
     </figure>
 
     <div class="ledger-note rise">

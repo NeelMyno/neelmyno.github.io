@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Page not found · Neel Tengariya</title>
+    <meta name="robots" content="noindex">
+    <link rel="shortcut icon" href="/images/web/favicon_32x32.png" type="image/x-icon">
+    <link rel="apple-touch-icon" href="/images/web/webclip_256x256.png">
+
+    <!-- GitHub Pages serves this file from the site root for EVERY missing route,
+         including nested ones like /tho8/typo/, and it does not redirect: the
+         browser's address stays on the nested path. Relative URLs would therefore
+         resolve against that path and 404 in turn, so every href and every asset
+         URL on this page is site-absolute or fully qualified. Verified against the
+         live site: /tho8/typo/ returns 404 with url_effective unchanged. -->
+
+    <style>
+        /* Inter Display is the site face. Both @font-face rules are copied verbatim
+           from css/index_mini.css so this page matches the rest of the site without
+           pulling the 100KB stylesheet. Only the two weights used here: 400 body,
+           500 headings. Absolute URLs, so they resolve from any nested path. */
+        @font-face {
+            font-family: "Inter Display";
+            src: url("https://assets.website-files.com/6279077bf697b924fac6e205/636dfe8261df29a8a191ebc6_Inter-Display.woff2") format("woff2");
+            font-weight: 400;
+            font-style: normal;
+            font-display: swap
+        }
+
+        @font-face {
+            font-family: "Inter Display";
+            src: url("https://assets.website-files.com/6279077bf697b924fac6e205/636dfea99b355b7be24afc55_Inter-DisplayMedium.woff2") format("woff2");
+            font-weight: 500;
+            font-style: normal;
+            font-display: swap
+        }
+
+        *,
+        *::before,
+        *::after { box-sizing: border-box }
+
+        html { height: 100%; -webkit-text-size-adjust: 100% }
+
+        /* Canvas, ink and type all lifted from index_mini.css `body`. Font smoothing
+           is deliberately NOT set: the site leaves it at the browser default, and
+           forcing antialiased here would render this page lighter than every other. */
+        body {
+            margin: 0;
+            min-height: 100%;
+            background-color: #fff;
+            color: #11181c;
+            font-family: "Inter Display", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+            font-size: 16px;
+            line-height: 1.2;
+        }
+
+        .page {
+            min-height: 100vh;
+            min-height: 100svh;
+            display: flex;
+            align-items: center;
+            padding: 64px 24px;
+        }
+
+        .wrap { width: 100%; max-width: 620px; margin: 0 auto }
+
+        /* Matches .legal-text h1, the site's own text-page heading. */
+        h1 {
+            margin: 0;
+            font-size: 48px;
+            line-height: 1.1;
+            font-weight: 500;
+            letter-spacing: -.015em;
+        }
+
+        /* Matches .request-form-description, the site's secondary copy. */
+        .sub {
+            max-width: 44ch;
+            margin: 16px 0 0;
+            color: #687076;
+            font-size: 17px;
+            line-height: 1.375;
+            letter-spacing: .01em;
+        }
+
+        /* Hairline rows, borrowed from the site's .faq-item pattern. */
+        .routes {
+            margin: 40px 0 0;
+            padding: 0;
+            list-style: none;
+            border-top: 1px solid #e6e8eb;
+        }
+
+        .routes li { border-bottom: 1px solid #e6e8eb }
+
+        .routes a {
+            display: flex;
+            align-items: baseline;
+            gap: 16px;
+            padding: 14px 2px;
+            color: #11181c;
+            text-decoration: none;
+            font-size: 17px;
+            line-height: 1.4;
+            letter-spacing: .01em;
+        }
+
+        .name {
+            flex: 0 0 auto;
+            min-width: 184px;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        .desc { color: #687076 }
+
+        .routes a:hover .name {
+            text-decoration: underline;
+            text-underline-offset: 3px;
+        }
+
+        /* Same ring the case studies use, with this page's ink. */
+        .routes a:focus-visible {
+            outline: 2.5px solid #11181c;
+            outline-offset: 3px;
+            border-radius: 3px;
+        }
+
+        /* Site breakpoints: 767px and 479px. Stacking the row before the two
+           columns can collide is what keeps horizontal overflow at zero. */
+        @media screen and (max-width:767px) {
+            h1 { font-size: 40px }
+
+            .routes a {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 4px;
+            }
+
+            .name {
+                min-width: 0;
+                white-space: normal;
+            }
+        }
+
+        @media screen and (max-width:479px) {
+            .page { padding: 48px 20px }
+
+            h1 { font-size: 32px }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="page">
+        <main class="wrap">
+            <h1>This page doesn't exist.</h1>
+            <p class="sub">The link may be old, or the address may have a typo.</p>
+
+            <ul class="routes">
+                <li><a href="/"><span class="name">Home</span></a></li>
+                <li><a href="/tho8/"><span class="name">Tho8</span><span class="desc">a thinking tool that shows
+                            its work</span></a></li>
+                <li><a href="/pataa/"><span class="name">Pataa</span><span class="desc">a trustable address for the
+                            last mile</span></a></li>
+                <li><a href="/lumen/"><span class="name">Lumen</span><span class="desc">Warp's design system built to
+                            be read by AI</span></a></li>
+                <li><a href="/tms/"><span class="name">Warp TMS</span><span class="desc">a free operator TMS for
+                            small shippers</span></a></li>
+                <li><a href="/warp-tracking/"><span class="name">Tracking Page</span><span class="desc">an
+                            honest-states engine for Warp freight tracking</span></a></li>
+                <li><a href="/big-bulky/"><span class="name">Warp Big &amp; Bulky</span><span class="desc">a real
+                            delivery date inside Shopify checkout</span></a></li>
+            </ul>
+        </main>
+    </div>
+</body>
+
+</html>

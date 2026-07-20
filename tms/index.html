@@ -627,6 +627,49 @@
   figure.shot figcaption{width:100%;margin-top:var(--s4);font-size:var(--fs-sm);line-height:1.55;color:var(--ink-2c);max-width:64ch}
   figure.shot figcaption b{color:var(--ink-hi);font-weight:600;display:block;font-family:var(--wide);font-size:1rem;margin-bottom:2px;letter-spacing:-.01em}
 
+  /* ---- mobile: the wide desktop screens become a horizontal pan ----------------
+     Below 640px the content column is ~348px and every figure.shot is a 2880px-wide
+     desktop screen, so the console, the shipments table and the mapping brain render
+     at 0.12x - a recruiter on a phone cannot read the thing that IS the evidence.
+     So the frame becomes a scroller: the image renders at --panw and the reader pans.
+     The 6px hairline scrollbar is the affordance, not decoration - keep it. Measured
+     caveat: on overlay-scrollbar platforms (iOS, default macOS) it is painted only
+     while the pan is moving, so at rest the reader's cue is the artwork running hard
+     off the frame's right edge. --panw defaults to 1040px, which is exactly the width these
+     figures get on a 1440 desktop, so a phone reader can pan to the same scale a
+     desktop reader sees; there is no gain past that and the pan stays ~2 swipes.
+     The left edge MUST stay reachable at scrollLeft:0. The base .ph centres its
+     children, and a centred over-wide child starts at a negative offset no scroll
+     position can reach. display:block is what actually removes that risk here: a
+     block scroll container has no centring to defeat, and it is measured reachable
+     (left gap +1px at scrollLeft 0, right gap -1px at max - the 1px .ph border).
+     The start-alignment trio below is the belt-and-braces if that display ever
+     changes; do not drop display:block and rely on it alone - measured on Chromium
+     149, a grid .ph with place-items:center strands the left edge even when the
+     image carries justify-self:start.
+     The four figure.st state strips are deliberately left alone - their job is
+     at-a-glance comparison across the set, which per-strip panning would defeat.
+     Everything here is inside the query; desktop renders byte-for-byte as before. */
+  @media (max-width:640px){
+    figure.shot .ph{
+      aspect-ratio:auto !important;height:auto;display:block;
+      overflow-x:auto;overflow-y:hidden;overscroll-behavior-x:contain;
+      -webkit-overflow-scrolling:touch;scrollbar-width:thin;
+      scrollbar-color:var(--line-strong) transparent}
+    figure.shot .ph img{
+      position:relative;inset:auto;width:auto;height:auto;
+      min-width:var(--panw,1040px);object-fit:unset;border-radius:0;
+      display:block;margin-inline:0;justify-self:start;align-self:flex-start}
+    /* the res/label pair is the pre-load fallback: keep it centred in the frame now
+       that the image sits in normal flow instead of absolutely covering the box */
+    figure.shot .ph .ph-res,figure.shot .ph .ph-lab{
+      position:absolute;left:50%;transform:translateX(-50%);max-width:100%}
+    figure.shot .ph .ph-res{top:38%}
+    figure.shot .ph .ph-lab{top:52%}
+    figure.shot .ph::-webkit-scrollbar{height:6px}
+    figure.shot .ph::-webkit-scrollbar-thumb{background:var(--line-strong);border-radius:3px}
+  }
+
   /* ================= scenario / big context figure ================= */
   .scene{grid-column:1/-1;margin-top:var(--s8);border-top:1px solid var(--line-1);border-bottom:1px solid var(--line-1);padding:var(--s7) 0;display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:clamp(24px,4vw,56px);align-items:center}
   @media (max-width:820px){.scene{grid-template-columns:1fr;gap:var(--s6)}}
@@ -822,6 +865,10 @@
   .nav-logo img{filter:invert(1)}  /* the black wordmark reads white on the dark band (verify the white asset on deploy) */
   .st figcaption .stn{display:block;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3);font-weight:600;margin-bottom:2px}
 </style>
+  <!-- Progressive enhancement: the .rise reveal is JS-driven (IntersectionObserver adds .in).
+       Without JS every .rise element would stay at opacity:0 and the page would render blank.
+       This restores the content as static, unanimated markup. -->
+  <noscript><style>.rise{opacity:1;transform:none;transition:none}</style></noscript>
 </head>
 <body>
 
@@ -1305,7 +1352,7 @@
     </div>
 
     <figure class="shot rise">
-      <div class="ph" style="--ar:2880/2200">
+      <div class="ph" style="--ar:2880/2200;--panw:1000px">
         <img src="assets/lane-map.webp" alt="The lane-corridor map after the fix: a dark map of the United States with lane arcs bowed by distance so short in-state lanes read as gentle curves rather than stubs, and filled circular nodes marking lanes that begin and end in the same zip." width="2880" height="2200" loading="lazy">
         <span class="ph-res num">2880 &times; 2200</span>
         <span class="ph-lab">Lanes &middot; the corridor map, after the fix</span>

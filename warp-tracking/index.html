@@ -378,6 +378,10 @@
     figure.shot.wide.montage:hover .ph{transform:none;box-shadow:var(--shadow-photo)}
   }
 </style>
+  <!-- Progressive enhancement: the .rise reveal is JS-driven (IntersectionObserver adds .in).
+       Without JS every .rise element would stay at opacity:0 and the page would render blank.
+       This restores the content as static, unanimated markup. -->
+  <noscript><style>.rise{opacity:1;transform:none;transition:none}</style></noscript>
 </head>
 <body>
 
