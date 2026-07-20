@@ -625,9 +625,21 @@
      which is a plain block with justify-items:normal and showed no offset either way.
 
      Deliberately NOT included: .collage .duo .frame.phone (hero-mobile, a portrait 810x1495
-     phone screenshot already drawn at ~0.43, which is roughly life size) and .sheet .st (the
-     eight contact-sheet tiles, an index of the surfaces rather than a reading surface, each
-     with its full-size counterpart in the template plates below). */
+     phone screenshot already drawn at ~0.43, which is roughly life size) and the four
+     contact-sheet tiles whose surfaces have a full-size counterpart elsewhere on the page
+     (Foundations -> the hero collage; SaaS/Commerce/Mobile -> the template plates).
+
+     Corrected 2026-07-20: the earlier version of this note claimed ALL eight tiles had
+     full-size counterparts below. False for four of them - Landing, Tool, Desktop and
+     Library exist NOWHERE else on the page, so at a 2-up 167px tile (0.149 of natural)
+     those four surfaces had no readable form on a phone at all. Fix: below 620px the
+     sheet goes single column, and those four tiles (.st.pan) take the same pan treatment
+     as every other wide figure here, at their natural 1120px (their baked-in scale from
+     the 2880px renders puts the smallest caps labels at ~10px there - the same target as
+     the min-widths above; wider would upscale and blur). The four with counterparts stay
+     cover-crop thumbnails: their reading surface exists elsewhere, and an index tile that
+     pans while a sibling doesn't is acceptable asymmetry only where the pan is the ONLY
+     form that surface has. */
   @media (max-width:620px){
     .collage .frame.band,
     .collage .duo .frame:not(.phone),
@@ -661,6 +673,22 @@
     figure.plate .ph.real > img[src$="template-saas.webp"]{min-width:1250px}      /* 2400w, 21px -> 10.9px */
     figure.plate .ph.real > img[src$="template-commerce.webp"]{min-width:1250px}  /* 2400w, 20px -> 10.4px */
     figure.plate .ph.real > img[src$="template-mobile.webp"]{min-width:1050px}    /* 2000w, two phones at ~0.53, near life size */
+
+    /* The contact sheet on a phone: one column (a 167px tile is a smudge, not an
+       index), and the four orphan tiles pan at natural size - see the note above.
+       min-width:0 on the figures is the same automatic-minimum fix as .pair below:
+       without it the pan img's 1120px min-content propagates into the single 1fr
+       track and inflates EVERY tile to 1120px, scrolling the whole page sideways. */
+    .sheet{grid-template-columns:1fr}
+    .sheet > figure{min-width:0}
+    .sheet .st.pan{
+      aspect-ratio:auto;height:auto;
+      overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;
+      scrollbar-width:thin;scrollbar-color:var(--line-strong) transparent}
+    .sheet .st.pan img{
+      width:auto;height:auto;object-fit:unset;min-width:1120px} /* natural; ~10px caps labels */
+    .sheet .st.pan::-webkit-scrollbar{height:6px}
+    .sheet .st.pan::-webkit-scrollbar-thumb{background:var(--line-strong);border-radius:3px}
   }
 
   /* ============================================================
@@ -1091,13 +1119,13 @@
       <div class="show-head rise"><span>The system, end to end</span><span class="rule"></span><span>Eight surfaces, one language</span></div>
       <div class="sheet rise">
         <figure><div class="st"><img src="assets/tile-foundations.webp" alt="Lumen Foundations reference surface" width="1120" height="700" loading="lazy" decoding="async"></div><figcaption><span class="idx">01</span> Foundations</figcaption></figure>
-        <figure><div class="st"><img src="assets/tile-landing.webp" alt="Lumen Marketing and Landing surface" width="1120" height="700" loading="lazy" decoding="async"></div><figcaption><span class="idx">02</span> Landing</figcaption></figure>
+        <figure><div class="st pan"><img src="assets/tile-landing.webp" alt="Lumen Marketing and Landing surface" width="1120" height="700" loading="lazy" decoding="async"></div><figcaption><span class="idx">02</span> Landing</figcaption></figure>
         <figure><div class="st"><img src="assets/tile-saas.webp" alt="Lumen SaaS Dashboard surface" width="1120" height="700" loading="lazy" decoding="async"></div><figcaption><span class="idx">03</span> SaaS</figcaption></figure>
-        <figure><div class="st"><img src="assets/tile-tool.webp" alt="Lumen Web Tool surface" width="1120" height="700" loading="lazy" decoding="async"></div><figcaption><span class="idx">04</span> Tool</figcaption></figure>
+        <figure><div class="st pan"><img src="assets/tile-tool.webp" alt="Lumen Web Tool surface" width="1120" height="700" loading="lazy" decoding="async"></div><figcaption><span class="idx">04</span> Tool</figcaption></figure>
         <figure><div class="st"><img src="assets/tile-commerce.webp" alt="Lumen Commerce storefront surface" width="1120" height="700" loading="lazy" decoding="async"></div><figcaption><span class="idx">05</span> Commerce</figcaption></figure>
         <figure><div class="st"><img src="assets/tile-mobile.webp" alt="Lumen Mobile surface, iOS and Android" width="1120" height="700" loading="lazy" decoding="async"></div><figcaption><span class="idx">06</span> Mobile</figcaption></figure>
-        <figure><div class="st"><img src="assets/tile-desktop.webp" alt="Lumen Native Desktop surface, macOS and Windows" width="1120" height="700" loading="lazy" decoding="async"></div><figcaption><span class="idx">07</span> Desktop</figcaption></figure>
-        <figure><div class="st"><img src="assets/tile-library.webp" alt="Lumen component Library surface" width="1120" height="700" loading="lazy" decoding="async"></div><figcaption><span class="idx">08</span> Library</figcaption></figure>
+        <figure><div class="st pan"><img src="assets/tile-desktop.webp" alt="Lumen Native Desktop surface, macOS and Windows" width="1120" height="700" loading="lazy" decoding="async"></div><figcaption><span class="idx">07</span> Desktop</figcaption></figure>
+        <figure><div class="st pan"><img src="assets/tile-library.webp" alt="Lumen component Library surface" width="1120" height="700" loading="lazy" decoding="async"></div><figcaption><span class="idx">08</span> Library</figcaption></figure>
       </div>
       <figure class="plate full rise" style="margin-top:var(--s6)">
         <figcaption><b>Eight surfaces, one system.</b> Foundations, Landing, SaaS, Tool, Commerce, Mobile, Desktop, and Library, all speaking the same language at very different densities.</figcaption>
