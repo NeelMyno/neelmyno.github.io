@@ -185,12 +185,17 @@
      sat 1.55px under the nav on mobile. Measured on all three case studies. */
   @media (max-width:767px){ body{ padding-top:55px } }
 
+  .cta--nav .cta-label-short{display:none}
   @media screen and (max-width:767px){
     .nav .page-padding{padding-right:20px;padding-left:20px}
     .nav-inner{justify-content:space-between}
     .nav-logo{position:static;margin-left:0;padding-left:0}
-    .nav-menu{display:none}
-    .nav .cta.cta--nav{position:static;margin-right:0;font-size:15px}
+    .nav-menu{display:flex;align-items:center}
+    .nav-menu .nav-link{display:none}
+    /* Option A (2026-07-20): the one link a phone recruiter needs stays visible, 44px hit area */
+    .nav .cta.cta--nav{position:static;margin-right:0;font-size:16px;min-height:44px;display:flex;align-items:center;padding:10px 2px 10px 12px}
+    .cta--nav .cta-label-full{display:none}
+    .cta--nav .cta-label-short{display:inline}
   }
   /* [PAGE-CUSTOM] page-matched nav: tint the reused white site header to Tho8's light editorial canvas + ember CTA (Neel's page-matched-nav call) */
   .nav{background-color:rgba(245,247,250,.8)}
@@ -279,6 +284,16 @@
   /* ============ generic section heads ============ */
   .s-head{grid-column:1/-1;max-width:24ch;margin-bottom:var(--s5)}
   .lead-col{grid-column:1 / span 8;margin-bottom:var(--s5)}
+/* 0036: margin pull-notes. The long leads span cols 1-8 and left cols 9-12 empty for a
+   full viewport; the aside promotes the lead's load-bearing fact into the eye path,
+   the editorial pattern the kickers already use. Never new claims, only promotion. */
+.mnote{grid-column:10/-1;align-self:start;border-top:2px solid var(--ink);padding-top:12px;font-size:var(--fs-sm);color:var(--ink-dim);line-height:1.5}
+.mnote .k{display:block;font-size:var(--fs-micro);letter-spacing:.14em;text-transform:uppercase;font-weight:800;color:var(--accent-ink,var(--accent));margin-bottom:8px}
+.mnote .big{display:block;font-family:var(--wide,inherit);font-weight:800;font-size:clamp(1.6rem,2.6vw,2.2rem);letter-spacing:-.02em;color:var(--ink);line-height:1.05;margin-bottom:6px}
+.mnote ul{margin:0;padding:0;list-style:none}
+.mnote li{padding:5px 0;border-bottom:1px solid var(--line)}
+.mnote li:last-child{border-bottom:0}
+@media (max-width:900px){.mnote{grid-column:1/-1;border-top-width:1.5px;margin-bottom:var(--s5)}}
   @media (max-width:920px){.lead-col{grid-column:1/-1}}
   .prose{grid-column:1 / span 7}
   @media (max-width:920px){.prose{grid-column:1/-1}}
@@ -526,6 +541,10 @@
   .colophon .note dd{margin:0;font-size:var(--fs-sm);color:var(--ink);font-weight:600;text-align:right}
   .colophon .note dd .u{display:inline-block;width:10px;height:10px;background:var(--accent);vertical-align:baseline;margin-left:6px}
   .backlink{grid-column:1/-1;display:inline-flex;align-items:center;gap:.5rem;margin-top:var(--s6);font-size:var(--fs-sm);color:var(--ink-dim);text-decoration:none;font-weight:700}
+  .colo-nav{grid-column:1/-1;margin-top:var(--s6);display:flex;justify-content:space-between;align-items:baseline;gap:18px;flex-wrap:wrap}
+  .colo-nav .backlink{margin-top:0}
+  .nextlink{display:inline-flex;align-items:center;gap:.5rem;font-size:var(--fs-sm);color:var(--ink);text-decoration:none;font-weight:700}
+  .nextlink:hover{text-decoration:underline}
   .backlink:hover{color:var(--ink)}
 
   /* ============ [P17 · phone] pan the wide artwork instead of shrinking it ============
@@ -610,7 +629,7 @@
           <a href="/#experience" class="nav-link">Experience</a>
           <a href="/" class="nav-link">About</a>
           <a href="/resume/neel_tengariya_resume.pdf" class="cta cta--nav w-inline-block" download>
-            <div>Download Resume</div>
+            <div><span class="cta-label-full">Download Resume</span><span class="cta-label-short">Resume</span></div>
             <div class="cta-chevron w-embed"><svg width="7" height="10" xmlns="http://www.w3.org/2000/svg"><path d="M1.566.434 6.131 5 1.566 9.566.434 8.434 3.869 5 .434 1.566z" fill="currentColor" /></svg></div>
           </a>
         </div>
@@ -730,6 +749,7 @@
     <div class="eyebrow rise"><span class="num"><i>^</i>02</span> <span class="lbl">Research</span> <span class="rule"></span><span class="tag">Two semesters, five phases</span></div>
     <h2 class="title s-head rise" id="research-h">I started with the problem, not a solution.</h2>
     <div class="lead-col rise"><p class="lead">Every decision had to trace back to an observation, a quote, or a measured friction point. A finding only reached the requirements if it showed up in at least two of three independent sources.</p></div>
+    <aside class="mnote rise" aria-hidden="true"><span class="k">The rule</span><span class="big">2 of 3</span>independent sources, before a finding became a requirement.</aside>
 
     <figure class="diagram rise">
       <div class="pan">
@@ -806,6 +826,7 @@
     <div class="eyebrow rise"><span class="num"><i>^</i>03</span> <span class="lbl">The people</span> <span class="rule"></span><span class="tag">Six setups, one story</span></div>
     <h2 class="title s-head rise" id="people-h">Six people, and the same story each time.</h2>
     <div class="lead-col rise"><p class="lead">Sixty minutes each, screen-sharing their real vaults, thinking aloud through four task probes in the tools they already use: make two notes relate, find a note they could not name, judge what else on the page they would trust, and explain why two things belonged together. No hypotheticals. Every observation traces to a real moment of friction.</p></div>
+    <aside class="mnote rise" aria-hidden="true"><span class="k">The four probes</span><ul><li>Make two notes relate</li><li>Find a note they could not name</li><li>Judge what they would trust</li><li>Explain why two belong together</li></ul></aside>
 
     <figure class="diagram rise">
       <div class="pan">
@@ -821,10 +842,7 @@
       <figcaption><span class="fn-tag"><span class="u" aria-hidden="true"></span>How we recruited</span><b>The real screener, not a description of one.</b> Nine questions to find six people who live in their notes. The last one, describe the last time you tried to find an old note, is the whole problem in a single line.</figcaption>
     </figure>
 
-    <blockquote class="pull small rise">
-      <q>If I type a phrase the system should propose a handful of precise candidates with a short because.</q>
-      <div class="attr"><span class="u" aria-hidden="true"></span> A participant, on how linking should feel.</div>
-    </blockquote>
+    <!-- 0036 edit: quote removed; its trust-evidence point is carried by the "citation match" quote beside the trust ladder. -->
     <blockquote class="pull small rise">
       <q>I never tag on the phone. It slows me down.</q>
       <div class="attr"><span class="u" aria-hidden="true"></span> A participant, on the front door.</div>
@@ -1025,10 +1043,7 @@
       <p>In the first build the graph rendered a black screen and crashed the app. <b>I found it in my own audit</b>, and wrapped the graph view in an error boundary with a real fallback, a &ldquo;Graph view crashed&rdquo; message with a way back to your notes, instead of a dead screen. The crash became a caught, recoverable state, not a patch.</p>
     </div>
 
-    <blockquote class="pull small rise">
-      <q>The global graph is too chaotic for me &hellip; Local graph plus backlinks is enough.</q>
-      <div class="attr"><span class="u" aria-hidden="true"></span> A participant, on the global graph, and why Backlinks carry the load.</div>
-    </blockquote>
+    <!-- 0036 edit: quote removed; the section intro already states the full-graph-overwhelmed finding in its own words. -->
 
     <div class="surface-note rise">
       <p><b>From the graph rail, Explore Related Thinking.</b> Select a note and it grows ideas from that note and its neighbors, each a card with a title, a one-line summary, and one button to turn it into a note. It reads as connecting what you already wrote, not conjuring something new.</p>
@@ -1138,7 +1153,10 @@
       <div class="brand">Tho8<span class="p">.</span></div>
       <p><b>Tho8, also ZettelKraft.</b> An MS-HCDE capstone at the University of Michigan by <b>Luhmann&rsquo;s Quorum</b>, a two-person team with <a href="https://www.linkedin.com/in/ruhivadsariya/" target="_blank" rel="noopener">Ruhi Vadsariya</a>, advised by Prof. Sang-Hwan Kim. Ruhi partnered on the research, ideation, evaluation, and testing; the design and the product build were mine. I designed the product and the system and shipped the working full-stack app in React and Supabase, directing the AI that wrote most of the code.</p>
       <p class="fine">Type is Manrope on a twelve-column grid. Orange appears once here, the product&rsquo;s Ember accent, borrowed as the single editorial signal; in the app itself Ember is the brand and a violet marks the AI. Screens and diagrams are clean recreations of the real work; the interview screener is the real Google Form, one email blurred.</p>
-      <a class="backlink" href="/">&larr; Back to portfolio</a>
+      <div class="colo-nav">
+        <a class="backlink" href="/">&larr; Back to portfolio</a>
+        <a class="nextlink" href="/lumen/">Next case study: Lumen &rarr;</a>
+      </div>
     </div>
     <div class="note rise">
       <dl>

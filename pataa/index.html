@@ -177,12 +177,17 @@
      sat 1.55px under the nav on mobile. Measured on all three case studies. */
   @media (max-width:767px){ body{ padding-top:55px } }
 
+  .cta--nav .cta-label-short{display:none}
   @media screen and (max-width:767px){
     .nav .page-padding{padding-right:20px;padding-left:20px}
     .nav-inner{justify-content:space-between}
     .nav-logo{position:static;margin-left:0;padding-left:0}
-    .nav-menu{display:none}
-    .nav .cta.cta--nav{position:static;margin-right:0;font-size:15px}
+    .nav-menu{display:flex;align-items:center}
+    .nav-menu .nav-link{display:none}
+    /* Option A (2026-07-20): the one link a phone recruiter needs stays visible, 44px hit area */
+    .nav .cta.cta--nav{position:static;margin-right:0;font-size:16px;min-height:44px;display:flex;align-items:center;padding:10px 2px 10px 12px}
+    .cta--nav .cta-label-full{display:none}
+    .cta--nav .cta-label-short{display:inline}
   }
   /* [PAGE-CUSTOM] page-matched nav: warm the reused white site header to Pataa's cream canvas + amber CTA (Neel's page-matched-nav call) */
   .nav{background-color:rgba(244,242,235,.8)}
@@ -207,6 +212,9 @@
   @media (max-width:920px){.cover-copy{grid-column:1/-1}.cover-figs{grid-column:1/-1;margin-top:var(--s8);justify-self:start}}
   .cover-kicker{margin-bottom:var(--s7)}
   .cover-h1{font-family:var(--wide);font-weight:800;font-size:var(--fs-display);line-height:.98;letter-spacing:-.035em;color:var(--ink-2);margin:0 0 var(--s5)}
+/* 0036: cap the hero size so "that gets you" holds one line in the 590px column; at the
+   old cap the middle line broke and left a single word stranded (the rag Neel flagged). */
+.cover-h1{font-size:min(var(--fs-display),5.5rem)}
   .cover-h1 .l2{color:var(--ink);display:block} /* display:block so each clause balances on its own: Chromium abandons text-wrap:balance on a block containing a forced <br>, which made the balance on .cover-h1 a no-op and orphaned "mile." Keeps Neel's <br> composition. */
   .cover-lead{font-size:var(--fs-lead);line-height:1.4;font-weight:450;color:var(--ink);max-width:40ch;margin:0 0 var(--s6)}
   .cover-lead .em{font-weight:700}
@@ -252,8 +260,13 @@
   .snip img{height:auto;border-radius:12px;filter:drop-shadow(0 10px 22px rgba(20,18,12,.13))}
 
   /* ============ UI-SHOWCASE MONTAGE (real composited app screens, full grid width, true aspect ratio) ============ */
-  .montage{grid-column:1/-1;width:100%;margin:var(--s7) 0 0}
-  .montage img{width:100%;height:auto;display:block}
+  .montage{grid-column:1/-1;width:100%;margin:var(--s7) 0 0;max-height:72vh;overflow:hidden;position:relative}
+.montage img{width:100%;height:auto;display:block;margin-top:-6%}
+/* 0036: the full-height montage ran ~2.5 viewports of unreadable texture; one contained
+   band keeps the every-screen breadth without the scroll cost. A soft fade closes the crop
+   honestly instead of a hard slice. */
+.montage::after{content:"";position:absolute;left:0;right:0;bottom:0;height:120px;background:linear-gradient(to bottom,rgba(244,242,235,0),var(--paper))}
+@media (max-width:640px){.montage{max-height:60vh}}
   /* On a phone the landscape montage collapses into the ~350px content column: a 1660px
      surface at 21% of native, where every screen label is a smudge. This figure IS the
      evidence of the work, so it gets the house pan-to-read treatment (ported from
@@ -354,6 +367,7 @@
 
   /* people - three clean cards, one need each (photos, not app UI) */
   .people{grid-column:1/-1;display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(20px,3vw,36px);margin-top:var(--s7)}
+.people-note{grid-column:1/-1;margin-top:14px;font-size:var(--fs-micro);letter-spacing:.04em;color:var(--ink-faint);font-weight:600}
   @media (max-width:820px){.people{grid-template-columns:1fr;max-width:24rem}}
   .person{}
   .person .pf{position:relative;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--paper-3)}
@@ -530,6 +544,10 @@
   .colophon .note dd{margin:0;font-size:var(--fs-sm);color:var(--ink);font-weight:600;text-align:right}
   .colophon .note dd .u{display:inline-block;width:10px;height:10px;background:var(--amber);vertical-align:baseline;margin-left:6px}
   .backlink{grid-column:1/-1;display:inline-flex;align-items:center;gap:.5rem;margin-top:var(--s7);font-size:var(--fs-sm);color:var(--ink-dim);text-decoration:none;font-weight:700}
+  .colo-nav{grid-column:1/-1;margin-top:var(--s7);display:flex;justify-content:space-between;align-items:baseline;gap:18px;flex-wrap:wrap}
+  .colo-nav .backlink{margin-top:0}
+  .nextlink{display:inline-flex;align-items:center;gap:.5rem;font-size:var(--fs-sm);color:var(--ink);text-decoration:none;font-weight:700}
+  .nextlink:hover{text-decoration:underline}
   .backlink:hover{color:var(--ink)}
 
   /* calm reveal - CSS transition only, no keyframes; reduced-motion safe */
@@ -574,7 +592,7 @@
           <a href="/#experience" class="nav-link">Experience</a>
           <a href="/" class="nav-link">About</a>
           <a href="/resume/neel_tengariya_resume.pdf" class="cta cta--nav w-inline-block" download>
-            <div>Download Resume</div>
+            <div><span class="cta-label-full">Download Resume</span><span class="cta-label-short">Resume</span></div>
             <div class="cta-chevron w-embed"><svg width="7" height="10" xmlns="http://www.w3.org/2000/svg"><path d="M1.566.434 6.131 5 1.566 9.566.434 8.434 3.869 5 .434 1.566z" fill="currentColor" /></svg></div>
           </a>
         </div>
@@ -598,7 +616,7 @@
   <div class="wrap grid12">
     <div class="cover-copy">
       <p class="kicker cover-kicker rise"><span class="caret" aria-hidden="true">^</span> Pataa Navigations &middot; 2022 redesign &middot; Android + iOS</p>
-      <h1 class="cover-h1 rise">An address that gets you<br><span class="l2">to the door.</span></h1>
+      <h1 class="cover-h1 rise">An address<br>that gets you<br><span class="l2">to the door.</span></h1>
       <p class="cover-lead rise">In most of India a written address points at an <span class="em">area</span>, not a place. Pataa gives any spot a short, memorable code that resolves to a single 3&nbsp;by&nbsp;3 metre block, then lets a person explain the last stretch in their own voice.</p>
       <div class="appget rise">
         <p class="appget-lab"><span class="caret" aria-hidden="true">^</span> Get the app</p>
@@ -807,6 +825,9 @@
         <p class="nd"><b>Needs to hear the way in his own language.</b> First smartphone, reads slowly, weak signal at home, big obvious buttons, something that works offline.</p>
       </div>
     </div>
+    <!-- Provenance line (0036): the trio sits beside genuinely real workshop/field photos,
+         so the synthetic portraits say so plainly. Source: assets/personas/PROMPTS.md. -->
+    <p class="people-note rise">The three portraits are AI-generated stand-ins for the personas, not photographs of real users. The workshop and field photos further down this page are real.</p>
 
     <div class="forcing rise">
       <div class="k"><span class="caret" aria-hidden="true">^</span> Why Mohan set the bar</div>
@@ -1063,7 +1084,10 @@
       <div class="brand"><span class="caret" aria-hidden="true">^</span>PATAA</div>
       <p><b>Pataa 2022 redesign.</b> UI / UX designer on the team at Prefme Matrix and Pataa Navigations. My contribution: user research and synthesis, the create-and-share flows, and the rich-media direction experience. Team &ldquo;we&rdquo; throughout.</p>
       <p class="fine">Type is Manrope, set on a twelve-column grid in the International Typographic tradition. The one accent is Pataa amber, with maroon kept only for the states that are genuinely red in the app.</p>
-      <a class="backlink" href="/">&larr; Back to portfolio</a>
+      <div class="colo-nav">
+        <a class="backlink" href="/">&larr; Back to portfolio</a>
+        <a class="nextlink" href="/tho8/">Next case study: Tho8 &rarr;</a>
+      </div>
     </div>
     <div class="note rise">
       <dl>

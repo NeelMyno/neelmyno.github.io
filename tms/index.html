@@ -75,8 +75,8 @@
     --ink-hi:oklch(0.97 0.004 236);   /* display headings */
     --ink-1:oklch(0.925 0.005 236);   /* bright body / lead */
     --ink-2c:oklch(0.785 0.007 236);  /* body secondary */
-    --ink-3:oklch(0.645 0.008 236);   /* small labels ~AA */
-    --ink-4:oklch(0.545 0.009 236);   /* faint / struck */
+    --ink-3:oklch(0.70 0.008 236); /* one step up (0036) */   /* small labels ~AA */
+    --ink-4:oklch(0.60 0.009 236); /* one step up (0036) */   /* faint / struck */
     /* the ONE accent - spring green, the product's mark. live / status / current only */
     --accent:oklch(0.864 0.22 153);      /* paints ~#03FA8A, the real Warp TMS mark */
     --accent-ink:oklch(0.235 0.03 160);  /* near-black ink ON the bright green (measured-contrast) */
@@ -112,7 +112,7 @@
     --fs-sm:0.9375rem;                         /* small / captions / detail */
     --fs-mono-sm:0.8125rem;                    /* small mono data (chips, stack, note) */
     --fs-label:0.75rem;                        /* uppercase section labels */
-    --fs-micro:0.6875rem;                      /* micro idents */
+    --fs-micro:0.75rem; /* 12px floor, was 11px (0036 fine-print bump) */                      /* micro idents */
 
     /* one modular spacing scale, 4px base */
     --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:32px;
@@ -189,12 +189,17 @@
      sat 1.55px under the nav on mobile. Measured on all three case studies. */
   @media (max-width:767px){ body{ padding-top:55px } }
 
+  .cta--nav .cta-label-short{display:none}
   @media screen and (max-width:767px){
     .nav .page-padding{padding-right:20px;padding-left:20px}
     .nav-inner{justify-content:space-between}
     .nav-logo{position:static;margin-left:0;padding-left:0}
-    .nav-menu{display:none}
-    .nav .cta.cta--nav{position:static;margin-right:0;font-size:15px}
+    .nav-menu{display:flex;align-items:center}
+    .nav-menu .nav-link{display:none}
+    /* Option A (2026-07-20): the one link a phone recruiter needs stays visible, 44px hit area */
+    .nav .cta.cta--nav{position:static;margin-right:0;font-size:16px;min-height:44px;display:flex;align-items:center;padding:10px 2px 10px 12px}
+    .cta--nav .cta-label-full{display:none}
+    .cta--nav .cta-label-short{display:inline}
   }
 
   /* ============================================================================
@@ -245,6 +250,9 @@
   .cover-h1{font-family:var(--wide);font-weight:600;font-size:var(--fs-display);line-height:.98;letter-spacing:-.032em;color:var(--ink-hi);margin:0 0 var(--s4);text-wrap:balance}
   .cover-sub{font-family:var(--wide);font-weight:500;font-size:clamp(1.25rem,2.4vw,1.9rem);line-height:1.15;letter-spacing:-.02em;color:var(--ink-2c);margin:0 0 var(--s6);max-width:27ch;text-wrap:balance}
   .cover-lead{font-size:var(--fs-lead);line-height:1.45;font-weight:450;color:var(--ink-1);max-width:52ch;margin:0 0 var(--s6)}
+.cover-counts{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px 9px;margin:var(--s5) 0 0;font-family:var(--mono,ui-monospace,monospace);font-size:var(--fs-micro);letter-spacing:.04em;text-transform:uppercase;color:var(--ink-3);white-space:nowrap}
+.cover-counts .cc b.num{font-size:1.05rem;letter-spacing:0;color:var(--ink-hi);font-weight:700;margin-right:5px}
+.cover-counts .sep{color:var(--ink-4)}
   .cover-lead b{font-weight:600;color:var(--ink-hi)}
   /* ============================================================================
      [V3] THE DESIGN NOTES — a persistent trigger and a real sidebar.
@@ -820,6 +828,10 @@
   .colophon .note dd .dn-link{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer;display:inline-flex;align-items:center;gap:6px;min-height:24px;transition:color var(--motion-fast) var(--ease-out)}
   .colophon .note dd .dn-link:hover,.colophon .note dd .dn-link:focus-visible{color:var(--accent)}
   .backlink{grid-column:1/-1;display:inline-flex;align-items:center;gap:.5rem;min-height:24px;margin-top:var(--s7);font-size:var(--fs-sm);color:var(--ink-2c);text-decoration:none;font-weight:600}
+  .colo-nav{grid-column:1/-1;margin-top:var(--s7);display:flex;justify-content:space-between;align-items:baseline;gap:18px;flex-wrap:wrap}
+  .colo-nav .backlink{margin-top:0}
+  .nextlink{display:inline-flex;align-items:center;gap:.5rem;font-size:var(--fs-sm);color:var(--ink);text-decoration:none;font-weight:700}
+  .nextlink:hover{text-decoration:underline}
   .backlink:hover{color:var(--ink-hi)}
 
   /* ============================================================================
@@ -889,7 +901,7 @@
           <a href="/#experience" class="nav-link">Experience</a>
           <a href="/" class="nav-link">About</a>
           <a href="/resume/neel_tengariya_resume.pdf" class="cta cta--nav w-inline-block" download>
-            <div>Download Resume</div>
+            <div><span class="cta-label-full">Download Resume</span><span class="cta-label-short">Resume</span></div>
             <div class="cta-chevron w-embed"><svg width="7" height="10" xmlns="http://www.w3.org/2000/svg"><path d="M1.566.434 6.131 5 1.566 9.566.434 8.434 3.869 5 .434 1.566z" fill="currentColor" /></svg></div>
           </a>
         </div>
@@ -1108,6 +1120,9 @@
       <h1 class="cover-h1 rise" style="--d:.05s">A free TMS, built to move the freight underneath it.</h1>
       <p class="cover-sub rise" style="--d:.1s">Warp gives small shippers the software for nothing. The loads they book run on Warp's freight network, and that network is the business.</p>
       <p class="cover-lead rise" style="--d:.15s">I designed the TMS and built its surfaces by directing AI coding agents: the operator console, the shipments working set, the quote-to-book path, and every state behind them. The funnel that feeds it, the Slack app that graduates a shipper into the TMS and the onboarding that reads a new shipper's freight history back to them the moment they sign up, I co-created with Warp's co-founder and CRO, Troy Lester. <b>The TMS design was mine. The funnel I co-created with Troy.</b></p>
+      <!-- 0036 signature lead: the build's own numbers, promoted to the first viewport.
+           Same figures as the reflection ledger; mono, neutral, no claims beyond the count. -->
+      <p class="cover-counts rise" style="--d:.2s" aria-label="The build, counted"><span class="cc"><b class="num">119</b> recorded decisions</span><span class="sep" aria-hidden="true">&middot;</span><span class="cc"><b class="num">359</b> test files</span><span class="sep" aria-hidden="true">&middot;</span><span class="cc"><b class="num">43</b> routes</span></p>
     </div>
     <dl class="meta rise">
       <div><dt>What I did</dt><dd>The TMS design, solo: every screen and state, the data model, the honesty rules, and the build I directed through AI agents. The funnel that feeds it, co-created with Troy Lester. I verified each surface in a real browser.</dd></div>
@@ -1160,8 +1175,9 @@
     <h2 class="title s-head rise" id="research-h">I was handed a category I did not know.</h2>
     <div class="lead-col rise"><p class="lead">I had never built freight software. There was no research budget, no panel of shippers to interview, and no time to run a study. What I had was a room full of people who talked to shippers every day, a competitor already winning the segment, and whatever the analysts would say for free.</p></div>
     <div class="prose rise">
-      <p class="body">So the method was borrowed knowledge, and I want to be plain that it was. The domain came out of Warp's own salespeople, because they were the ones on the phone with the shippers I would never meet. The instruction I got was to go extract everything I could from them and learn the business. That is not user research. It is the next best thing available, and treating it as equivalent would be the lie.</p>
-      <p class="body">The competitor did the rest. A free SMB TMS was already serving this exact shipper, and it was thorough and looked its age. I pulled it apart feature by feature, and that teardown became the information architecture: the shell collapsed, and the app reorganised around the three questions a shipper actually opens a TMS to answer.</p>
+      <!-- 0036: the two paragraphs here restated the 01/02/03 ladder below almost line for
+           line; one plain intro now hands off to the ladder, which carries the detail. -->
+      <p class="body">So the method was borrowed knowledge, and I want to be plain that it was. Three sources stood in for the research I could not run, each held honestly as what it is:</p>
     </div>
 
     <div class="ledger rise">
@@ -1244,7 +1260,7 @@
   <div class="wrap grid12">
     <div class="eyebrow rise"><span class="idx">04</span> <span class="lbl">The product</span> <span class="rule"></span><span class="tag">One order, for everyone</span></div>
     <h2 class="title s-head rise" id="product-h">The tool has to be worth living in.</h2>
-    <div class="lead-col rise"><p class="lead">A free tool a shipper abandons on day two acquires nothing. So the product had to be good enough to become the one they open all day, which is a craft problem, not a pricing one. It is a transportation management system: the screen an operations team lives inside all day to quote, book, track, and reconcile freight.</p></div>
+    <div class="lead-col rise"><p class="lead">A free tool a shipper abandons on day two acquires nothing. So the product had to be good enough to become the one they open all day, which is a craft problem, not a pricing one.</p></div>
     <div class="prose rise">
       <p class="body">The dashboard opens with one honest sentence, then a ranked feed of the loads that actually need the operator, and it tapers to the calm reads below. The incumbent tool answers with a wall of red nobody can trust and a three-click hunt to learn what "overdue" even means. The donor build I inherited offered a three-way "pick your worry" preset on the first run. I cut it. A confident tool shows you the one right thing instead of asking you to configure your worry at the exact moment a load has gone wrong.</p>
     </div>
@@ -1438,7 +1454,10 @@
       <p><b>Warp TMS.</b> I designed the TMS and directed its build, and I co-created the funnel that feeds it with Warp’s co-founder and CRO, Troy Lester. I recorded 119 decisions, wrote the honesty rules the build enforces, set the QA bar, and helped shape the go-to-market with Warp’s leadership. The AI coding agents did the typing; I made the calls and ran the last check in a real browser.</p>
       <p class="fine">Product screens are captured from the live build over sample fixtures, so no customer data is shown.</p>
       <p class="warp-credit"><span class="warp-credit-lbl">Designed at</span><svg class="warp-mark" viewBox="0 0 660 186" role="img" aria-label="Warp" focusable="false" xmlns="http://www.w3.org/2000/svg"><path d="M660 185.035H0V0H660V185.035ZM14.0597 171.327H646.141V13.9593H14.0597V171.327Z" fill="currentColor" aria-hidden="true"/><path d="M300.976 53.2756L332.509 131.608H351.239L319.705 53.2756H300.976Z" fill="currentColor" aria-hidden="true"/><path d="M215.919 131.608H234.648L266.182 53.2756H247.453L215.919 131.608Z" fill="currentColor" aria-hidden="true"/><path d="M150.892 107.405L136.431 71.3523H115.593L101.131 107.405L78.2342 53.2756H60.0068L93.047 131.608H109.517L125.987 90.5839L142.457 131.608H158.927L192.017 53.2756H173.739L150.892 107.405Z" fill="currentColor" aria-hidden="true"/><path d="M471.856 82.8511C471.816 75.0646 468.691 67.6113 463.166 62.1242C457.642 56.6371 450.167 53.5636 442.381 53.5769H388.502V131.608H405.323V112.125H440.021L447.854 131.608H465.981L456.691 108.41C461.258 105.886 465.065 102.183 467.715 97.6881C470.364 93.1928 471.759 88.0691 471.755 82.8511H471.856ZM405.323 70.3481H442.381C445.71 70.3481 448.903 71.6706 451.257 74.0248C453.611 76.379 454.934 79.572 454.934 82.9013C454.934 86.2307 453.611 89.4236 451.257 91.7778C448.903 94.132 445.71 95.4546 442.381 95.4546H405.323V70.3481Z" fill="currentColor" aria-hidden="true"/><path d="M570.768 53.5769H516.939V131.608H533.711V112.125H570.768C574.612 112.125 578.419 111.368 581.971 109.897C585.522 108.426 588.749 106.269 591.468 103.551C594.186 100.833 596.342 97.6055 597.814 94.0538C599.285 90.5021 600.042 86.6954 600.042 82.8511C600.042 79.0067 599.285 75.2 597.814 71.6483C596.342 68.0966 594.186 64.8695 591.468 62.1511C588.749 59.4327 585.522 57.2764 581.971 55.8053C578.419 54.3341 574.612 53.5769 570.768 53.5769ZM570.768 95.4043H533.711V70.2978H570.768C574.097 70.2978 577.29 71.6204 579.644 73.9746C581.998 76.3288 583.321 79.5217 583.321 82.8511C583.321 86.1804 581.998 89.3734 579.644 91.7276C577.29 94.0818 574.097 95.4043 570.768 95.4043Z" fill="currentColor" aria-hidden="true"/><path d="M292.04 76.1794H275.219V94.1557H292.04V76.1794Z" fill="currentColor" aria-hidden="true"/><path d="M275.219 131.615H292.04V113.84H275.219V131.615Z" fill="currentColor" aria-hidden="true"/></svg></p>
-      <a class="backlink" href="/">&larr; Back to portfolio</a>
+      <div class="colo-nav">
+        <a class="backlink" href="/">&larr; Back to portfolio</a>
+        <a class="nextlink" href="/big-bulky/">Next case study: Big &amp; Bulky &rarr;</a>
+      </div>
     </div>
     <div class="note rise">
       <dl>
