@@ -1287,7 +1287,7 @@
         <div class="col">
           <div class="k"><span class="dot" aria-hidden="true"></span> Two files per component</div>
           <div class="kt">Human beside machine.</div>
-          <p>A <b>component.md</b> with anatomy, usage, motion, and accessibility that a designer reads directly. A <b>component.json</b> the shadcn registry installs from. They are kept in lockstep, so the prose and the schema never drift apart.</p>
+          <p>A <b>component.md</b> with anatomy, usage, motion, and accessibility that a designer reads directly. A <b>component.json</b> the shadcn registry installs from. A lint rule flags the drift when it runs, so the prose and the schema are checked against each other.</p>
         </div>
         <div class="col">
           <div class="k"><span class="dot" aria-hidden="true"></span> One layered contract</div>
@@ -1299,7 +1299,7 @@
       <figure class="plate full rise" style="margin-top:var(--s9)">
         <div class="spec">
           <div class="spec-pad">
-            <p class="spec-label">The component contract <span class="rule"></span> <span class="k2">Two files, kept in lockstep by lint</span></p>
+            <p class="spec-label">The component contract <span class="rule"></span> <span class="k2">Two files, with a lint rule that flags drift when it runs</span></p>
             <div class="contract-cols">
               <div class="fpanel">
                 <div class="fp-top"><span class="fdot" style="background:var(--ink-dim)"></span><span class="fname">button/component.md</span></div>
@@ -1361,7 +1361,7 @@
 
       <div class="ladder rise">
         <div class="row"><div class="p">R1 to R3</div><div class="txt"><b>Static, interaction, contract</b><span>Sticky-header bleed, product-page pickers failing the first click, hardcoded calendar offsets. Per-route audits.</span></div></div>
-        <div class="row"><div class="p">R4</div><div class="txt"><b>Meta-contract integrity</b><span>Version chips drifting across llms.txt, the using guide, and the readme. A release step rewrites them in lockstep.</span></div></div>
+        <div class="row"><div class="p">R4</div><div class="txt"><b>Meta-contract integrity</b><span>Version chips drifting across llms.txt, the using guide, and the readme. A release step rewrites them together.</span></div></div>
         <div class="row"><div class="p">R5 to R6</div><div class="txt"><b>Mobile metrics and single-source docs</b><span>Audits at 320 and 375, catching layout inflation, then a catalog that disagreed with itself on how many components existed.</span></div></div>
         <div class="row hot"><div class="p">R11</div><div class="txt"><b>Green retired from every shadow</b><span>Brand identity is a green fill, never a green light. A lint walks the token JSON and fails on any accent in a shadow.</span></div></div>
         <div class="row hot"><div class="p">R14</div><div class="txt"><b>Docs-to-tokens drift</b><span>The token check could not read prose. A second lint walks every doc and fails on any prescriptive use of a retired token, off a list, so the next retirement is one line, not two hundred find-and-replaces.</span></div></div>
