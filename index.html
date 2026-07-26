@@ -124,22 +124,36 @@
     <link href="images\web\webclip_256x256.png" rel="apple-touch-icon" />
     <!-- Social preview (OG + Twitter), mirroring the tag set and order the six case studies use.
          og:type is "website" here, not the case studies' "article" — the homepage is not an article.
-         og:image is warp-tracking/assets/tracking-og.jpg because it is one of only two assets in the
-         repo authored at exactly 1200x630 (the 1.91:1 box every unfurler crops to, so zero crop loss),
-         it is a JPEG (LinkedIn's scraper does not reliably render WebP, which rules out every .webp
-         case-study hero), and it is the only asset that carries Neel's name, his role and the domain
-         while still showing real shipped craft. Absolute URLs, as the case studies do. -->
+
+         og:image is now images/og/neelmyno-og.jpg, purpose-built 2026-07-26 (Neel picked direction 09
+         from a 12-card field). It SUPERSEDES the earlier choice of warp-tracking/assets/tracking-og.jpg,
+         which was the best of what already existed but was the Tracking case study's own card: every
+         share of the homepage advertised one Warp project, its byline printed an off-canon title, and
+         the name sat at 12px so it vanished at LinkedIn's ~128px inline size.
+
+         The new card is drawn in the homepage's own language rather than as a poster. His six
+         case-study cards are 586x305 at 18px radius, a 1.92:1 letterbox, which is the OG ratio, so
+         this is simply a seventh card whose subject is him: the same chip-with-dot, the same display
+         title, the same stat row. Still 1200x630 (zero crop loss in the 1.91:1 box every unfurler
+         uses) and still a JPEG, because LinkedIn's scraper does not reliably render WebP.
+         Absolute URLs, as the case studies do. Every case study keeps its own og:image. -->
     <meta property="og:type" content="website" />
     <meta property="og:title" content="Neel Tengariya · product designer and design engineer" />
     <meta property="og:description"
         content="I design software and direct AI agents to ship it, from a 10-platform design system to a freight tool that books real shipments." />
-    <meta property="og:image" content="https://neelmyno.in/warp-tracking/assets/tracking-og.jpg" />
+    <meta property="og:image" content="https://neelmyno.in/images/og/neelmyno-og.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt"
+        content="Neel Tengariya, product designer and design engineer. I design the product, then direct the AI that builds it." />
     <meta property="og:url" content="https://neelmyno.in/" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="Neel Tengariya · product designer and design engineer" />
     <meta name="twitter:description"
         content="I design software and direct AI agents to ship it, from a 10-platform design system to a freight tool that books real shipments." />
-    <meta name="twitter:image" content="https://neelmyno.in/warp-tracking/assets/tracking-og.jpg" />
+    <meta name="twitter:image" content="https://neelmyno.in/images/og/neelmyno-og.jpg" />
+    <meta name="twitter:image:alt"
+        content="Neel Tengariya, product designer and design engineer. I design the product, then direct the AI that builds it." />
     <link rel="canonical" href="https://neelmyno.in/" />
     
     <script
